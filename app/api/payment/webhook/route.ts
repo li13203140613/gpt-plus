@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getStripe } from '@/lib/payment/stripe'
-import { completePayment } from '@/lib/payment/service'
+import { completePayment, handleSessionExpired } from '@/lib/payment/service'
 
 export async function POST(request: NextRequest) {
   const body = await request.text()
@@ -18,9 +18,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
   }
 
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object
-    await completePayment(session.id, session.customer_details?.email ?? undefined)
+  switch (event.type) {
+    case 'checkout.session.completed': {
+      const session = event.data.object
+      await completePayment(session.id, session.customer_details?.email ?? undefined)
+      break
+    }
+    case 'checkout.session.expired': {
+      const session = event.data.object
+      await handleSessionExpired(session.id)
+      break
+    }
   }
 
   return NextResponse.json({ received: true })

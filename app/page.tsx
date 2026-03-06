@@ -91,9 +91,34 @@ export default function HomePage() {
             <p className="mt-4 text-lg text-zinc-400 max-w-xl mx-auto">
               安全快捷的 ChatGPT Plus 充值服务，付款后即时获取激活码，轻松开通 GPT-4 会员
             </p>
-            <p className="mt-3 text-sm text-zinc-500 max-w-md mx-auto">
-              支持支付宝 / 微信支付 / 信用卡 &middot; 即买即用
-            </p>
+            <div className="mt-5 flex items-center justify-center gap-3">
+              {/* 微信支付 */}
+              <div className="flex items-center gap-1.5 rounded-full bg-zinc-800/60 border border-zinc-700/50 px-3 py-1.5">
+                <svg className="size-5" viewBox="0 0 24 24" fill="none">
+                  <path d="M9.5 4C5.36 4 2 6.69 2 10c0 1.89 1.08 3.56 2.78 4.66l-.7 2.1 2.45-1.23c.78.22 1.6.34 2.47.34.33 0 .66-.02.98-.06A5.93 5.93 0 0 1 9.5 14c0-3.31 3.13-6 7-6 .17 0 .33.01.5.02C15.93 5.69 13.03 4 9.5 4z" fill="#07C160"/>
+                  <path d="M22 14c0-2.76-2.69-5-6-5s-6 2.24-6 5 2.69 5 6 5c.7 0 1.37-.1 2-.29l1.8.9-.52-1.54C20.88 17.06 22 15.63 22 14z" fill="#07C160"/>
+                </svg>
+                <span className="text-xs text-zinc-300">微信支付</span>
+              </div>
+              {/* 支付宝 */}
+              <div className="flex items-center gap-1.5 rounded-full bg-zinc-800/60 border border-zinc-700/50 px-3 py-1.5">
+                <svg className="size-5" viewBox="0 0 24 24" fill="none">
+                  <rect width="24" height="24" rx="4" fill="#1677FF"/>
+                  <path d="M18.5 15.2c-1.5-.6-3.2-1.3-4.2-1.8.5-.9.9-1.9 1.1-3h-2.8v-1h3.2V8.6h-3.2V7h-1.4v1.6H8v.8h3.2v1H8.4v.8h5.4c-.2.7-.5 1.4-.9 2-1.2-.5-2.5-.8-3.5-.8-1.5 0-2.5.7-2.5 1.8 0 1.2 1.1 2 3 2 1.5 0 2.8-.6 3.8-1.5 1.3.7 3.3 1.5 4.8 2v-1.5z" fill="white"/>
+                  <circle cx="9.8" cy="16" r="1.2" fill="white"/>
+                </svg>
+                <span className="text-xs text-zinc-300">支付宝</span>
+              </div>
+              {/* 银行卡 */}
+              <div className="flex items-center gap-1.5 rounded-full bg-zinc-800/60 border border-zinc-700/50 px-3 py-1.5">
+                <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="#a1a1aa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                  <line x1="1" y1="10" x2="23" y2="10"/>
+                </svg>
+                <span className="text-xs text-zinc-300">银行卡</span>
+              </div>
+            </div>
+            <p className="mt-3 text-xs text-zinc-500">即买即用 · 安全支付 · 无需注册</p>
           </div>
         </section>
 

@@ -116,6 +116,22 @@ export async function completePayment(sessionId: string, buyerEmail?: string) {
   `
 }
 
+export async function handleSessionExpired(sessionId: string) {
+  const sql = getDb()
+
+  await sql`
+    UPDATE activation_codes
+    SET status = 'available', stripe_session_id = NULL, reserved_at = NULL
+    WHERE stripe_session_id = ${sessionId} AND status = 'reserved'
+  `
+
+  await sql`
+    UPDATE gptplus_orders
+    SET status = 'expired'
+    WHERE stripe_session_id = ${sessionId} AND status = 'pending'
+  `
+}
+
 export async function getOrderBySessionId(sessionId: string) {
   const sql = getDb()
 
