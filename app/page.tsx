@@ -173,6 +173,69 @@ export default function HomePage() {
             ))}
           </div>
         </section>
+
+        {/* Service Notice */}
+        <section className="max-w-4xl mx-auto px-4 pb-20">
+          <div className="rounded-2xl border border-amber-500/20 bg-gradient-to-br from-amber-500/5 to-orange-500/5 p-6 sm:p-8 space-y-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-white">ChatGPT Plus 充值服务说明</h2>
+
+            {/* Important notice */}
+            <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 space-y-2">
+              <h3 className="text-base font-semibold text-amber-300 flex items-center gap-2">
+                <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126z"/><path strokeLinecap="round" strokeLinejoin="round" d="M12 15.75h.007v.008H12v-.008z"/></svg>
+                重要提醒
+              </h3>
+              <p className="text-sm text-zinc-300 leading-relaxed">
+                ChatGPT Plus 官网会员一个月充值到你自己账号，不懂这个商品的请勿购买。最少要会用官网版，用过官网版的人再买。
+              </p>
+              <p className="text-sm text-zinc-300 leading-relaxed">
+                下单前请仔细阅读产品服务内容，谢谢！这里买的是充值官网 Plus，用来在给自己 ChatGPT 账号充值会员。
+              </p>
+            </div>
+
+            {/* Usage instructions */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-white">购买须知 / 使用教程</h3>
+
+              <div className="space-y-3 text-sm text-zinc-300 leading-relaxed">
+                <div>
+                  <p className="font-medium text-zinc-200 mb-1">操作流程：</p>
+                  <p>
+                    第一步，登了 GPT 账号的浏览器，重新再开一个窗口，输入这个链接：
+                    <a href="https://chatgpt.com/api/auth/session" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 underline ml-1">
+                      https://chatgpt.com/api/auth/session
+                    </a>
+                    {' '}然后就会弹代码出来了，全选复制在充值网站粘贴提交充值。
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-3">
+                  <span className="text-zinc-400">充值网站：</span>
+                  <a href="https://shop.gptai.vip/" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 underline font-medium">
+                    点我直达
+                  </a>
+                </div>
+
+                <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 px-4 py-3 space-y-1">
+                  <p className="text-amber-300">注意：如果遇到充值失败，请多提交几次即可，24小时全自动自助充值。</p>
+                  <p className="text-zinc-300">质保30天不掉订阅，掉订阅按天赔付。【从充值成功开始计算】</p>
+                </div>
+
+                <p className="text-zinc-400">使用中有问题加客服QQ：2415997472</p>
+              </div>
+            </div>
+
+            {/* Risk notice */}
+            <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 space-y-2">
+              <p className="text-sm text-red-300 leading-relaxed">
+                注意事项：由于 OpenAI 政策原因在国人使用的 ChatGPT 账号是有可能被它封号的，这个情况全网都有不定时发生，这种被官网封号不在可控范围内，不是我们的售后范围。账号当前必须已经不是会员，显示为免费版才可以充值，如果之前充过还没有到期是充不上的，只能等旧会员过期才能充值。
+              </p>
+              <p className="text-sm text-zinc-300 leading-relaxed">
+                本站只确保在官网不封号的情况下，质保你充值的会员有效期至少满30天使用时间。
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
 
       <Footer />
