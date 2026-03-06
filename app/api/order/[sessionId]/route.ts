@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getOrderBySessionId } from '@/lib/payment/service'
+import { getOrderBySessionId, completePayment } from '@/lib/payment/service'
+import { getStripe } from '@/lib/payment/stripe'
 
 export async function GET(
   _request: NextRequest,
@@ -11,7 +12,20 @@ export async function GET(
     return NextResponse.json({ error: '缺少 session ID' }, { status: 400 })
   }
 
-  const order = await getOrderBySessionId(sessionId)
+  let order = await getOrderBySessionId(sessionId)
+
+  // Fallback: if order is still pending, check Stripe directly
+  if (order && order.status === 'pending') {
+    try {
+      const session = await getStripe().checkout.sessions.retrieve(sessionId)
+      if (session.payment_status === 'paid') {
+        await completePayment(sessionId, session.customer_details?.email ?? undefined)
+        order = await getOrderBySessionId(sessionId)
+      }
+    } catch {
+      // Stripe query failed, continue with current status
+    }
+  }
 
   if (!order) {
     return NextResponse.json({ status: 'expired' })
