@@ -53,6 +53,10 @@ pnpm start    # 生产模式
 
 | Date | Module | Changes | Scope | Note |
 |------|----------|----------|----------|------|
+| 2026-03-07 | Components | Modified: table.tsx | C:/Users/LILI/Desktop/gpt-plus/components/ui/table.tsx | AI Auto |
+| 2026-03-07 | Components | Modified: badge.tsx | C:/Users/LILI/Desktop/gpt-plus/components/ui/badge.tsx | AI Auto |
+| 2026-03-06 | Components | Modified: label.tsx | C:/Users/LILI/Desktop/gpt-plus/components/ui/label.tsx | AI Auto |
+| 2026-03-06 | Components | Modified: input.tsx | C:/Users/LILI/Desktop/gpt-plus/components/ui/input.tsx | AI Auto |
 | 2026-03-06 | Docs | Modified: CLAUDE.md | C:/Users/LILI/Desktop/gpt-plus/CLAUDE.md | AI Auto |
 | 2026-03-06 | Library | Modified: db.ts | C:/Users/LILI/Desktop/gpt-plus/lib/db.ts | AI Auto |
 | 2026-03-06 | Other | Modified: sitemap.ts | C:/Users/LILI/Desktop/gpt-plus/app/sitemap.ts | AI Auto |
