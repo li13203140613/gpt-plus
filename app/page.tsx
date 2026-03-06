@@ -152,6 +152,96 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Service Notice - restructured */}
+        <section className="max-w-4xl mx-auto px-4 pb-20">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-10">
+            <span className="bg-gradient-to-r from-white via-emerald-200 to-white bg-clip-text text-transparent">
+              充值流程与注意事项
+            </span>
+          </h2>
+
+          {/* Step-by-step recharge flow */}
+          <div className="space-y-4 mb-8">
+            {[
+              {
+                step: '1',
+                title: '在本站购买激活码',
+                desc: '选择上方激活码，通过支付宝 / 微信 / 银行卡完成付款，支付成功后复制完整激活码。',
+              },
+              {
+                step: '2',
+                title: '获取 ChatGPT 登录凭证',
+                desc: '在已登录 ChatGPT 账号的浏览器中，新开一个标签页，访问以下地址：',
+                link: { url: 'https://chatgpt.com/api/auth/session', text: 'chatgpt.com/api/auth/session' },
+                extra: '页面会显示一段代码，全选并复制。',
+              },
+              {
+                step: '3',
+                title: '前往充值网站完成充值',
+                desc: '打开充值网站，粘贴刚才复制的代码，再输入激活码，提交即可自动完成充值。',
+                cta: { url: 'https://shop.gptai.vip/', text: '前往充值网站' },
+              },
+            ].map((item) => (
+              <div key={item.step} className="flex gap-4 rounded-xl border border-zinc-800 bg-zinc-900/50 p-5">
+                <div className="flex-shrink-0 size-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold text-lg">
+                  {item.step}
+                </div>
+                <div className="space-y-1.5">
+                  <h3 className="text-base font-semibold text-zinc-100">{item.title}</h3>
+                  <p className="text-sm text-zinc-400 leading-relaxed">{item.desc}</p>
+                  {item.link && (
+                    <a href={item.link.url} target="_blank" rel="noopener noreferrer" className="inline-block text-sm text-emerald-400 hover:text-emerald-300 underline break-all">
+                      {item.link.text}
+                    </a>
+                  )}
+                  {item.extra && <p className="text-sm text-zinc-400">{item.extra}</p>}
+                  {item.cta && (
+                    <a href={item.cta.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 mt-1 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium px-4 py-1.5 transition-colors">
+                      {item.cta.text}
+                      <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+                    </a>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Notice cards */}
+          <div className="grid sm:grid-cols-2 gap-4 mb-8">
+            <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5 space-y-2">
+              <h3 className="text-sm font-semibold text-emerald-400">售后保障</h3>
+              <ul className="text-sm text-zinc-300 space-y-1.5">
+                <li className="flex items-start gap-2"><span className="text-emerald-400 mt-0.5">&#10003;</span>质保 30 天不掉订阅</li>
+                <li className="flex items-start gap-2"><span className="text-emerald-400 mt-0.5">&#10003;</span>掉订阅按天赔付（从充值成功算起）</li>
+                <li className="flex items-start gap-2"><span className="text-emerald-400 mt-0.5">&#10003;</span>24 小时全自动自助充值</li>
+                <li className="flex items-start gap-2"><span className="text-emerald-400 mt-0.5">&#10003;</span>充值失败可多次重试</li>
+              </ul>
+            </div>
+            <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-5 space-y-2">
+              <h3 className="text-sm font-semibold text-amber-400">充值前必读</h3>
+              <ul className="text-sm text-zinc-300 space-y-1.5">
+                <li className="flex items-start gap-2"><span className="text-amber-400 mt-0.5">!</span>账号必须是免费版（非会员）才能充值</li>
+                <li className="flex items-start gap-2"><span className="text-amber-400 mt-0.5">!</span>已有会员未到期的账号无法充值</li>
+                <li className="flex items-start gap-2"><span className="text-amber-400 mt-0.5">!</span>请确保你使用过 ChatGPT 官网版</li>
+                <li className="flex items-start gap-2"><span className="text-amber-400 mt-0.5">!</span>不了解此商品的用户请勿购买</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Risk disclaimer */}
+          <div className="rounded-xl border border-red-500/20 bg-red-500/5 p-5 space-y-2">
+            <h3 className="text-sm font-semibold text-red-400">风险提示</h3>
+            <p className="text-sm text-zinc-400 leading-relaxed">
+              由于 OpenAI 政策原因，国内用户的 ChatGPT 账号存在被封号的可能，此类情况全网均有发生，属于不可控因素，不在售后范围内。本站仅保证在官网不封号的前提下，充值会员有效期至少满 30 天。
+            </p>
+          </div>
+
+          {/* Contact */}
+          <p className="text-center text-sm text-zinc-500 mt-6">
+            遇到问题？联系客服 QQ：<span className="text-zinc-300">2415997472</span>
+          </p>
+        </section>
+
         {/* FAQ */}
         <section className="max-w-4xl mx-auto px-4 pb-20">
           <h2 className="text-2xl sm:text-3xl font-bold text-center mb-10">
@@ -171,69 +261,6 @@ export default function HomePage() {
                 <div className="px-6 pb-5 text-sm leading-relaxed text-zinc-400">{item.a}</div>
               </details>
             ))}
-          </div>
-        </section>
-
-        {/* Service Notice */}
-        <section className="max-w-4xl mx-auto px-4 pb-20">
-          <div className="rounded-2xl border border-amber-500/20 bg-gradient-to-br from-amber-500/5 to-orange-500/5 p-6 sm:p-8 space-y-6">
-            <h2 className="text-xl sm:text-2xl font-bold text-white">ChatGPT Plus 充值服务说明</h2>
-
-            {/* Important notice */}
-            <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 space-y-2">
-              <h3 className="text-base font-semibold text-amber-300 flex items-center gap-2">
-                <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126z"/><path strokeLinecap="round" strokeLinejoin="round" d="M12 15.75h.007v.008H12v-.008z"/></svg>
-                重要提醒
-              </h3>
-              <p className="text-sm text-zinc-300 leading-relaxed">
-                ChatGPT Plus 官网会员一个月充值到你自己账号，不懂这个商品的请勿购买。最少要会用官网版，用过官网版的人再买。
-              </p>
-              <p className="text-sm text-zinc-300 leading-relaxed">
-                下单前请仔细阅读产品服务内容，谢谢！这里买的是充值官网 Plus，用来在给自己 ChatGPT 账号充值会员。
-              </p>
-            </div>
-
-            {/* Usage instructions */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-white">购买须知 / 使用教程</h3>
-
-              <div className="space-y-3 text-sm text-zinc-300 leading-relaxed">
-                <div>
-                  <p className="font-medium text-zinc-200 mb-1">操作流程：</p>
-                  <p>
-                    第一步，登了 GPT 账号的浏览器，重新再开一个窗口，输入这个链接：
-                    <a href="https://chatgpt.com/api/auth/session" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 underline ml-1">
-                      https://chatgpt.com/api/auth/session
-                    </a>
-                    {' '}然后就会弹代码出来了，全选复制在充值网站粘贴提交充值。
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-3">
-                  <span className="text-zinc-400">充值网站：</span>
-                  <a href="https://shop.gptai.vip/" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 underline font-medium">
-                    点我直达
-                  </a>
-                </div>
-
-                <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 px-4 py-3 space-y-1">
-                  <p className="text-amber-300">注意：如果遇到充值失败，请多提交几次即可，24小时全自动自助充值。</p>
-                  <p className="text-zinc-300">质保30天不掉订阅，掉订阅按天赔付。【从充值成功开始计算】</p>
-                </div>
-
-                <p className="text-zinc-400">使用中有问题加客服QQ：2415997472</p>
-              </div>
-            </div>
-
-            {/* Risk notice */}
-            <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 space-y-2">
-              <p className="text-sm text-red-300 leading-relaxed">
-                注意事项：由于 OpenAI 政策原因在国人使用的 ChatGPT 账号是有可能被它封号的，这个情况全网都有不定时发生，这种被官网封号不在可控范围内，不是我们的售后范围。账号当前必须已经不是会员，显示为免费版才可以充值，如果之前充过还没有到期是充不上的，只能等旧会员过期才能充值。
-              </p>
-              <p className="text-sm text-zinc-300 leading-relaxed">
-                本站只确保在官网不封号的情况下，质保你充值的会员有效期至少满30天使用时间。
-              </p>
-            </div>
           </div>
         </section>
       </main>

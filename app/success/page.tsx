@@ -117,11 +117,36 @@ function SuccessContent() {
             </Button>
           </div>
 
-          <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 text-left space-y-2">
-            <p className="text-sm font-medium text-amber-300">下一步：前往激活网站</p>
-            <p className="text-sm text-zinc-400">
-              请复制上方激活码，然后前往卡密激活网站输入激活码，即可完成 ChatGPT Plus 的开通。
-            </p>
+          {/* How to use - step by step */}
+          <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5 text-left space-y-4">
+            <p className="text-base font-semibold text-emerald-300">接下来按以下步骤完成充值：</p>
+            <div className="space-y-3">
+              <div className="flex gap-3">
+                <span className="flex-shrink-0 size-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-xs font-bold">1</span>
+                <p className="text-sm text-zinc-300">在已登录 ChatGPT 的浏览器中，新开标签页访问：<a href="https://chatgpt.com/api/auth/session" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 underline break-all">chatgpt.com/api/auth/session</a></p>
+              </div>
+              <div className="flex gap-3">
+                <span className="flex-shrink-0 size-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-xs font-bold">2</span>
+                <p className="text-sm text-zinc-300">页面会显示一段代码，<strong className="text-white">全选复制</strong>这段代码</p>
+              </div>
+              <div className="flex gap-3">
+                <span className="flex-shrink-0 size-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-xs font-bold">3</span>
+                <p className="text-sm text-zinc-300">打开充值网站，粘贴代码并输入激活码，提交即可完成充值</p>
+              </div>
+            </div>
+            <a
+              href="https://shop.gptai.vip/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 w-full rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 transition-colors"
+            >
+              前往充值网站
+              <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+            </a>
+          </div>
+
+          <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 px-4 py-3 text-left">
+            <p className="text-xs text-amber-300">充值失败？多提交几次即可，系统 24 小时全自动处理。</p>
           </div>
 
           <div className="space-y-2 text-sm text-zinc-500">
@@ -135,10 +160,7 @@ function SuccessContent() {
           </Link>
 
           <p className="text-sm text-zinc-500">
-            如有问题请联系{' '}
-            <a href="mailto:lixiaofei160@gmail.com" className="text-emerald-400 hover:text-emerald-300 underline">
-              lixiaofei160@gmail.com
-            </a>
+            遇到问题？客服 QQ：<span className="text-zinc-300">2415997472</span>
           </p>
         </div>
       )}
