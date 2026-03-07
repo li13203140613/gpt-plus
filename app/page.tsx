@@ -103,7 +103,7 @@ function JsonLd() {
       price: '99.00',
       priceCurrency: 'CNY',
       availability: 'https://schema.org/InStock',
-      url: 'https://gpt-plus.ai',
+      url: 'https://www.gpt-plus.ai',
       seller: { '@type': 'Organization', name: 'GPT Plus' },
     },
     aggregateRating: {
@@ -138,10 +138,24 @@ function JsonLd() {
     })),
   }
 
+  const breadcrumbData = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: '首页',
+        item: 'https://www.gpt-plus.ai',
+      },
+    ],
+  }
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productData) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqData) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }} />
     </>
   )
 }

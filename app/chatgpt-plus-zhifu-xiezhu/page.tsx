@@ -59,7 +59,7 @@ const jsonLd = {
 
 export default function ChatGPTPlusZhifuXieZhuPage() {
   return (
-    <SeoPageLayout jsonLd={jsonLd}>
+    <SeoPageLayout jsonLd={jsonLd} breadcrumbTitle="ChatGPT Plus 支付协助" breadcrumbPath="/chatgpt-plus-zhifu-xiezhu">
       <SeoHero
         badge="支付难题终结者"
         title="ChatGPT Plus 支付协助"
@@ -67,7 +67,7 @@ export default function ChatGPTPlusZhifuXieZhuPage() {
       />
 
       <SeoSection title="国内用户为什么需要 ChatGPT Plus 支付协助">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             <strong>ChatGPT Plus 支付协助</strong>服务的诞生，源于国内用户在订阅 ChatGPT Plus 时遭遇的种种支付壁垒。OpenAI 目前的支付系统存在严格的地区限制，导致绝大多数中国大陆用户无法完成正常支付流程。
           </p>
@@ -81,9 +81,9 @@ export default function ChatGPTPlusZhifuXieZhuPage() {
               { title: '虚拟卡无法通过', desc: '市面上常见的虚拟信用卡（如 Depay、OneKey）成功率不稳定，且存在封号风险。' },
               { title: '支付流程繁琐', desc: '即便有合适的卡，还需要处理地址验证、VPN 选择等一系列复杂操作，技术门槛高。' },
             ].map((item) => (
-              <div key={item.title} className="bg-zinc-800/60 border border-zinc-700 rounded-xl p-4">
+              <div key={item.title} className="bg-gray-50 border border-gray-200 rounded-xl p-4">
                 <h3 className="text-rose-400 font-semibold mb-1">{item.title}</h3>
-                <p className="text-zinc-400 text-sm">{item.desc}</p>
+                <p className="text-gray-500 text-sm">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -94,7 +94,7 @@ export default function ChatGPTPlusZhifuXieZhuPage() {
       </SeoSection>
 
       <SeoSection title="ChatGPT Plus 支付协助的工作原理">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             很多用户好奇，<strong>ChatGPT Plus 支付协助</strong>究竟是如何运作的？我们的核心优势在于拥有经过验证的合规国际支付渠道，能够稳定、高效地完成 OpenAI 平台的支付操作，同时规避各类风控拦截。
           </p>
@@ -109,11 +109,11 @@ export default function ChatGPTPlusZhifuXieZhuPage() {
               { num: '04', title: '验证到账', desc: '支付完成后，我们会登录后台验证 Plus 会员状态已激活，确认成功后通知您查收。' },
               { num: '05', title: '售后保障', desc: '开通后如遇任何问题，我们的客服团队提供 30 天内的售后支持，保障您的使用体验。' },
             ].map((item) => (
-              <div key={item.num} className="flex gap-4 items-start bg-zinc-800/40 border border-zinc-700 rounded-lg p-4">
+              <div key={item.num} className="flex gap-4 items-start bg-gray-50 border border-gray-200 rounded-lg p-4">
                 <span className="text-2xl font-bold text-emerald-500 flex-shrink-0 w-10">{item.num}</span>
                 <div>
-                  <p className="font-semibold text-white mb-1">{item.title}</p>
-                  <p className="text-sm text-zinc-400">{item.desc}</p>
+                  <p className="font-semibold text-gray-900 mb-1">{item.title}</p>
+                  <p className="text-sm text-gray-500">{item.desc}</p>
                 </div>
               </div>
             ))}
@@ -122,17 +122,17 @@ export default function ChatGPTPlusZhifuXieZhuPage() {
       </SeoSection>
 
       <SeoSection title="ChatGPT Plus 支付协助 vs 自行解决对比">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             部分用户会考虑自行申请虚拟信用卡或寻找其他途径来完成 <strong>ChatGPT Plus 支付</strong>。下表对比了自行操作与使用专业支付协助服务的差异：
           </p>
           <div className="overflow-x-auto mt-4">
-            <table className="w-full text-sm text-zinc-300 border-collapse">
+            <table className="w-full text-sm text-gray-600 border-collapse">
               <thead>
                 <tr className="bg-zinc-800 text-left">
-                  <th className="p-3 border border-zinc-700 text-emerald-400">对比维度</th>
-                  <th className="p-3 border border-zinc-700 text-emerald-400">自行操作</th>
-                  <th className="p-3 border border-zinc-700 text-emerald-400">专业支付协助</th>
+                  <th className="p-3 border border-gray-200 text-violet-600">对比维度</th>
+                  <th className="p-3 border border-gray-200 text-violet-600">自行操作</th>
+                  <th className="p-3 border border-gray-200 text-violet-600">专业支付协助</th>
                 </tr>
               </thead>
               <tbody>
@@ -143,23 +143,23 @@ export default function ChatGPTPlusZhifuXieZhuPage() {
                   ['账号风险', '虚拟卡可能触发 OpenAI 风控', '合规渠道，零封号风险'],
                   ['费用', '虚拟卡手续费 + 失败损失 + 时间成本', '透明收费，失败全退'],
                 ].map(([dim, self, us]) => (
-                  <tr key={dim} className="border-b border-zinc-700 hover:bg-zinc-800/30">
-                    <td className="p-3 border border-zinc-700 font-medium">{dim}</td>
-                    <td className="p-3 border border-zinc-700 text-zinc-400">{self}</td>
-                    <td className="p-3 border border-zinc-700 text-emerald-400">{us}</td>
+                  <tr key={dim} className="border-b border-gray-200 hover:bg-zinc-800/30">
+                    <td className="p-3 border border-gray-200 font-medium">{dim}</td>
+                    <td className="p-3 border border-gray-200 text-gray-500">{self}</td>
+                    <td className="p-3 border border-gray-200 text-violet-600">{us}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <p className="mt-4 text-zinc-400 text-sm">
+          <p className="mt-4 text-gray-500 text-sm">
             综合来看，使用专业的 <strong>ChatGPT Plus 支付协助</strong>服务，无论是成功率、安全性还是时间成本，都远优于自行操作。
           </p>
         </div>
       </SeoSection>
 
       <SeoSection title="哪些用户最需要 ChatGPT Plus 支付协助">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             <strong>ChatGPT Plus 支付协助</strong>服务适合所有希望使用 ChatGPT Plus 但遭遇支付障碍的国内用户。以下几类用户群体尤为适合：
           </p>
@@ -172,18 +172,18 @@ export default function ChatGPTPlusZhifuXieZhuPage() {
               '曾经尝试购买虚拟信用卡但遭遇封号或支付失败的用户，希望找到更稳定的方案。',
             ].map((text, i) => (
               <li key={i} className="flex gap-3 items-start">
-                <span className="mt-1 w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0" />
-                <span className="text-zinc-300 text-sm">{text}</span>
+                <span className="mt-1 w-2 h-2 rounded-full bg-violet-500 flex-shrink-0" />
+                <span className="text-gray-600 text-sm">{text}</span>
               </li>
             ))}
           </ul>
           <p className="mt-4">
             如果您已经决定使用我们的协助服务，也欢迎直接了解
-            <Link href="/chatgpt-plus-dai-kaitong" className="text-emerald-400 hover:text-emerald-300 underline mx-1">
+            <Link href="/chatgpt-plus-dai-kaitong" className="text-violet-600 hover:text-violet-500 underline mx-1">
               ChatGPT Plus 代开通
             </Link>
             服务，或查看
-            <Link href="/chatgpt-plus-chongzhi" className="text-emerald-400 hover:text-emerald-300 underline mx-1">
+            <Link href="/chatgpt-plus-chongzhi" className="text-violet-600 hover:text-violet-500 underline mx-1">
               ChatGPT Plus 充值
             </Link>
             页面了解更多充值方案。

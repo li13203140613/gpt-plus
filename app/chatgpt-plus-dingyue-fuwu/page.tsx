@@ -59,7 +59,7 @@ const jsonLd = {
 
 export default function ChatGPTPlusDingyueFuwuPage() {
   return (
-    <SeoPageLayout jsonLd={jsonLd}>
+    <SeoPageLayout jsonLd={jsonLd} breadcrumbTitle="ChatGPT Plus 订阅服务" breadcrumbPath="/chatgpt-plus-dingyue-fuwu">
       <SeoHero
         badge="专业可信赖"
         title="ChatGPT Plus 订阅服务"
@@ -67,7 +67,7 @@ export default function ChatGPTPlusDingyueFuwuPage() {
       />
 
       <SeoSection title="什么是 ChatGPT Plus 订阅服务">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             <strong>ChatGPT Plus 订阅服务</strong>是指专业平台代替国内用户完成 OpenAI ChatGPT Plus 会员的开通、续费及管理工作。由于 OpenAI 平台的支付系统仅支持 Visa、Mastercard 等海外信用卡，国内绝大多数用户无法直接完成订阅，这为广大 AI 工具使用者带来了极大不便。
           </p>
@@ -111,16 +111,16 @@ export default function ChatGPTPlusDingyueFuwuPage() {
               desc: '除首次开通外，我们同样提供月度续费、年度订阅及企业批量订阅服务，满足不同规模用户的 ChatGPT Plus 订阅需求。',
             },
           ].map((item) => (
-            <div key={item.title} className="bg-zinc-800/60 border border-zinc-700 rounded-xl p-5">
-              <h3 className="text-emerald-400 font-semibold text-lg mb-2">{item.title}</h3>
-              <p className="text-zinc-300 text-sm leading-relaxed">{item.desc}</p>
+            <div key={item.title} className="bg-gray-50 border border-gray-200 rounded-xl p-5">
+              <h3 className="text-violet-600 font-semibold text-lg mb-2">{item.title}</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">{item.desc}</p>
             </div>
           ))}
         </div>
       </SeoSection>
 
       <SeoSection title="ChatGPT Plus 订阅服务开通流程">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             我们的 <strong>ChatGPT Plus 订阅服务</strong>流程简洁透明，从下单到开通全程不超过 5 个操作步骤，即使是第一次使用的用户也能轻松完成。
           </p>
@@ -132,11 +132,11 @@ export default function ChatGPTPlusDingyueFuwuPage() {
               { step: '第四步', title: '确认开通成功', desc: '订阅完成后，您会收到系统通知。登录 ChatGPT 即可看到 Plus 标识，全部功能立即可用。' },
               { step: '第五步', title: '享受 Plus 专属功能', desc: '使用 GPT-4o、高级推理、图像生成等 ChatGPT Plus 专属功能，大幅提升您的 AI 使用体验。' },
             ].map((item, index) => (
-              <li key={index} className="flex gap-4 bg-zinc-800/40 border border-zinc-700 rounded-lg p-4">
-                <span className="flex-shrink-0 w-20 text-emerald-400 font-bold text-sm">{item.step}</span>
+              <li key={index} className="flex gap-4 bg-gray-50 border border-gray-200 rounded-lg p-4">
+                <span className="flex-shrink-0 w-20 text-violet-600 font-bold text-sm">{item.step}</span>
                 <div>
-                  <p className="font-semibold text-white mb-1">{item.title}</p>
-                  <p className="text-sm text-zinc-400">{item.desc}</p>
+                  <p className="font-semibold text-gray-900 mb-1">{item.title}</p>
+                  <p className="text-sm text-gray-500">{item.desc}</p>
                 </div>
               </li>
             ))}
@@ -145,7 +145,7 @@ export default function ChatGPTPlusDingyueFuwuPage() {
       </SeoSection>
 
       <SeoSection title="ChatGPT Plus 订阅后能使用哪些功能">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             完成 <strong>ChatGPT Plus 订阅</strong>后，您将立即解锁以下专属高级功能，这些功能在免费版 ChatGPT 中均不可用或受到严格限制：
           </p>
@@ -158,19 +158,19 @@ export default function ChatGPTPlusDingyueFuwuPage() {
               { name: 'GPTs 自定义助手', desc: '访问 OpenAI GPT 商店，使用数千款专业领域 AI 应用。' },
               { name: '更长上下文记忆', desc: '支持更长的对话历史，复杂项目协作更加连贯高效。' },
             ].map((item) => (
-              <div key={item.name} className="bg-zinc-800/50 border border-zinc-700 rounded-lg p-4">
-                <p className="text-emerald-400 font-semibold mb-1">{item.name}</p>
-                <p className="text-zinc-400 text-sm">{item.desc}</p>
+              <div key={item.name} className="bg-zinc-800/50 border border-gray-200 rounded-lg p-4">
+                <p className="text-violet-600 font-semibold mb-1">{item.name}</p>
+                <p className="text-gray-500 text-sm">{item.desc}</p>
               </div>
             ))}
           </div>
           <p className="mt-4">
             如需进一步了解开通详情，可参考我们的
-            <Link href="/chatgpt-plus-kaitong" className="text-emerald-400 hover:text-emerald-300 underline mx-1">
+            <Link href="/chatgpt-plus-kaitong" className="text-violet-600 hover:text-violet-500 underline mx-1">
               ChatGPT Plus 开通指南
             </Link>
             页面，或直接查看
-            <Link href="/chatgpt-plus-dai-dingyue" className="text-emerald-400 hover:text-emerald-300 underline mx-1">
+            <Link href="/chatgpt-plus-dai-dingyue" className="text-violet-600 hover:text-violet-500 underline mx-1">
               代订阅方案
             </Link>
             了解更多选项。
@@ -179,7 +179,7 @@ export default function ChatGPTPlusDingyueFuwuPage() {
       </SeoSection>
 
       <SeoSection title="为什么选择我们的 ChatGPT Plus 订阅服务">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             市面上提供 <strong>ChatGPT Plus 订阅服务</strong>的平台良莠不齐。选择专业可信赖的服务商，是保障账号安全和订阅体验的关键。以下是用户选择我们的主要原因：
           </p>
@@ -192,14 +192,14 @@ export default function ChatGPTPlusDingyueFuwuPage() {
               '支持企业批量采购，提供发票及对公转账方式，满足正规企业采购需求。',
             ].map((text, i) => (
               <li key={i} className="flex gap-3 items-start">
-                <span className="mt-1 w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0" />
-                <span className="text-zinc-300 text-sm">{text}</span>
+                <span className="mt-1 w-2 h-2 rounded-full bg-violet-500 flex-shrink-0" />
+                <span className="text-gray-600 text-sm">{text}</span>
               </li>
             ))}
           </ul>
           <p className="mt-4">
             如果您还在犹豫如何解决支付问题，可以参考我们的
-            <Link href="/chatgpt-plus-zhifu-xiezhu" className="text-emerald-400 hover:text-emerald-300 underline mx-1">
+            <Link href="/chatgpt-plus-zhifu-xiezhu" className="text-violet-600 hover:text-violet-500 underline mx-1">
               ChatGPT Plus 支付协助
             </Link>
             页面，了解更多支付解决方案。

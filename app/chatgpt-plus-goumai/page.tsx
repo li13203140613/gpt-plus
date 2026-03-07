@@ -60,7 +60,7 @@ const jsonLd = {
 
 export default function ChatgptPlusGoumaIPage() {
   return (
-    <SeoPageLayout jsonLd={jsonLd}>
+    <SeoPageLayout jsonLd={jsonLd} breadcrumbTitle="ChatGPT Plus 购买" breadcrumbPath="/chatgpt-plus-goumai">
       <SeoHero
         badge="安全购买"
         title="ChatGPT Plus 购买"
@@ -68,7 +68,7 @@ export default function ChatgptPlusGoumaIPage() {
       />
 
       <SeoSection title="为什么选择我们购买 ChatGPT Plus">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             <strong>购买 ChatGPT Plus</strong>看似简单，但对于国内用户来说，在哪里购买、如何安全购买，却是需要认真考量的问题。市面上鱼龙混杂的代购平台中，存在账号被封、资金损失、售后无门等诸多风险，选择一个可靠的 <strong>ChatGPT Plus 购买</strong>渠道至关重要。
           </p>
@@ -82,7 +82,7 @@ export default function ChatgptPlusGoumaIPage() {
       </SeoSection>
 
       <SeoSection title="ChatGPT Plus 购买安全保障体系">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             安全是 <strong>ChatGPT Plus 购买</strong>过程中用户最关注的核心问题。我们建立了多层次的安全保障体系，让每一位用户都能安心完成购买：
           </p>
@@ -113,9 +113,9 @@ export default function ChatgptPlusGoumaIPage() {
                 desc: '我们严格遵守隐私保护原则，不会将您提供的账号邮箱用于任何营销推广或第三方数据共享，您的个人信息受到严格保护。',
               },
             ].map((item) => (
-              <div key={item.title} className="bg-zinc-800/60 border border-zinc-700 rounded-xl p-5">
-                <h3 className="text-emerald-400 font-semibold mb-2">{item.title}</h3>
-                <p className="text-zinc-400 text-sm leading-relaxed">{item.desc}</p>
+              <div key={item.title} className="bg-gray-50 border border-gray-200 rounded-xl p-5">
+                <h3 className="text-violet-600 font-semibold mb-2">{item.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -123,7 +123,7 @@ export default function ChatgptPlusGoumaIPage() {
       </SeoSection>
 
       <SeoSection title="ChatGPT Plus 购买的注意事项">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             在完成 <strong>ChatGPT Plus 购买</strong>之前，以下几点需要您提前了解，以确保整个购买过程顺利且体验良好：
           </p>
@@ -155,13 +155,13 @@ export default function ChatgptPlusGoumaIPage() {
                 desc: '完成支付后，请保留系统生成的订单号和支付凭证，以备售后维权之用。我们的客服在处理问题时会需要这些信息来快速定位您的订单。',
               },
             ].map((item) => (
-              <div key={item.num} className="flex gap-4 bg-zinc-800/40 border border-zinc-700/50 rounded-lg p-4">
-                <span className="w-7 h-7 rounded-full bg-emerald-900/60 text-emerald-400 text-sm font-bold flex items-center justify-center shrink-0">
+              <div key={item.num} className="flex gap-4 bg-gray-50 border border-gray-200 rounded-lg p-4">
+                <span className="w-7 h-7 rounded-full bg-emerald-900/60 text-violet-600 text-sm font-bold flex items-center justify-center shrink-0">
                   {item.num}
                 </span>
                 <div>
-                  <h3 className="text-white font-medium mb-1">{item.title}</h3>
-                  <p className="text-zinc-400 text-sm leading-relaxed">{item.desc}</p>
+                  <h3 className="text-gray-900 font-medium mb-1">{item.title}</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
                 </div>
               </div>
             ))}
@@ -170,7 +170,7 @@ export default function ChatgptPlusGoumaIPage() {
       </SeoSection>
 
       <SeoSection title="购买 ChatGPT Plus 与其他方案的对比">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             在选择 <strong>ChatGPT Plus 购买</strong>方式时，用户通常面临几种不同的选择路径，每种方式都有其优缺点。以下分析可以帮助您做出更明智的决策：
           </p>
@@ -200,25 +200,25 @@ export default function ChatgptPlusGoumaIPage() {
                 className={`rounded-xl p-5 border ${
                   option.highlight
                     ? 'bg-emerald-900/20 border-emerald-600/50'
-                    : 'bg-zinc-800/60 border-zinc-700'
+                    : 'bg-gray-50 border-gray-200'
                 }`}
               >
-                <h3 className={`font-semibold mb-3 ${option.highlight ? 'text-emerald-400' : 'text-white'}`}>
+                <h3 className={`font-semibold mb-3 ${option.highlight ? 'text-violet-600' : 'text-gray-900'}`}>
                   {option.method}
                 </h3>
                 <div className="space-y-1 mb-3">
-                  <p className="text-xs text-zinc-400 font-medium uppercase tracking-wide">优点</p>
+                  <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">优点</p>
                   {option.pros.map((p) => (
-                    <p key={p} className="text-sm text-zinc-300 flex items-start gap-1">
-                      <span className="text-emerald-400">+</span> {p}
+                    <p key={p} className="text-sm text-gray-600 flex items-start gap-1">
+                      <span className="text-violet-600">+</span> {p}
                     </p>
                   ))}
                 </div>
                 {option.cons.length > 0 && (
                   <div className="space-y-1">
-                    <p className="text-xs text-zinc-400 font-medium uppercase tracking-wide">缺点</p>
+                    <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">缺点</p>
                     {option.cons.map((c) => (
-                      <p key={c} className="text-sm text-zinc-500 flex items-start gap-1">
+                      <p key={c} className="text-sm text-gray-400 flex items-start gap-1">
                         <span className="text-red-500/70">-</span> {c}
                       </p>
                     ))}
@@ -228,7 +228,7 @@ export default function ChatgptPlusGoumaIPage() {
             ))}
           </div>
           <p className="mt-4">
-            除了直接购买，您也可以了解我们提供的<Link href="/chatgpt-plus-kaitong-fuwu" className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2 mx-1">专业代开通服务</Link>，或查看<Link href="/chatgpt-plus-dingyue" className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2 mx-1">订阅管理</Link>相关说明，获取更完整的信息。
+            除了直接购买，您也可以了解我们提供的<Link href="/chatgpt-plus-kaitong-fuwu" className="text-violet-600 hover:text-violet-500 underline underline-offset-2 mx-1">专业代开通服务</Link>，或查看<Link href="/chatgpt-plus-dingyue" className="text-violet-600 hover:text-violet-500 underline underline-offset-2 mx-1">订阅管理</Link>相关说明，获取更完整的信息。
           </p>
         </div>
       </SeoSection>

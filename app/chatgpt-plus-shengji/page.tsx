@@ -60,7 +60,7 @@ const jsonLd = {
 
 export default function ChatgptPlusShengjiPage() {
   return (
-    <SeoPageLayout jsonLd={jsonLd}>
+    <SeoPageLayout jsonLd={jsonLd} breadcrumbTitle="ChatGPT Plus 升级" breadcrumbPath="/chatgpt-plus-shengji">
       <SeoHero
         badge="版本升级"
         title="ChatGPT Plus 升级"
@@ -68,7 +68,7 @@ export default function ChatgptPlusShengjiPage() {
       />
 
       <SeoSection title="为什么需要升级 ChatGPT Plus">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             ChatGPT 免费版自发布以来深受全球用户喜爱，但随着 OpenAI 持续迭代升级，免费版与付费版之间的功能差距越来越大。如果您日常工作中需要处理复杂任务、追求更高质量的 AI 输出，那么 <strong>ChatGPT Plus 升级</strong>将是一项极具价值的投资。
           </p>
@@ -82,7 +82,7 @@ export default function ChatgptPlusShengjiPage() {
       </SeoSection>
 
       <SeoSection title="免费版 vs Plus 版：核心功能全面对比">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             在决定是否进行 <strong>ChatGPT Plus 升级</strong>之前，直观了解两个版本的差异至关重要。以下是免费版与 Plus 版在核心功能维度上的详细对比：
           </p>
@@ -90,9 +90,9 @@ export default function ChatgptPlusShengjiPage() {
             <table className="w-full text-sm border-collapse">
               <thead>
                 <tr className="bg-zinc-800 text-left">
-                  <th className="px-4 py-3 text-zinc-200 font-semibold border border-zinc-700 rounded-tl-lg">功能项目</th>
-                  <th className="px-4 py-3 text-zinc-400 font-semibold border border-zinc-700">免费版</th>
-                  <th className="px-4 py-3 text-emerald-400 font-semibold border border-zinc-700 rounded-tr-lg">Plus 会员</th>
+                  <th className="px-4 py-3 text-zinc-200 font-semibold border border-gray-200 rounded-tl-lg">功能项目</th>
+                  <th className="px-4 py-3 text-gray-500 font-semibold border border-gray-200">免费版</th>
+                  <th className="px-4 py-3 text-violet-600 font-semibold border border-gray-200 rounded-tr-lg">Plus 会员</th>
                 </tr>
               </thead>
               <tbody>
@@ -112,9 +112,9 @@ export default function ChatgptPlusShengjiPage() {
                     key={feature}
                     className={index % 2 === 0 ? 'bg-zinc-900' : 'bg-zinc-800/50'}
                   >
-                    <td className="px-4 py-3 text-zinc-300 border border-zinc-700">{feature}</td>
-                    <td className="px-4 py-3 text-zinc-500 border border-zinc-700">{free}</td>
-                    <td className="px-4 py-3 text-emerald-400 border border-zinc-700 font-medium">{plus}</td>
+                    <td className="px-4 py-3 text-gray-600 border border-gray-200">{feature}</td>
+                    <td className="px-4 py-3 text-gray-400 border border-gray-200">{free}</td>
+                    <td className="px-4 py-3 text-violet-600 border border-gray-200 font-medium">{plus}</td>
                   </tr>
                 ))}
               </tbody>
@@ -124,7 +124,7 @@ export default function ChatgptPlusShengjiPage() {
       </SeoSection>
 
       <SeoSection title="ChatGPT Plus 升级的适用人群">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             <strong>ChatGPT Plus 升级</strong>并非对所有人都必要，但对以下几类用户来说，升级带来的价值将远超其成本：
           </p>
@@ -155,9 +155,9 @@ export default function ChatgptPlusShengjiPage() {
                 desc: '如果您每天大量使用 ChatGPT 处理工作任务，免费版的使用限制会频繁打断您的工作流。升级 Plus 后，高峰期访问保障能确保您随时获得 AI 支持。',
               },
             ].map((item) => (
-              <div key={item.title} className="bg-zinc-800/60 border border-zinc-700 rounded-xl p-5">
-                <h3 className="text-white font-semibold mb-2">{item.title}</h3>
-                <p className="text-zinc-400 text-sm leading-relaxed">{item.desc}</p>
+              <div key={item.title} className="bg-gray-50 border border-gray-200 rounded-xl p-5">
+                <h3 className="text-gray-900 font-semibold mb-2">{item.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -165,7 +165,7 @@ export default function ChatgptPlusShengjiPage() {
       </SeoSection>
 
       <SeoSection title="如何完成 ChatGPT Plus 升级">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             对于国内用户来说，自行 <strong>升级 ChatGPT Plus</strong> 的最大障碍是支付问题。OpenAI 官方只接受 Visa、Mastercard 等境外信用卡，且对中国大陆 IP 的支付有严格限制，导致很多用户即使有境外卡也会遭遇支付失败。
           </p>
@@ -173,11 +173,11 @@ export default function ChatgptPlusShengjiPage() {
             我们的代升级服务完美解决了这一痛点。整个 <strong>ChatGPT Plus 升级</strong>流程极为简便：选择套餐、提供账号邮箱、完成人民币支付，然后等待我们处理完成即可。无需您掌握任何技术知识，也不存在账号安全风险。
           </p>
           <p>
-            此外，您也可以参考我们关于<Link href="/chatgpt-plus-kaitong" className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2 mx-1">ChatGPT Plus 开通</Link>和<Link href="/chatgpt-plus-dingyue" className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2 mx-1">ChatGPT Plus 订阅管理</Link>的详细指南，全面了解 Plus 服务的方方面面。
+            此外，您也可以参考我们关于<Link href="/chatgpt-plus-kaitong" className="text-violet-600 hover:text-violet-500 underline underline-offset-2 mx-1">ChatGPT Plus 开通</Link>和<Link href="/chatgpt-plus-dingyue" className="text-violet-600 hover:text-violet-500 underline underline-offset-2 mx-1">ChatGPT Plus 订阅管理</Link>的详细指南，全面了解 Plus 服务的方方面面。
           </p>
           <div className="bg-emerald-900/20 border border-emerald-700/30 rounded-xl p-5 mt-4">
-            <h3 className="text-emerald-400 font-semibold mb-2">升级成功率保障</h3>
-            <p className="text-zinc-400 text-sm leading-relaxed">
+            <h3 className="text-violet-600 font-semibold mb-2">升级成功率保障</h3>
+            <p className="text-gray-500 text-sm leading-relaxed">
               我们承诺 <strong>ChatGPT Plus 升级</strong>成功率不低于 99%。如果因任何原因导致升级失败，我们将全额退款或重新处理，直至成功为止。您的满意是我们服务的最终目标。
             </p>
           </div>

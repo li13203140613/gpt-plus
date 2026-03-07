@@ -59,7 +59,7 @@ const jsonLd = {
 
 export default function ChatGPTPlusDaiDingyuePage() {
   return (
-    <SeoPageLayout jsonLd={jsonLd}>
+    <SeoPageLayout jsonLd={jsonLd} breadcrumbTitle="ChatGPT Plus 代订阅" breadcrumbPath="/chatgpt-plus-dai-dingyue">
       <SeoHero
         badge="一站式代订阅"
         title="ChatGPT Plus 代订阅"
@@ -67,7 +67,7 @@ export default function ChatGPTPlusDaiDingyuePage() {
       />
 
       <SeoSection title="什么是 ChatGPT Plus 代订阅服务">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             <strong>ChatGPT Plus 代订阅</strong>服务是指由专业平台代替用户完成 ChatGPT Plus 会员的全生命周期管理，包括首次开通激活、月度到期续费、年度订阅升级以及套餐变更等一系列操作。
           </p>
@@ -83,9 +83,9 @@ export default function ChatGPTPlusDaiDingyuePage() {
               { title: '月度续费', desc: '现有 Plus 用户到期后的续费代办，支持提前续费和到期当天续费两种模式。' },
               { title: '年度订阅', desc: '选择年度代订阅方案，享受更优惠的价格，免去每月操作的繁琐。' },
             ].map((item) => (
-              <div key={item.title} className="bg-zinc-800/60 border border-emerald-500/20 rounded-xl p-5">
-                <h3 className="text-emerald-400 font-semibold mb-2">{item.title}</h3>
-                <p className="text-zinc-400 text-sm">{item.desc}</p>
+              <div key={item.title} className="bg-gray-50 border border-emerald-500/20 rounded-xl p-5">
+                <h3 className="text-violet-600 font-semibold mb-2">{item.title}</h3>
+                <p className="text-gray-500 text-sm">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -93,7 +93,7 @@ export default function ChatGPTPlusDaiDingyuePage() {
       </SeoSection>
 
       <SeoSection title="ChatGPT Plus 代订阅的七大优势">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             市面上提供 <strong>ChatGPT Plus 代订阅</strong>的平台众多，选择专业、可靠的服务商是确保订阅体验的关键。以下是我们代订阅服务的核心差异化优势：
           </p>
@@ -128,13 +128,13 @@ export default function ChatGPTPlusDaiDingyuePage() {
                 desc: '代订阅操作失败时全额退款，无任何附加条件，是我们对每一位用户的基础承诺。',
               },
             ].map((item, i) => (
-              <li key={i} className="flex gap-4 bg-zinc-800/40 border border-zinc-700 rounded-lg p-4">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-xs font-bold flex items-center justify-center">
+              <li key={i} className="flex gap-4 bg-gray-50 border border-gray-200 rounded-lg p-4">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-violet-600 text-xs font-bold flex items-center justify-center">
                   {i + 1}
                 </span>
                 <div>
-                  <p className="font-semibold text-white mb-1">{item.title}</p>
-                  <p className="text-sm text-zinc-400">{item.desc}</p>
+                  <p className="font-semibold text-gray-900 mb-1">{item.title}</p>
+                  <p className="text-sm text-gray-500">{item.desc}</p>
                 </div>
               </li>
             ))}
@@ -143,7 +143,7 @@ export default function ChatGPTPlusDaiDingyuePage() {
       </SeoSection>
 
       <SeoSection title="ChatGPT Plus 代订阅工作流程详解">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             我们的 <strong>ChatGPT Plus 代订阅</strong>服务工作流程经过精心设计，用户端操作极为简单，同时后台服务流程完整严谨，确保每一笔代订阅都能准确、安全地完成。
           </p>
@@ -156,19 +156,19 @@ export default function ChatGPTPlusDaiDingyuePage() {
                 { title: '验证确认', desc: '后台验证 Plus 状态已激活，推送成功通知。' },
                 { title: '持续服务', desc: '享受 Plus 功能，到期自动续费无需操心。' },
               ].map((item, i) => (
-                <div key={i} className="relative bg-zinc-800/60 border border-zinc-700 rounded-xl p-4 text-center">
-                  <div className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-sm font-bold flex items-center justify-center mx-auto mb-3">
+                <div key={i} className="relative bg-gray-50 border border-gray-200 rounded-xl p-4 text-center">
+                  <div className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-violet-600 text-sm font-bold flex items-center justify-center mx-auto mb-3">
                     {i + 1}
                   </div>
-                  <p className="font-semibold text-white text-sm mb-1">{item.title}</p>
-                  <p className="text-zinc-400 text-xs">{item.desc}</p>
+                  <p className="font-semibold text-gray-900 text-sm mb-1">{item.title}</p>
+                  <p className="text-gray-500 text-xs">{item.desc}</p>
                 </div>
               ))}
             </div>
           </div>
           <p className="mt-4">
             首次代订阅通常在付款后 1-2 小时内完成。如需了解支付相关问题，可参考我们的
-            <Link href="/chatgpt-plus-zhifu-xiezhu" className="text-emerald-400 hover:text-emerald-300 underline mx-1">
+            <Link href="/chatgpt-plus-zhifu-xiezhu" className="text-violet-600 hover:text-violet-500 underline mx-1">
               ChatGPT Plus 支付协助
             </Link>
             页面。
@@ -177,7 +177,7 @@ export default function ChatGPTPlusDaiDingyuePage() {
       </SeoSection>
 
       <SeoSection title="ChatGPT Plus 代订阅适合哪些用户">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             <strong>ChatGPT Plus 代订阅</strong>服务适合所有希望持续使用 ChatGPT Plus 但受制于支付条件的国内用户。根据我们的服务经验，以下几类用户群体最为典型：
           </p>
@@ -200,19 +200,19 @@ export default function ChatGPTPlusDaiDingyuePage() {
                 desc: '使用 ChatGPT Plus 进行代码审查、调试、架构设计的开发者，对 Plus 功能高度依赖，不容订阅中断。',
               },
             ].map((item) => (
-              <div key={item.type} className="bg-zinc-800/50 border border-zinc-700 rounded-xl p-5">
-                <h3 className="text-emerald-400 font-semibold mb-2">{item.type}</h3>
-                <p className="text-zinc-400 text-sm leading-relaxed">{item.desc}</p>
+              <div key={item.type} className="bg-zinc-800/50 border border-gray-200 rounded-xl p-5">
+                <h3 className="text-violet-600 font-semibold mb-2">{item.type}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
           <p className="mt-4">
             如果您是首次了解 ChatGPT Plus，也可以先查看我们的
-            <Link href="/chatgpt-plus-dingyue-fuwu" className="text-emerald-400 hover:text-emerald-300 underline mx-1">
+            <Link href="/chatgpt-plus-dingyue-fuwu" className="text-violet-600 hover:text-violet-500 underline mx-1">
               ChatGPT Plus 订阅服务介绍
             </Link>
             页面，或访问
-            <Link href="/chatgpt-plus-chongzhi" className="text-emerald-400 hover:text-emerald-300 underline mx-1">
+            <Link href="/chatgpt-plus-chongzhi" className="text-violet-600 hover:text-violet-500 underline mx-1">
               ChatGPT Plus 充值指南
             </Link>
             了解充值相关信息。

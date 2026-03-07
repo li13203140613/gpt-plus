@@ -59,7 +59,7 @@ const jsonLd = {
 
 export default function ChatGPTPlusChongzhiPage() {
   return (
-    <SeoPageLayout jsonLd={jsonLd}>
+    <SeoPageLayout jsonLd={jsonLd} breadcrumbTitle="ChatGPT Plus 充值" breadcrumbPath="/chatgpt-plus-chongzhi">
       <SeoHero
         badge="充值指南 2025 最新"
         title="ChatGPT Plus 充值"
@@ -67,7 +67,7 @@ export default function ChatGPTPlusChongzhiPage() {
       />
 
       <SeoSection title="国内用户 ChatGPT Plus 充值全攻略">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             <strong>ChatGPT Plus 充值</strong>对于国内用户来说，长期以来是一道难以逾越的门槛。OpenAI 官方平台不支持国内银行卡、微信支付和支付宝，导致大量希望体验 GPT-4o、DALL-E 等高级功能的用户只能望而兴叹。
           </p>
@@ -106,23 +106,23 @@ export default function ChatGPTPlusChongzhiPage() {
                 className={`rounded-xl p-5 border ${
                   item.recommended
                     ? 'bg-emerald-900/20 border-emerald-500/40'
-                    : 'bg-zinc-800/50 border-zinc-700'
+                    : 'bg-zinc-800/50 border-gray-200'
                 }`}
               >
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-semibold text-zinc-500">{item.method}</span>
+                  <span className="text-xs font-semibold text-gray-400">{item.method}</span>
                   {item.recommended && (
-                    <span className="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded">
+                    <span className="text-xs bg-emerald-500/20 text-violet-600 border border-emerald-500/30 px-2 py-0.5 rounded">
                       推荐
                     </span>
                   )}
                 </div>
-                <h3 className={`font-semibold mb-3 ${item.recommended ? 'text-emerald-400' : 'text-white'}`}>
+                <h3 className={`font-semibold mb-3 ${item.recommended ? 'text-violet-600' : 'text-gray-900'}`}>
                   {item.title}
                 </h3>
                 <div className="space-y-2 text-sm">
-                  <p className="text-emerald-400/80">优点：{item.pros}</p>
-                  <p className="text-zinc-500">缺点：{item.cons}</p>
+                  <p className="text-violet-600/80">优点：{item.pros}</p>
+                  <p className="text-gray-400">缺点：{item.cons}</p>
                 </div>
               </div>
             ))}
@@ -131,7 +131,7 @@ export default function ChatGPTPlusChongzhiPage() {
       </SeoSection>
 
       <SeoSection title="使用专业服务充值 ChatGPT Plus 的详细步骤">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             通过我们的平台完成 <strong>ChatGPT Plus 充值</strong>，整个过程极为简便。以下是详细操作步骤：
           </p>
@@ -163,12 +163,12 @@ export default function ChatGPTPlusChongzhiPage() {
                 desc: '通常 1-2 小时内完成 ChatGPT Plus 充值。到账后系统发送通知，您登录 ChatGPT 即可看到 Plus 标识和所有高级功能。',
               },
             ].map((item, index) => (
-              <div key={index} className="bg-zinc-800/40 border border-zinc-700 rounded-lg p-5">
+              <div key={index} className="bg-gray-50 border border-gray-200 rounded-lg p-5">
                 <div className="flex gap-4 items-start">
-                  <span className="flex-shrink-0 text-emerald-400 font-bold text-sm w-16">{item.step}</span>
+                  <span className="flex-shrink-0 text-violet-600 font-bold text-sm w-16">{item.step}</span>
                   <div>
-                    <p className="font-semibold text-white mb-2">{item.title}</p>
-                    <p className="text-sm text-zinc-400 leading-relaxed">{item.desc}</p>
+                    <p className="font-semibold text-gray-900 mb-2">{item.title}</p>
+                    <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
                   </div>
                 </div>
               </div>
@@ -178,7 +178,7 @@ export default function ChatGPTPlusChongzhiPage() {
       </SeoSection>
 
       <SeoSection title="ChatGPT Plus 充值常见问题与解决方案">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             在帮助用户完成 <strong>ChatGPT Plus 充值</strong>的过程中，我们积累了丰富的问题处理经验。以下是用户最常遇到的充值问题及解决方案：
           </p>
@@ -205,12 +205,12 @@ export default function ChatGPTPlusChongzhiPage() {
                   '这通常是 OpenAI 平台的临时技术问题。建议更换浏览器或使用无痕模式重试，或直接联系我们通过后台协助完成充值确认。',
               },
             ].map((item, i) => (
-              <div key={i} className="border border-zinc-700 rounded-lg overflow-hidden">
-                <div className="bg-zinc-800/80 px-5 py-3 border-b border-zinc-700">
+              <div key={i} className="border border-gray-200 rounded-lg overflow-hidden">
+                <div className="bg-zinc-800/80 px-5 py-3 border-b border-gray-200">
                   <p className="font-semibold text-rose-400 text-sm">问题：{item.problem}</p>
                 </div>
                 <div className="px-5 py-3 bg-zinc-800/30">
-                  <p className="text-zinc-400 text-sm leading-relaxed">解决方案：{item.solution}</p>
+                  <p className="text-gray-500 text-sm leading-relaxed">解决方案：{item.solution}</p>
                 </div>
               </div>
             ))}
@@ -219,14 +219,14 @@ export default function ChatGPTPlusChongzhiPage() {
       </SeoSection>
 
       <SeoSection title="ChatGPT Plus 充值后能享受哪些功能">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             完成 <strong>ChatGPT Plus 充值</strong>之后，您的账号将立即升级为 Plus 会员，解锁 OpenAI 全部高级功能。与免费版相比，Plus 版本在以下方面有显著提升：
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
             <div>
-              <h3 className="text-white font-semibold mb-3 pb-2 border-b border-zinc-700">免费版 ChatGPT</h3>
-              <ul className="space-y-2 text-sm text-zinc-400">
+              <h3 className="text-gray-900 font-semibold mb-3 pb-2 border-b border-gray-200">免费版 ChatGPT</h3>
+              <ul className="space-y-2 text-sm text-gray-500">
                 {[
                   '仅可使用 GPT-4o mini（能力有限）',
                   '高峰期访问受限，经常排队等待',
@@ -243,10 +243,10 @@ export default function ChatGPTPlusChongzhiPage() {
               </ul>
             </div>
             <div>
-              <h3 className="text-emerald-400 font-semibold mb-3 pb-2 border-b border-emerald-500/30">
+              <h3 className="text-violet-600 font-semibold mb-3 pb-2 border-b border-emerald-500/30">
                 ChatGPT Plus 充值后
               </h3>
-              <ul className="space-y-2 text-sm text-zinc-300">
+              <ul className="space-y-2 text-sm text-gray-600">
                 {[
                   'GPT-4o 完整版，多模态旗舰模型',
                   '优先访问，高峰期零等待',
@@ -256,7 +256,7 @@ export default function ChatGPTPlusChongzhiPage() {
                   '更高消息配额，更长上下文',
                 ].map((item, i) => (
                   <li key={i} className="flex gap-2 items-start">
-                    <span className="mt-0.5 text-emerald-400">+</span>
+                    <span className="mt-0.5 text-violet-600">+</span>
                     <span>{item}</span>
                   </li>
                 ))}
@@ -265,15 +265,15 @@ export default function ChatGPTPlusChongzhiPage() {
           </div>
           <p className="mt-4">
             想了解更多开通方式，可参考
-            <Link href="/chatgpt-plus-dai-kaitong" className="text-emerald-400 hover:text-emerald-300 underline mx-1">
+            <Link href="/chatgpt-plus-dai-kaitong" className="text-violet-600 hover:text-violet-500 underline mx-1">
               ChatGPT Plus 代开通
             </Link>
             服务，或查看
-            <Link href="/chatgpt-plus-dingyue-fuwu" className="text-emerald-400 hover:text-emerald-300 underline mx-1">
+            <Link href="/chatgpt-plus-dingyue-fuwu" className="text-violet-600 hover:text-violet-500 underline mx-1">
               ChatGPT Plus 订阅服务
             </Link>
             的详细介绍。如需了解续费相关事项，推荐参考
-            <Link href="/chatgpt-plus-dai-dingyue" className="text-emerald-400 hover:text-emerald-300 underline mx-1">
+            <Link href="/chatgpt-plus-dai-dingyue" className="text-violet-600 hover:text-violet-500 underline mx-1">
               ChatGPT Plus 代订阅
             </Link>
             方案。
@@ -282,7 +282,7 @@ export default function ChatGPTPlusChongzhiPage() {
       </SeoSection>
 
       <SeoSection title="ChatGPT Plus 充值价格说明">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             了解 <strong>ChatGPT Plus 充值</strong>的价格构成，有助于您做出最经济的选择。以下是 2025 年最新的 ChatGPT Plus 充值价格信息：
           </p>
@@ -315,26 +315,26 @@ export default function ChatGPTPlusChongzhiPage() {
                 className={`rounded-xl p-5 border ${
                   item.highlight
                     ? 'bg-emerald-900/20 border-emerald-500/40'
-                    : 'bg-zinc-800/50 border-zinc-700'
+                    : 'bg-zinc-800/50 border-gray-200'
                 }`}
               >
                 {item.highlight && (
                   <div className="text-center mb-3">
-                    <span className="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full">
+                    <span className="text-xs bg-emerald-500/20 text-violet-600 border border-emerald-500/30 px-3 py-1 rounded-full">
                       最划算
                     </span>
                   </div>
                 )}
-                <h3 className={`font-semibold text-lg mb-1 ${item.highlight ? 'text-emerald-400' : 'text-white'}`}>
+                <h3 className={`font-semibold text-lg mb-1 ${item.highlight ? 'text-violet-600' : 'text-gray-900'}`}>
                   {item.plan}
                 </h3>
-                <p className="text-2xl font-bold text-white mb-1">{item.price}</p>
-                <p className="text-zinc-400 text-sm mb-3">{item.cny}</p>
-                <p className="text-zinc-400 text-xs leading-relaxed">{item.desc}</p>
+                <p className="text-2xl font-bold text-gray-900 mb-1">{item.price}</p>
+                <p className="text-gray-500 text-sm mb-3">{item.cny}</p>
+                <p className="text-gray-500 text-xs leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
-          <p className="text-zinc-500 text-xs mt-3">
+          <p className="text-gray-400 text-xs mt-3">
             注：以上价格为 OpenAI 官方定价，服务费以下单时页面显示为准。人民币价格按实时汇率计算，每日略有波动。
           </p>
         </div>

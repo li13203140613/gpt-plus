@@ -60,7 +60,7 @@ const jsonLd = {
 
 export default function ChatgptPlusKaitongPage() {
   return (
-    <SeoPageLayout jsonLd={jsonLd}>
+    <SeoPageLayout jsonLd={jsonLd} breadcrumbTitle="ChatGPT Plus 开通" breadcrumbPath="/chatgpt-plus-kaitong">
       <SeoHero
         badge="快速开通"
         title="ChatGPT Plus 开通"
@@ -68,7 +68,7 @@ export default function ChatgptPlusKaitongPage() {
       />
 
       <SeoSection title="什么是 ChatGPT Plus 开通">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             <strong>ChatGPT Plus 开通</strong>是指将您的 OpenAI 免费账户升级为 Plus 付费订阅的过程。完成开通后，您将从标准版用户变为高级会员，可以访问 OpenAI 最新、最强大的人工智能模型和功能集合。
           </p>
@@ -83,7 +83,7 @@ export default function ChatgptPlusKaitongPage() {
 
       <SeoSection title="ChatGPT Plus 开通的完整流程">
         <div className="space-y-6">
-          <p className="text-zinc-300 leading-relaxed">
+          <p className="text-gray-600 leading-relaxed">
             了解 <strong>ChatGPT Plus 开通</strong>的完整步骤，有助于您做好准备，确保整个过程顺畅无阻。以下是我们为您提供代开通服务的标准流程：
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -121,12 +121,12 @@ export default function ChatgptPlusKaitongPage() {
             ].map((item) => (
               <div
                 key={item.step}
-                className="bg-zinc-800/60 border border-zinc-700 rounded-xl p-5 flex gap-4"
+                className="bg-gray-50 border border-gray-200 rounded-xl p-5 flex gap-4"
               >
-                <span className="text-emerald-400 font-bold text-lg shrink-0">{item.step}</span>
+                <span className="text-violet-600 font-bold text-lg shrink-0">{item.step}</span>
                 <div>
-                  <h3 className="text-white font-semibold mb-1">{item.title}</h3>
-                  <p className="text-zinc-400 text-sm leading-relaxed">{item.desc}</p>
+                  <h3 className="text-gray-900 font-semibold mb-1">{item.title}</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
                 </div>
               </div>
             ))}
@@ -135,7 +135,7 @@ export default function ChatgptPlusKaitongPage() {
       </SeoSection>
 
       <SeoSection title="开通 ChatGPT Plus 后您能获得什么">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             成功 <strong>开通 ChatGPT Plus</strong> 后，您将立即解锁 OpenAI 提供的全套高级权益。相较于免费版，Plus 会员的使用体验有着质的飞跃，具体体现在以下几个核心维度：
           </p>
@@ -168,10 +168,10 @@ export default function ChatgptPlusKaitongPage() {
             ].map((item) => (
               <div
                 key={item.title}
-                className="bg-zinc-800/60 border border-emerald-900/40 rounded-xl p-5"
+                className="bg-gray-50 border border-violet-100 rounded-xl p-5"
               >
-                <h3 className="text-emerald-400 font-semibold mb-2">{item.title}</h3>
-                <p className="text-zinc-400 text-sm leading-relaxed">{item.desc}</p>
+                <h3 className="text-violet-600 font-semibold mb-2">{item.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -179,7 +179,7 @@ export default function ChatgptPlusKaitongPage() {
       </SeoSection>
 
       <SeoSection title="为什么选择我们来完成 ChatGPT Plus 开通">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             市面上提供 <strong>ChatGPT Plus 开通</strong>服务的平台不在少数，但我们凭借以下核心优势，成为众多用户的首选：
           </p>
@@ -212,29 +212,29 @@ export default function ChatgptPlusKaitongPage() {
             ].map((item) => (
               <div
                 key={item.title}
-                className="flex gap-3 bg-zinc-800/40 border border-zinc-700/50 rounded-lg p-4"
+                className="flex gap-3 bg-gray-50 border border-gray-200 rounded-lg p-4"
               >
-                <span className="w-2 h-2 mt-2 rounded-full bg-emerald-400 shrink-0" />
+                <span className="w-2 h-2 mt-2 rounded-full bg-violet-500 shrink-0" />
                 <div>
-                  <span className="text-white font-medium">{item.title}：</span>
-                  <span className="text-zinc-400 text-sm">{item.desc}</span>
+                  <span className="text-gray-900 font-medium">{item.title}：</span>
+                  <span className="text-gray-500 text-sm">{item.desc}</span>
                 </div>
               </div>
             ))}
           </div>
           <p className="mt-4">
-            如果您还在纠结是否需要<Link href="/chatgpt-plus-shengji" className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2 mx-1">升级到 ChatGPT Plus</Link>，可以查看我们的详细对比说明；如需了解<Link href="/chatgpt-plus-dingyue" className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2 mx-1">订阅管理方式</Link>，也可以参考对应页面。
+            如果您还在纠结是否需要<Link href="/chatgpt-plus-shengji" className="text-violet-600 hover:text-violet-500 underline underline-offset-2 mx-1">升级到 ChatGPT Plus</Link>，可以查看我们的详细对比说明；如需了解<Link href="/chatgpt-plus-dingyue" className="text-violet-600 hover:text-violet-500 underline underline-offset-2 mx-1">订阅管理方式</Link>，也可以参考对应页面。
           </p>
         </div>
       </SeoSection>
 
       <SeoSection title="ChatGPT Plus 开通常见问题解答">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             在正式 <strong>开通 ChatGPT Plus</strong> 之前，许多用户都有一些共同的疑虑。以下是我们在实际服务中遇到最频繁的问题及解答，帮助您做出明智决策。
           </p>
           <p>
-            如果您希望直接<Link href="/chatgpt-plus-goumai" className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2 mx-1">购买 ChatGPT Plus</Link>，或了解我们提供的<Link href="/chatgpt-plus-kaitong-fuwu" className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2 mx-1">专业开通服务详情</Link>，欢迎访问对应页面获取更多信息。
+            如果您希望直接<Link href="/chatgpt-plus-goumai" className="text-violet-600 hover:text-violet-500 underline underline-offset-2 mx-1">购买 ChatGPT Plus</Link>，或了解我们提供的<Link href="/chatgpt-plus-kaitong-fuwu" className="text-violet-600 hover:text-violet-500 underline underline-offset-2 mx-1">专业开通服务详情</Link>，欢迎访问对应页面获取更多信息。
           </p>
         </div>
       </SeoSection>

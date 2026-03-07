@@ -60,7 +60,7 @@ const jsonLd = {
 
 export default function ChatgptPlusDingyuePage() {
   return (
-    <SeoPageLayout jsonLd={jsonLd}>
+    <SeoPageLayout jsonLd={jsonLd} breadcrumbTitle="ChatGPT Plus 订阅" breadcrumbPath="/chatgpt-plus-dingyue">
       <SeoHero
         badge="订阅服务"
         title="ChatGPT Plus 订阅"
@@ -68,7 +68,7 @@ export default function ChatgptPlusDingyuePage() {
       />
 
       <SeoSection title="ChatGPT Plus 订阅全面解析">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             <strong>ChatGPT Plus 订阅</strong>是 OpenAI 为个人用户提供的付费会员计划，于 2023 年 2 月正式推出。通过<strong>订阅 ChatGPT Plus</strong>，用户可以获得对 OpenAI 最新旗舰模型 GPT-4o 的完整访问权限，以及包括图像生成、数据分析、联网搜索在内的一系列高级功能。
           </p>
@@ -82,7 +82,7 @@ export default function ChatgptPlusDingyuePage() {
       </SeoSection>
 
       <SeoSection title="ChatGPT Plus 订阅套餐与定价">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             我们提供多种 <strong>ChatGPT Plus 订阅</strong>套餐，满足不同使用周期和预算需求。所有套餐均通过官方渠道完成，订阅有效期与 OpenAI 账号直接绑定，稳定可靠。
           </p>
@@ -133,22 +133,22 @@ export default function ChatgptPlusDingyuePage() {
                 className={`rounded-xl p-6 border ${
                   plan.highlight
                     ? 'bg-emerald-900/20 border-emerald-600/50'
-                    : 'bg-zinc-800/60 border-zinc-700'
+                    : 'bg-gray-50 border-gray-200'
                 }`}
               >
                 {plan.highlight && (
-                  <span className="text-xs font-semibold text-emerald-400 bg-emerald-900/40 px-2 py-1 rounded-full mb-3 inline-block">
+                  <span className="text-xs font-semibold text-violet-600 bg-emerald-900/40 px-2 py-1 rounded-full mb-3 inline-block">
                     最受欢迎
                   </span>
                 )}
-                <h3 className={`text-lg font-bold mb-1 ${plan.highlight ? 'text-emerald-400' : 'text-white'}`}>
+                <h3 className={`text-lg font-bold mb-1 ${plan.highlight ? 'text-violet-600' : 'text-gray-900'}`}>
                   {plan.name}
                 </h3>
-                <p className="text-zinc-400 text-sm mb-4">有效期：{plan.period}</p>
+                <p className="text-gray-500 text-sm mb-4">有效期：{plan.period}</p>
                 <ul className="space-y-2">
                   {plan.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2 text-sm text-zinc-300">
-                      <span className="text-emerald-400 mt-0.5">-</span>
+                    <li key={f} className="flex items-start gap-2 text-sm text-gray-600">
+                      <span className="text-violet-600 mt-0.5">-</span>
                       {f}
                     </li>
                   ))}
@@ -156,14 +156,14 @@ export default function ChatgptPlusDingyuePage() {
               </div>
             ))}
           </div>
-          <p className="text-zinc-400 text-sm mt-4">
+          <p className="text-gray-500 text-sm mt-4">
             具体价格请访问首页查看最新报价，所有套餐均支持支付宝、微信支付，人民币结算，无隐藏费用。
           </p>
         </div>
       </SeoSection>
 
       <SeoSection title="ChatGPT Plus 订阅包含的核心功能">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             <strong>ChatGPT Plus 订阅</strong>为用户提供了一个全面的 AI 能力平台，以下是订阅后可以使用的核心功能详细介绍：
           </p>
@@ -190,9 +190,9 @@ export default function ChatgptPlusDingyuePage() {
                   'OpenAI 的 GPT 商店汇聚了数以万计的第三方自定义 GPT，涵盖编程助手、学术写作、法律咨询、设计工具等各个垂直领域。Plus 订阅用户可以完整访问 GPT 商店，使用最受欢迎的专业 GPT，大幅扩展 ChatGPT 的应用场景。',
               },
             ].map((item) => (
-              <div key={item.title} className="bg-zinc-800/40 border border-zinc-700/50 rounded-xl p-5">
-                <h3 className="text-white font-semibold mb-2">{item.title}</h3>
-                <p className="text-zinc-400 text-sm leading-relaxed">{item.content}</p>
+              <div key={item.title} className="bg-gray-50 border border-gray-200 rounded-xl p-5">
+                <h3 className="text-gray-900 font-semibold mb-2">{item.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{item.content}</p>
               </div>
             ))}
           </div>
@@ -200,7 +200,7 @@ export default function ChatgptPlusDingyuePage() {
       </SeoSection>
 
       <SeoSection title="订阅后的账号管理与续订说明">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             顺利完成 <strong>ChatGPT Plus 订阅</strong>后，了解如何管理您的订阅状态同样重要。以下几点可以帮助您更好地管理 Plus 会员权益：
           </p>
@@ -223,14 +223,14 @@ export default function ChatgptPlusDingyuePage() {
                 desc: 'Plus 订阅账号可以在任意数量的设备上登录使用，包括浏览器版和手机 App，您的对话记录在各设备间自动同步。',
               },
             ].map((item) => (
-              <div key={item.title} className="bg-zinc-800/60 border border-zinc-700 rounded-xl p-5">
-                <h3 className="text-emerald-400 font-semibold mb-2">{item.title}</h3>
-                <p className="text-zinc-400 text-sm leading-relaxed">{item.desc}</p>
+              <div key={item.title} className="bg-gray-50 border border-gray-200 rounded-xl p-5">
+                <h3 className="text-violet-600 font-semibold mb-2">{item.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
           <p className="mt-4">
-            如果您想了解如何<Link href="/chatgpt-plus-kaitong" className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2 mx-1">快速开通 ChatGPT Plus</Link>，或考虑<Link href="/chatgpt-plus-goumai" className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2 mx-1">购买 ChatGPT Plus 激活码</Link>，欢迎查阅相关页面获取详细信息。
+            如果您想了解如何<Link href="/chatgpt-plus-kaitong" className="text-violet-600 hover:text-violet-500 underline underline-offset-2 mx-1">快速开通 ChatGPT Plus</Link>，或考虑<Link href="/chatgpt-plus-goumai" className="text-violet-600 hover:text-violet-500 underline underline-offset-2 mx-1">购买 ChatGPT Plus 激活码</Link>，欢迎查阅相关页面获取详细信息。
           </p>
         </div>
       </SeoSection>

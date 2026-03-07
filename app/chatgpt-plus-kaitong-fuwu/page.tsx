@@ -60,7 +60,7 @@ const jsonLd = {
 
 export default function ChatgptPlusKaitongFuwuPage() {
   return (
-    <SeoPageLayout jsonLd={jsonLd}>
+    <SeoPageLayout jsonLd={jsonLd} breadcrumbTitle="ChatGPT Plus 开通服务" breadcrumbPath="/chatgpt-plus-kaitong-fuwu">
       <SeoHero
         badge="专业服务"
         title="ChatGPT Plus 开通服务"
@@ -68,7 +68,7 @@ export default function ChatgptPlusKaitongFuwuPage() {
       />
 
       <SeoSection title="我们的 ChatGPT Plus 开通服务介绍">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             我们专注于为国内用户提供专业的 <strong>ChatGPT Plus 开通服务</strong>。自 ChatGPT Plus 推出以来，我们持续优化服务流程，打磨每一个用户触点，力求为每一位用户提供最顺畅的 <strong>GPT Plus 代开通</strong>体验。
           </p>
@@ -82,7 +82,7 @@ export default function ChatgptPlusKaitongFuwuPage() {
       </SeoSection>
 
       <SeoSection title="ChatGPT Plus 开通服务的核心优势">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             市场上提供类似 <strong>ChatGPT Plus 开通服务</strong>的平台不少，但以下几点是我们的差异化核心竞争力：
           </p>
@@ -104,10 +104,10 @@ export default function ChatgptPlusKaitongFuwuPage() {
                 desc: '全程无需提供密码，操作通过官方渠道完成，您的账号数据和隐私受到严格保护，零泄露风险。',
               },
             ].map((item) => (
-              <div key={item.label} className="bg-zinc-800/60 border border-emerald-900/40 rounded-xl p-6 text-center">
-                <p className="text-3xl font-bold text-emerald-400 mb-1">{item.stat}</p>
-                <p className="text-white font-semibold mb-3">{item.label}</p>
-                <p className="text-zinc-400 text-sm leading-relaxed">{item.desc}</p>
+              <div key={item.label} className="bg-gray-50 border border-violet-100 rounded-xl p-6 text-center">
+                <p className="text-3xl font-bold text-violet-600 mb-1">{item.stat}</p>
+                <p className="text-gray-900 font-semibold mb-3">{item.label}</p>
+                <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -130,9 +130,9 @@ export default function ChatgptPlusKaitongFuwuPage() {
                 desc: '开通完成后如遇任何问题，我们的售后团队会持续跟进至问题完全解决，用实际行动兑现我们的服务承诺。',
               },
             ].map((item) => (
-              <div key={item.title} className="bg-zinc-800/40 border border-zinc-700/50 rounded-lg p-4">
-                <h3 className="text-white font-medium mb-1">{item.title}</h3>
-                <p className="text-zinc-400 text-sm leading-relaxed">{item.desc}</p>
+              <div key={item.title} className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                <h3 className="text-gray-900 font-medium mb-1">{item.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -140,7 +140,7 @@ export default function ChatgptPlusKaitongFuwuPage() {
       </SeoSection>
 
       <SeoSection title="ChatGPT Plus 开通服务流程详解">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             为了让您对我们的 <strong>ChatGPT Plus 开通服务</strong>有清晰的预期，以下是完整的服务流程说明：
           </p>
@@ -181,12 +181,12 @@ export default function ChatgptPlusKaitongFuwuPage() {
               ].map((item) => (
                 <div key={item.step} className="relative flex gap-4 md:gap-8 pl-0 md:pl-16">
                   <div className="hidden md:flex absolute left-0 w-12 h-12 rounded-full bg-emerald-900/40 border border-emerald-700/40 items-center justify-center shrink-0">
-                    <span className="text-emerald-400 text-xs font-bold">{item.step.replace('第', '').replace('步', '')}</span>
+                    <span className="text-violet-600 text-xs font-bold">{item.step.replace('第', '').replace('步', '')}</span>
                   </div>
-                  <div className="bg-zinc-800/40 border border-zinc-700/50 rounded-xl p-5 flex-1">
-                    <span className="text-xs font-semibold text-emerald-400 uppercase tracking-wider">{item.step}</span>
-                    <h3 className="text-white font-semibold mt-1 mb-2">{item.title}</h3>
-                    <p className="text-zinc-400 text-sm leading-relaxed">{item.desc}</p>
+                  <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 flex-1">
+                    <span className="text-xs font-semibold text-violet-600 uppercase tracking-wider">{item.step}</span>
+                    <h3 className="text-gray-900 font-semibold mt-1 mb-2">{item.title}</h3>
+                    <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -196,7 +196,7 @@ export default function ChatgptPlusKaitongFuwuPage() {
       </SeoSection>
 
       <SeoSection title="ChatGPT Plus 开通服务的适用场景">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             <strong>ChatGPT Plus 开通服务</strong>特别适合以下几类用户群体：
           </p>
@@ -219,20 +219,20 @@ export default function ChatgptPlusKaitongFuwuPage() {
                 desc: '如果您想为家人、同事或客户购买 ChatGPT Plus 会员，我们的服务同样适用，只需提供对应账号的注册邮箱即可，方便快捷。',
               },
             ].map((item) => (
-              <div key={item.title} className="bg-zinc-800/60 border border-zinc-700 rounded-xl p-5">
-                <h3 className="text-white font-semibold mb-2">{item.title}</h3>
-                <p className="text-zinc-400 text-sm leading-relaxed">{item.desc}</p>
+              <div key={item.title} className="bg-gray-50 border border-gray-200 rounded-xl p-5">
+                <h3 className="text-gray-900 font-semibold mb-2">{item.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
           <p className="mt-4">
-            无论您是初次了解 <Link href="/chatgpt-plus-kaitong" className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2 mx-1">ChatGPT Plus 开通</Link>，还是已经在考虑<Link href="/chatgpt-plus-shengji" className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2 mx-1">从免费版升级</Link>，或者想了解<Link href="/chatgpt-plus-goumai" className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2 mx-1">如何安全购买</Link>，我们都能为您提供最专业的服务支持。
+            无论您是初次了解 <Link href="/chatgpt-plus-kaitong" className="text-violet-600 hover:text-violet-500 underline underline-offset-2 mx-1">ChatGPT Plus 开通</Link>，还是已经在考虑<Link href="/chatgpt-plus-shengji" className="text-violet-600 hover:text-violet-500 underline underline-offset-2 mx-1">从免费版升级</Link>，或者想了解<Link href="/chatgpt-plus-goumai" className="text-violet-600 hover:text-violet-500 underline underline-offset-2 mx-1">如何安全购买</Link>，我们都能为您提供最专业的服务支持。
           </p>
         </div>
       </SeoSection>
 
       <SeoSection title="服务质量承诺">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             我们对 <strong>ChatGPT Plus 开通服务</strong>的每一笔订单都做出以下明确承诺，以透明的方式建立您对我们的信任：
           </p>
@@ -264,8 +264,8 @@ export default function ChatgptPlusKaitongFuwuPage() {
               },
             ].map((item) => (
               <div key={item.title} className="bg-emerald-900/10 border border-emerald-800/30 rounded-xl p-5">
-                <h3 className="text-emerald-400 font-semibold mb-2">{item.title}</h3>
-                <p className="text-zinc-400 text-sm leading-relaxed">{item.desc}</p>
+                <h3 className="text-violet-600 font-semibold mb-2">{item.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>

@@ -54,6 +54,43 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="zh-CN">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              name: 'GPT Plus',
+              url: 'https://www.gpt-plus.ai',
+              logo: 'https://www.gpt-plus.ai/icon.svg',
+              description: '专业 ChatGPT Plus 代充值服务，支持支付宝、微信支付。',
+              contactPoint: {
+                '@type': 'ContactPoint',
+                contactType: 'customer service',
+                availableLanguage: 'Chinese',
+              },
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: 'GPT Plus - ChatGPT Plus 充值服务',
+              url: 'https://www.gpt-plus.ai',
+              inLanguage: 'zh-CN',
+              potentialAction: {
+                '@type': 'SearchAction',
+                target: 'https://www.gpt-plus.ai/?q={search_term_string}',
+                'query-input': 'required name=search_term_string',
+              },
+            }),
+          }}
+        />
+      </head>
       <body className="min-h-screen bg-white text-slate-900 antialiased">
         {children}
         <Toaster />

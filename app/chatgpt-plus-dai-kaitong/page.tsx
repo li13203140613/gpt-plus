@@ -59,7 +59,7 @@ const jsonLd = {
 
 export default function ChatGPTPlusDaiKaitongPage() {
   return (
-    <SeoPageLayout jsonLd={jsonLd}>
+    <SeoPageLayout jsonLd={jsonLd} breadcrumbTitle="ChatGPT Plus 代开通" breadcrumbPath="/chatgpt-plus-dai-kaitong">
       <SeoHero
         badge="专业代开 值得信赖"
         title="ChatGPT Plus 代开通"
@@ -67,7 +67,7 @@ export default function ChatGPTPlusDaiKaitongPage() {
       />
 
       <SeoSection title="ChatGPT Plus 代开通服务介绍">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             <strong>ChatGPT Plus 代开通</strong>服务是专为国内用户设计的一站式 GPT Plus 会员激活解决方案。面对 OpenAI 平台复杂的海外支付流程，越来越多的国内用户选择通过专业的代开通服务，快速、安全地完成 ChatGPT Plus 会员的激活。
           </p>
@@ -117,19 +117,19 @@ export default function ChatGPTPlusDaiKaitongPage() {
               desc: '支持企业团队批量代开通需求，10 人以上可享受折扣价格，并提供对公付款及发票服务。',
             },
           ].map((item) => (
-            <div key={item.title} className="bg-zinc-800/60 border border-zinc-700 rounded-xl p-5">
-              <div className="inline-block bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold px-2 py-1 rounded mb-3">
+            <div key={item.title} className="bg-gray-50 border border-gray-200 rounded-xl p-5">
+              <div className="inline-block bg-emerald-500/10 border border-emerald-500/30 text-violet-600 text-xs font-bold px-2 py-1 rounded mb-3">
                 {item.icon}
               </div>
-              <h3 className="text-white font-semibold mb-2">{item.title}</h3>
-              <p className="text-zinc-400 text-sm leading-relaxed">{item.desc}</p>
+              <h3 className="text-gray-900 font-semibold mb-2">{item.title}</h3>
+              <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
             </div>
           ))}
         </div>
       </SeoSection>
 
       <SeoSection title="ChatGPT Plus 代开通详细流程">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             我们的 <strong>ChatGPT Plus 代开通</strong>流程设计极为简洁，用户端操作不超过 3 步，全程在我们平台上完成，无需跳转到任何第三方复杂页面。
           </p>
@@ -163,16 +163,16 @@ export default function ChatGPTPlusDaiKaitongPage() {
                   desc: '所有 ChatGPT Plus 专属功能立即解锁，包括 GPT-4o、o1 推理模型、DALL-E 图像生成等全部高级功能。',
                 },
               ].map((item, index) => (
-                <div key={index} className="flex gap-4 md:ml-12 bg-zinc-800/40 border border-zinc-700 rounded-lg p-4">
+                <div key={index} className="flex gap-4 md:ml-12 bg-gray-50 border border-gray-200 rounded-lg p-4">
                   <div className="relative flex-shrink-0">
-                    <div className="w-12 h-12 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-xs font-bold text-emerald-400">
+                    <div className="w-12 h-12 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-xs font-bold text-violet-600">
                       {index + 1}
                     </div>
                   </div>
                   <div>
-                    <p className="text-emerald-400 text-xs font-semibold mb-1">{item.step}</p>
-                    <p className="font-semibold text-white mb-1">{item.title}</p>
-                    <p className="text-sm text-zinc-400">{item.desc}</p>
+                    <p className="text-violet-600 text-xs font-semibold mb-1">{item.step}</p>
+                    <p className="font-semibold text-gray-900 mb-1">{item.title}</p>
+                    <p className="text-sm text-gray-500">{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -182,7 +182,7 @@ export default function ChatGPTPlusDaiKaitongPage() {
       </SeoSection>
 
       <SeoSection title="ChatGPT Plus 代开通后能使用什么功能">
-        <div className="space-y-4 text-zinc-300 leading-relaxed">
+        <div className="space-y-4 text-gray-600 leading-relaxed">
           <p>
             通过我们的 <strong>ChatGPT Plus 代开通</strong>服务激活会员后，您将获得与 OpenAI 官网直接订阅完全相同的 Plus 会员权益，具体包括：
           </p>
@@ -196,21 +196,21 @@ export default function ChatGPTPlusDaiKaitongPage() {
               { title: '记忆与个性化功能', desc: 'ChatGPT 可记住您的偏好和历史对话信息，提供高度个性化的 AI 交互体验。' },
             ].map((item) => (
               <div key={item.title} className="flex gap-3 items-start">
-                <span className="mt-1 w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0" />
+                <span className="mt-1 w-2 h-2 rounded-full bg-violet-500 flex-shrink-0" />
                 <div>
-                  <p className="font-semibold text-white">{item.title}</p>
-                  <p className="text-zinc-400 text-sm">{item.desc}</p>
+                  <p className="font-semibold text-gray-900">{item.title}</p>
+                  <p className="text-gray-500 text-sm">{item.desc}</p>
                 </div>
               </div>
             ))}
           </div>
           <p className="mt-4">
             如果您对订阅方案有更多疑问，可以参考我们的
-            <Link href="/chatgpt-plus-dingyue-fuwu" className="text-emerald-400 hover:text-emerald-300 underline mx-1">
+            <Link href="/chatgpt-plus-dingyue-fuwu" className="text-violet-600 hover:text-violet-500 underline mx-1">
               ChatGPT Plus 订阅服务
             </Link>
             页面，或了解
-            <Link href="/chatgpt-plus-dai-dingyue" className="text-emerald-400 hover:text-emerald-300 underline mx-1">
+            <Link href="/chatgpt-plus-dai-dingyue" className="text-violet-600 hover:text-violet-500 underline mx-1">
               ChatGPT Plus 代订阅
             </Link>
             的具体方案详情。
