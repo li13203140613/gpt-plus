@@ -6,7 +6,7 @@ interface ActivationCodeEmailOptions {
 const ACTIVATION_SITE_URL = 'https://shop.gptai.vip/'
 const ORDER_SITE_URL = 'https://gpt-plus.ai/success'
 const RESEND_API_URL = 'https://api.resend.com/emails'
-const SUPPORT_QQ = '2415997472'
+const SUPPORT_WECHAT = 'fanxx2029'
 
 const EMAIL_COPY = {
   badge: 'GPT Plus Recharge',
@@ -30,7 +30,7 @@ const EMAIL_COPY = {
   orderHint:
     '\u5982\u679c\u4f60\u6682\u65f6\u6ca1\u6709\u5b8c\u6210\u64cd\u4f5c\uff0c\u4e5f\u53ef\u4ee5\u7a0d\u540e\u4ece\u8ba2\u5355\u9875\u7ee7\u7eed\u67e5\u770b\uff1a',
   support:
-    '\u5982\u6709\u95ee\u9898\uff0c\u8bf7\u8054\u7cfb\u5ba2\u670d QQ\uff1a',
+    '如有问题，请联系客服微信：',
 }
 
 function escapeHtml(value: string) {
@@ -113,7 +113,7 @@ function buildActivationEmailHtml(code: string) {
             </div>
 
             <p style="margin:0;font-size:13px;line-height:1.8;color:#94a3b8;">
-              ${EMAIL_COPY.support}${SUPPORT_QQ}
+              ${EMAIL_COPY.support}${SUPPORT_WECHAT}
             </p>
           </div>
         </div>
@@ -136,7 +136,7 @@ function buildActivationEmailText(code: string) {
     `3. ${EMAIL_COPY.step3}`,
     '',
     `\u8ba2\u5355\u9875\uff1a${ORDER_SITE_URL}`,
-    `${EMAIL_COPY.support}${SUPPORT_QQ}`,
+    `${EMAIL_COPY.support}${SUPPORT_WECHAT}`,
   ].join('\n')
 }
 

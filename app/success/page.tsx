@@ -244,7 +244,7 @@ function SuccessContent() {
           </Link>
 
           <p className="text-sm text-slate-500">
-            遇到问题？客服 QQ：<span className="text-slate-900">2415997472</span>
+            遇到问题？客服微信：<span className="text-slate-900">fanxx2029</span>
           </p>
         </div>
       )}

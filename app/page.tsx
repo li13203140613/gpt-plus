@@ -411,7 +411,7 @@ export default function HomePage() {
           </div>
 
           <p className="mt-6 text-center text-sm text-gray-400">
-            遇到问题？联系客服 QQ：<span className="text-gray-900">2415997472</span>
+            遇到问题？联系客服微信：<span className="text-gray-900">fanxx2029</span>
           </p>
         </section>
 

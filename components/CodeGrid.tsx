@@ -110,7 +110,7 @@ export function CodeGrid() {
           <div className="rounded-2xl border border-gray-100 bg-gray-50/50 p-5">
             <p className="text-xs uppercase tracking-[0.2em] text-gray-400">Price</p>
             <p className="mt-3 text-3xl font-bold text-gray-900">{formatPrice(product.price)}</p>
-            <p className="mt-2 text-sm text-gray-400">每次下单系统自动分配 1 个激活码</p>
+            <p className="mt-2 text-sm text-gray-400">即刻下单，立省2-5美金开卡费</p>
           </div>
 
           {/* Email */}
