@@ -213,7 +213,7 @@ export default function HomePage() {
         </section>
 
         {/* Trust Stats Bar */}
-        <section className="max-w-4xl mx-auto px-4 pb-20">
+        <section className="max-w-4xl mx-auto px-4 pb-32">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {[
               { icon: Users, value: '59,800+', label: '累计客户' },
@@ -231,7 +231,7 @@ export default function HomePage() {
         </section>
 
         {/* Why Choose Us */}
-        <section className="max-w-5xl mx-auto px-4 pb-20">
+        <section className="max-w-5xl mx-auto px-4 pb-32">
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4 text-gray-900">
             为什么选择我们服务
           </h2>
@@ -274,7 +274,7 @@ export default function HomePage() {
         </section>
 
         {/* User Testimonials - right after Why Choose Us */}
-        <section className="max-w-5xl mx-auto px-4 pb-20">
+        <section className="max-w-5xl mx-auto px-4 pb-32">
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4 text-gray-900">
             用户真实评价
           </h2>
