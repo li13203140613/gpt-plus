@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import { Loader2, Mail } from 'lucide-react'
 import { toast } from 'sonner'
-import { ChatGptIcon } from './ChatGptIcon'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 
@@ -104,29 +103,17 @@ export function CodeGrid() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-xl mx-auto">
       <div className="overflow-hidden rounded-[28px] border border-gray-100 bg-white shadow-xl shadow-violet-500/5">
-        <div className="border-b border-gray-100 bg-gradient-to-b from-violet-50 to-white px-6 py-10 text-center sm:px-10">
-          <div className="mx-auto flex size-24 items-center justify-center rounded-[28px] border border-violet-100 bg-white shadow-lg shadow-violet-500/10">
-            <ChatGptIcon className="size-12 text-violet-600" />
-          </div>
-          <p className="mt-6 text-sm uppercase tracking-[0.28em] text-violet-600/80">GPT Plus</p>
-          <h3 className="mt-3 text-3xl font-bold text-gray-900 sm:text-4xl">{product.title}</h3>
-        </div>
-
         <div className="space-y-6 px-6 py-8 sm:px-10">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="rounded-2xl border border-gray-100 bg-gray-50/50 p-5">
-              <p className="text-xs uppercase tracking-[0.2em] text-gray-400">Price</p>
-              <p className="mt-3 text-3xl font-bold text-gray-900">{formatPrice(product.price)}</p>
-              <p className="mt-2 text-sm text-gray-400">每次下单系统自动分配 1 个激活码</p>
-            </div>
-            <div className="rounded-2xl border border-gray-100 bg-gray-50/50 p-5">
-              <p className="text-xs uppercase tracking-[0.2em] text-gray-400">Stock</p>
-              <p className="mt-3 text-3xl font-bold text-violet-600">{product.stock}</p>
-            </div>
+          {/* Price only */}
+          <div className="rounded-2xl border border-gray-100 bg-gray-50/50 p-5">
+            <p className="text-xs uppercase tracking-[0.2em] text-gray-400">Price</p>
+            <p className="mt-3 text-3xl font-bold text-gray-900">{formatPrice(product.price)}</p>
+            <p className="mt-2 text-sm text-gray-400">每次下单系统自动分配 1 个激活码</p>
           </div>
 
+          {/* Email */}
           <div className="space-y-3">
             <label htmlFor="buyer-email" className="block text-sm font-medium text-gray-800">
               接收邮箱

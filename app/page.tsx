@@ -3,6 +3,7 @@ import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { CodeGrid } from '@/components/CodeGrid'
 import { SocialProof } from '@/components/SocialProof'
+import { Typewriter } from '@/components/Typewriter'
 
 const faqItems = [
   {
@@ -166,26 +167,13 @@ export default function HomePage() {
               充值服务
             </h1>
 
-            <p className="mx-auto mt-4 inline-block rounded-lg bg-violet-50 px-6 py-2 text-xl font-semibold text-violet-700 sm:text-2xl">
-              专业 ChatGPT Plus 充值
+            <p className="mx-auto mt-4 inline-block rounded-lg bg-violet-50 px-6 py-2 text-xl font-semibold text-violet-700 sm:text-2xl h-10 leading-10">
+              <Typewriter />
             </p>
 
             <p className="mx-auto mt-6 max-w-2xl text-base text-gray-500">
               无需信用卡、免开卡费，通过正规通道 2 分钟内即可完成充值，让每个人都能轻松充值 ChatGPT Plus。
             </p>
-
-            {/* CTA Button */}
-            <div className="mt-8">
-              <a
-                href="#product"
-                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-purple-600 px-10 py-4 text-lg font-semibold text-white shadow-lg shadow-violet-500/25 transition-all hover:shadow-xl hover:shadow-violet-500/30 hover:-translate-y-0.5"
-              >
-                立即充值
-                <svg className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                </svg>
-              </a>
-            </div>
 
             {/* Social Proof */}
             <SocialProof />
@@ -280,6 +268,39 @@ export default function HomePage() {
                 </div>
                 <h3 className="mb-2 text-base font-bold text-gray-900">{item.title}</h3>
                 <p className="text-sm leading-relaxed text-gray-500">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* User Testimonials - right after Why Choose Us */}
+        <section className="max-w-5xl mx-auto px-4 pb-20">
+          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4 text-gray-900">
+            用户真实评价
+          </h2>
+          <p className="mb-10 text-center text-gray-500">累计 59,809 位用户给出五星好评</p>
+
+          <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-5">
+            {testimonials.map((t) => (
+              <div key={t.name} className="flex h-full flex-col rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+                <div className="flex gap-0.5 mb-3">
+                  {Array.from({ length: t.rating }).map((_, i) => (
+                    <Star key={i} className="size-4 text-amber-400 fill-amber-400" />
+                  ))}
+                </div>
+                <p className="mb-4 flex-1 text-sm leading-relaxed text-gray-600">&ldquo;{t.content}&rdquo;</p>
+                <div className="mt-auto flex items-center gap-3 pt-2">
+                  <img
+                    src={t.avatar}
+                    alt={t.name}
+                    loading="lazy"
+                    className="size-11 rounded-full border border-violet-100 object-cover shadow-sm"
+                  />
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">{t.name}</p>
+                    <p className="text-xs text-gray-400">{t.role}</p>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -392,39 +413,6 @@ export default function HomePage() {
           <p className="mt-6 text-center text-sm text-gray-400">
             遇到问题？联系客服 QQ：<span className="text-gray-900">2415997472</span>
           </p>
-        </section>
-
-        {/* User Testimonials */}
-        <section className="max-w-5xl mx-auto px-4 pb-20">
-          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4 text-gray-900">
-            用户真实评价
-          </h2>
-          <p className="mb-10 text-center text-gray-500">累计 59,809 位用户给出五星好评</p>
-
-          <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-5">
-            {testimonials.map((t) => (
-              <div key={t.name} className="flex h-full flex-col rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-                <div className="flex gap-0.5 mb-3">
-                  {Array.from({ length: t.rating }).map((_, i) => (
-                    <Star key={i} className="size-4 text-amber-400 fill-amber-400" />
-                  ))}
-                </div>
-                <p className="mb-4 flex-1 text-sm leading-relaxed text-gray-600">&ldquo;{t.content}&rdquo;</p>
-                <div className="mt-auto flex items-center gap-3 pt-2">
-                  <img
-                    src={t.avatar}
-                    alt={t.name}
-                    loading="lazy"
-                    className="size-11 rounded-full border border-violet-100 object-cover shadow-sm"
-                  />
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">{t.name}</p>
-                    <p className="text-xs text-gray-400">{t.role}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
         </section>
 
         {/* Trust Badges */}

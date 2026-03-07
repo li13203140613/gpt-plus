@@ -30,15 +30,7 @@ export function BookmarkPrompt() {
   if (!show) return null
 
   return (
-    <>
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0 z-[100] bg-black/20 backdrop-blur-sm transition-opacity"
-        onClick={handleClose}
-      />
-
-      {/* Dialog */}
-      <div className="fixed left-1/2 top-1/2 z-[101] w-[360px] max-w-[90vw] -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-gray-100 bg-white p-6 shadow-2xl shadow-violet-500/10">
+      <div className="fixed right-6 bottom-24 z-[100] w-[340px] max-w-[90vw] rounded-2xl border border-gray-100 bg-white p-6 shadow-2xl shadow-violet-500/10 animate-[slideUp_0.3s_ease-out]">
         {/* Close button */}
         <button
           onClick={handleClose}
@@ -75,6 +67,5 @@ export function BookmarkPrompt() {
           </button>
         </div>
       </div>
-    </>
   )
 }
