@@ -1,8 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Bot, Loader2, Mail, ShieldCheck } from 'lucide-react'
+import { Loader2, Mail } from 'lucide-react'
 import { toast } from 'sonner'
+import { ChatGptIcon } from './ChatGptIcon'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 
@@ -88,7 +89,7 @@ export function CodeGrid() {
   if (error) {
     return (
       <div className="text-center py-20">
-        <p className="text-zinc-400">{error}</p>
+        <p className="text-slate-600">{error}</p>
       </div>
     )
   }
@@ -96,72 +97,58 @@ export function CodeGrid() {
   if (!product) {
     return (
       <div className="text-center py-20">
-        <p className="text-zinc-400 text-lg">当前暂无可售库存</p>
-        <p className="text-zinc-500 text-sm mt-2">稍后再来查看，我们会补充库存。</p>
+        <p className="text-lg text-slate-700">当前暂无可售库存</p>
+        <p className="mt-2 text-sm text-slate-500">稍后再来查看，我们会补充库存。</p>
       </div>
     )
   }
 
   return (
     <div className="max-w-3xl mx-auto">
-      <div className="rounded-[28px] border border-zinc-800 bg-zinc-900/60 backdrop-blur-sm overflow-hidden shadow-2xl shadow-emerald-950/20">
-        <div className="border-b border-zinc-800 bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.18),_transparent_58%)] px-6 py-10 text-center sm:px-10">
-          <div className="mx-auto flex size-24 items-center justify-center rounded-[28px] border border-emerald-500/30 bg-emerald-500/10 shadow-lg shadow-emerald-950/30">
-            <Bot className="size-12 text-emerald-300" />
+      <div className="overflow-hidden rounded-[28px] border border-stone-200 bg-white/82 shadow-[0_32px_80px_-48px_rgba(15,23,42,0.35)] backdrop-blur-sm">
+        <div className="border-b border-stone-200 bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.2),_rgba(255,255,255,0.96)_58%)] px-6 py-10 text-center sm:px-10">
+          <div className="mx-auto flex size-24 items-center justify-center rounded-[28px] border border-emerald-200 bg-white shadow-[0_18px_45px_-30px_rgba(16,185,129,0.65)]">
+            <ChatGptIcon className="size-12 text-emerald-600" />
           </div>
-          <p className="mt-6 text-sm uppercase tracking-[0.28em] text-emerald-300/80">GPT Plus</p>
-          <h3 className="mt-3 text-3xl font-bold text-white sm:text-4xl">{product.title}</h3>
-          <p className="mt-4 text-sm leading-6 text-zinc-400 sm:text-base">
-            支付成功后，页面会直接展示激活码。邮箱会作为备份接收地址，方便你关闭页面后继续找回。
-          </p>
+          <p className="mt-6 text-sm uppercase tracking-[0.28em] text-emerald-700/80">GPT Plus</p>
+          <h3 className="mt-3 text-3xl font-bold text-slate-900 sm:text-4xl">{product.title}</h3>
         </div>
 
         <div className="space-y-6 px-6 py-8 sm:px-10">
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-5">
-              <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">Price</p>
-              <p className="mt-3 text-3xl font-bold text-white">{formatPrice(product.price)}</p>
-              <p className="mt-2 text-sm text-zinc-500">每次下单系统自动分配 1 个激活码</p>
+            <div className="rounded-2xl border border-stone-200 bg-[#fffaf5] p-5 shadow-[0_20px_50px_-36px_rgba(15,23,42,0.28)]">
+              <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Price</p>
+              <p className="mt-3 text-3xl font-bold text-slate-900">{formatPrice(product.price)}</p>
+              <p className="mt-2 text-sm text-slate-500">每次下单系统自动分配 1 个激活码</p>
             </div>
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-5">
-              <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">Stock</p>
-              <p className="mt-3 text-3xl font-bold text-emerald-400">{product.stock}</p>
-              <p className="mt-2 text-sm text-zinc-500">库存数量会随支付和释放实时变化</p>
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5">
-            <div className="flex items-start gap-3">
-              <ShieldCheck className="mt-0.5 size-5 text-emerald-300" />
-              <div className="space-y-1 text-sm text-zinc-300">
-                <p>页面会展示激活码，邮箱是备用接收渠道。</p>
-                <p>如果邮件发送已配置，支付完成后同一份激活码也会发到你填写的邮箱。</p>
-              </div>
+            <div className="rounded-2xl border border-stone-200 bg-[#fffaf5] p-5 shadow-[0_20px_50px_-36px_rgba(15,23,42,0.28)]">
+              <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Stock</p>
+              <p className="mt-3 text-3xl font-bold text-emerald-600">{product.stock}</p>
             </div>
           </div>
 
           <div className="space-y-3">
-            <label htmlFor="buyer-email" className="block text-sm font-medium text-zinc-200">
+            <label htmlFor="buyer-email" className="block text-sm font-medium text-slate-800">
               接收邮箱
             </label>
             <div className="relative">
-              <Mail className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-zinc-500" />
+              <Mail className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
               <Input
                 id="buyer-email"
                 type="email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 placeholder="you@example.com"
-                className="h-12 rounded-xl border-zinc-700 bg-zinc-950/80 pl-11 text-white placeholder:text-zinc-500"
+                className="h-12 rounded-xl border-stone-300 bg-white/90 pl-11 text-slate-900 placeholder:text-slate-400 focus-visible:border-emerald-400 focus-visible:ring-emerald-100"
               />
             </div>
-            <p className="text-xs text-zinc-500">邮箱会随订单一起保存，方便后续在页面恢复和邮件备份。</p>
+            <p className="text-xs text-slate-500">邮箱会随订单一起保存，方便后续恢复订单信息。</p>
           </div>
 
           <Button
             onClick={handleBuy}
             disabled={submitting}
-            className="h-12 w-full rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-base font-semibold text-white shadow-lg shadow-emerald-950/40 hover:from-emerald-500 hover:to-teal-500"
+            className="h-12 w-full rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-base font-semibold text-white shadow-[0_18px_40px_-18px_rgba(16,185,129,0.65)] hover:from-emerald-500 hover:to-teal-500"
           >
             {submitting ? <Loader2 className="size-4 animate-spin" /> : '填写邮箱并去支付'}
           </Button>

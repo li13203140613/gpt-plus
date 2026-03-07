@@ -52,7 +52,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="zh-CN">
-      <body className="min-h-screen bg-[#0a0a0f] antialiased">
+      <body className="min-h-screen bg-[#f6f1e7] text-slate-900 antialiased">
         {children}
         <Toaster />
       </body>

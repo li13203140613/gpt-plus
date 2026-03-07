@@ -68,8 +68,8 @@ export async function createPaymentSession({ buyerEmail }: CreatePaymentSessionI
         price_data: {
           currency: 'cny',
           product_data: {
-            name: 'ChatGPT Plus activation code',
-            description: 'Monthly ChatGPT Plus recharge card',
+            name: 'ChatGPT Plus 一个月会员充值卡',
+            description: '月度 ChatGPT Plus 代充值卡',
           },
           unit_amount: Math.round(Number(code.price) * 100),
         },

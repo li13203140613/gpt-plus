@@ -132,8 +132,8 @@ function SuccessContent() {
         <div className="space-y-6">
           <Loader2 className="size-16 text-emerald-400 animate-spin mx-auto" />
           <div>
-            <h1 className="text-2xl font-bold text-white">正在确认支付</h1>
-            <p className="text-zinc-400 mt-2">请稍候，我们正在同步你的订单状态。</p>
+            <h1 className="text-2xl font-bold text-slate-900">正在确认支付</h1>
+            <p className="mt-2 text-slate-600">请稍候，我们正在同步你的订单状态。</p>
           </div>
         </div>
       )}
@@ -142,21 +142,21 @@ function SuccessContent() {
         <div className="space-y-8">
           <div className="space-y-4">
             <CheckCircle className="size-16 text-emerald-400 mx-auto" />
-            <h1 className="text-2xl font-bold text-white">支付成功</h1>
-            <p className="text-zinc-400">你的 ChatGPT Plus 激活码如下，请妥善保存。</p>
+            <h1 className="text-2xl font-bold text-slate-900">支付成功</h1>
+            <p className="text-slate-600">你的 ChatGPT Plus 激活码如下，请妥善保存。</p>
             {restoredFromCookie && (
-              <p className="text-sm text-emerald-300">已从当前浏览器恢复上一次订单记录。</p>
+              <p className="text-sm text-emerald-700">已从当前浏览器恢复上一次订单记录。</p>
             )}
           </div>
 
-          <div className="relative rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-8">
+          <div className="relative rounded-2xl border border-emerald-200 bg-white/82 p-8 shadow-[0_24px_60px_-40px_rgba(15,23,42,0.3)]">
             <div className="flex gap-2 justify-center flex-wrap">
               {order.code.split('').map((char, index) => (
                 <div
                   key={`${char}-${index}`}
-                  className="w-10 h-14 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center"
+                  className="flex h-14 w-10 items-center justify-center rounded-lg border border-stone-200 bg-[#fffaf5]"
                 >
-                  <span className="text-2xl font-mono font-bold text-emerald-400">{char}</span>
+                  <span className="text-2xl font-mono font-bold text-emerald-600">{char}</span>
                 </div>
               ))}
             </div>
@@ -164,7 +164,7 @@ function SuccessContent() {
             <Button
               onClick={copyCode}
               variant="outline"
-              className="mt-6 w-full border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10"
+              className="mt-6 w-full border-emerald-200 bg-white/70 text-emerald-700 hover:bg-emerald-50"
             >
               <Copy className="size-4" />
               复制激活码
@@ -172,39 +172,52 @@ function SuccessContent() {
           </div>
 
           {order.email && (
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900/70 px-4 py-3 text-left">
-              <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">Backup email</p>
-              <p className="mt-2 text-sm text-zinc-200">{order.email}</p>
-              <p className="mt-1 text-xs text-zinc-500">如果邮件发送已配置，激活码也会同步发到这个邮箱。</p>
+            <div className="rounded-xl border border-stone-200 bg-white/82 px-4 py-3 text-left shadow-[0_18px_45px_-34px_rgba(15,23,42,0.24)]">
+              <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Backup email</p>
+              <p className="mt-2 text-sm text-slate-900">{order.email}</p>
+              <p className="mt-1 text-xs text-slate-500">如果邮件发送已配置，激活码也会同步发到这个邮箱。</p>
             </div>
           )}
 
-          <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5 text-left space-y-4">
-            <p className="text-base font-semibold text-emerald-300">接下来按以下步骤完成充值：</p>
+          <div className="space-y-4 rounded-xl border border-emerald-200 bg-emerald-50/85 p-5 text-left">
+            <p className="text-base font-semibold text-emerald-700">接下来按以下步骤完成充值：</p>
             <div className="space-y-3">
               <div className="flex gap-3">
-                <span className="flex-shrink-0 size-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-xs font-bold">1</span>
-                <p className="text-sm text-zinc-300">
+                <span className="flex size-6 flex-shrink-0 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-700">1</span>
+                <p className="text-sm text-slate-700">
                   在已登录 ChatGPT 的浏览器中，打开：
                   <a
                     href="https://chatgpt.com/api/auth/session"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-emerald-400 hover:text-emerald-300 underline break-all"
+                    className="break-all text-emerald-700 underline hover:text-emerald-600"
                   >
                     chatgpt.com/api/auth/session
                   </a>
                 </p>
               </div>
               <div className="flex gap-3">
-                <span className="flex-shrink-0 size-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-xs font-bold">2</span>
-                <p className="text-sm text-zinc-300">
-                  页面会显示一段代码，<strong className="text-white">完整复制</strong> 这段内容。
+                <span className="flex size-6 flex-shrink-0 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-700">2</span>
+                <p className="text-sm text-slate-700">
+                  页面会显示一段代码，<strong className="text-slate-900">完整复制</strong> 这段内容。
                 </p>
               </div>
               <div className="flex gap-3">
-                <span className="flex-shrink-0 size-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-xs font-bold">3</span>
-                <p className="text-sm text-zinc-300">打开充值网站，粘贴代码并输入激活码，提交即可完成充值。</p>
+                <span className="flex size-6 flex-shrink-0 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-700">3</span>
+                <div className="space-y-2">
+                  <p className="text-sm text-slate-700">打开充值网站，粘贴代码并输入激活码，提交即可完成充值。</p>
+                  <p className="text-sm text-slate-700">
+                    充值网站地址：
+                    <a
+                      href="https://shop.gptai.vip/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="ml-1 break-all text-emerald-700 underline hover:text-emerald-600"
+                    >
+                      https://shop.gptai.vip/
+                    </a>
+                  </p>
+                </div>
               </div>
             </div>
             <a
@@ -220,28 +233,28 @@ function SuccessContent() {
             </a>
           </div>
 
-          <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 px-4 py-3 text-left">
-            <p className="text-xs text-amber-300">如果充值失败，可以多提交几次；系统会自动处理订单状态。</p>
+          <div className="rounded-lg border border-amber-200 bg-amber-50/90 px-4 py-3 text-left">
+            <p className="text-xs text-amber-700">如果充值失败，可以多提交几次；系统会自动处理订单状态。</p>
           </div>
 
           <Link href="/">
-            <Button variant="ghost" className="text-zinc-400 hover:text-white">
+            <Button variant="ghost" className="text-slate-600 hover:bg-white/70 hover:text-slate-900">
               返回首页
             </Button>
           </Link>
 
-          <p className="text-sm text-zinc-500">
-            遇到问题？客服 QQ：<span className="text-zinc-300">2415997472</span>
+          <p className="text-sm text-slate-500">
+            遇到问题？客服 QQ：<span className="text-slate-900">2415997472</span>
           </p>
         </div>
       )}
 
       {status === 'empty' && (
         <div className="space-y-6">
-          <XCircle className="size-16 text-zinc-500 mx-auto" />
+          <XCircle className="size-16 text-slate-400 mx-auto" />
           <div>
-            <h1 className="text-2xl font-bold text-white">没有可恢复的订单</h1>
-            <p className="text-zinc-400 mt-2">当前浏览器里还没有最近支付记录，请返回首页重新购买。</p>
+            <h1 className="text-2xl font-bold text-slate-900">没有可恢复的订单</h1>
+            <p className="mt-2 text-slate-600">当前浏览器里还没有最近支付记录，请返回首页重新购买。</p>
           </div>
           <Link href="/">
             <Button className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white">
@@ -255,8 +268,8 @@ function SuccessContent() {
         <div className="space-y-6">
           <XCircle className="size-16 text-amber-400 mx-auto" />
           <div>
-            <h1 className="text-2xl font-bold text-white">支付已过期</h1>
-            <p className="text-zinc-400 mt-2">这个支付会话已过期，请返回首页重新下单。</p>
+            <h1 className="text-2xl font-bold text-slate-900">支付已过期</h1>
+            <p className="mt-2 text-slate-600">这个支付会话已过期，请返回首页重新下单。</p>
           </div>
           <Link href="/">
             <Button className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white">
@@ -270,8 +283,8 @@ function SuccessContent() {
         <div className="space-y-6">
           <XCircle className="size-16 text-red-400 mx-auto" />
           <div>
-            <h1 className="text-2xl font-bold text-white">订单确认失败</h1>
-            <p className="text-zinc-400 mt-2">
+            <h1 className="text-2xl font-bold text-slate-900">订单确认失败</h1>
+            <p className="mt-2 text-slate-600">
               {!activeSessionId ? '缺少订单记录' : '订单确认超时，如已付款请联系客服处理'}
             </p>
           </div>
@@ -288,9 +301,9 @@ function SuccessContent() {
 
 export default function SuccessPage() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-grid text-slate-900">
       <Header />
-      <main className="flex-1 flex items-center justify-center px-4">
+      <main className="flex flex-1 items-center justify-center px-4 py-16">
         <Suspense
           fallback={
             <div className="text-center">

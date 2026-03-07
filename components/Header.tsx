@@ -1,40 +1,21 @@
 'use client'
 
 import Link from 'next/link'
-import { Zap } from 'lucide-react'
-
-const NAV_LINKS = [
-  { href: '/', label: '首页' },
-  { href: '/success', label: '查看订单' },
-  { href: '/chatgpt-plus-kaitong', label: '开通' },
-  { href: '/chatgpt-plus-dingyue', label: '订阅' },
-  { href: '/chatgpt-plus-shengji', label: '升级' },
-]
+import { ChatGptIcon } from './ChatGptIcon'
 
 export function Header() {
   return (
-    <header className="border-b border-zinc-800/50 backdrop-blur-md bg-zinc-950/80 sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+    <header className="sticky top-0 z-50 border-b border-stone-200/80 bg-[#fffaf0]/85 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center gap-2">
-            <div className="size-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
-              <Zap className="size-4 text-white" />
+            <div className="flex size-8 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 shadow-[0_10px_24px_-14px_rgba(16,185,129,0.9)]">
+              <ChatGptIcon className="size-4 text-white" />
             </div>
-            <span className="text-lg font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-emerald-700 to-teal-600 bg-clip-text text-lg font-bold text-transparent">
               GPT Plus
             </span>
           </Link>
-          <nav className="hidden sm:flex items-center gap-3 ml-4 border-l border-zinc-800 pl-4">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm text-zinc-400 hover:text-emerald-300 transition-colors"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
         </div>
       </div>
     </header>
