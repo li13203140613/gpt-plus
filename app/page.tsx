@@ -158,7 +158,7 @@ export default function HomePage() {
           <div className="relative max-w-4xl mx-auto px-4 pt-20 pb-8 text-center">
             {/* Badge */}
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-4 py-1.5">
-              <span className="text-sm font-medium text-violet-700">正规充值通道 · 专业 ChatGPT Plus 充值服务 · 不成功100%退款</span>
+              <span className="text-sm font-medium text-violet-700">专业 ChatGPT Plus 代充值 · 不成功100%退款</span>
             </div>
 
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-gray-900">
