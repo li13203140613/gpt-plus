@@ -1,10 +1,13 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { Loader2, Lock, LogIn, Plus, RefreshCw, Trash2 } from 'lucide-react'
+import { toast } from 'sonner'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Badge } from '@/components/ui/badge'
+import { Toaster } from '@/components/ui/sonner'
 import {
   Table,
   TableBody,
@@ -13,15 +16,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Loader2, Plus, Lock, LogIn, RefreshCw } from 'lucide-react'
-import { toast } from 'sonner'
-import { Toaster } from '@/components/ui/sonner'
 
 interface Code {
   id: string
   code: string
   price: number
-  status: string
+  status: 'available' | 'reserved' | 'sold'
   buyer_email: string | null
   sold_at: string | null
   created_at: string
@@ -35,62 +35,104 @@ interface Stats {
   revenue: number
 }
 
+const INITIAL_STATS: Stats = {
+  total: 0,
+  available: 0,
+  reserved: 0,
+  sold: 0,
+  revenue: 0,
+}
+
+function statusLabel(status: Code['status']) {
+  switch (status) {
+    case 'available':
+      return '可用'
+    case 'reserved':
+      return '预留中'
+    case 'sold':
+      return '已售'
+    default:
+      return status
+  }
+}
+
+function badgeClass(status: Code['status']) {
+  switch (status) {
+    case 'available':
+      return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+    case 'reserved':
+      return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
+    case 'sold':
+      return 'bg-blue-500/20 text-blue-400 border-blue-500/30'
+    default:
+      return ''
+  }
+}
+
 export default function AdminPage() {
   const [authenticated, setAuthenticated] = useState(false)
   const [password, setPassword] = useState('')
   const [codes, setCodes] = useState<Code[]>([])
-  const [stats, setStats] = useState<Stats>({ total: 0, available: 0, reserved: 0, sold: 0, revenue: 0 })
+  const [stats, setStats] = useState<Stats>(INITIAL_STATS)
   const [loading, setLoading] = useState(false)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
   const [newCodes, setNewCodes] = useState('')
   const [newPrice, setNewPrice] = useState(99)
 
   const fetchCodes = useCallback(async () => {
     setLoading(true)
+
     try {
       const res = await fetch('/api/admin/codes', {
         headers: { 'x-admin-key': password },
       })
-      if (!res.ok) throw new Error('获取失败')
+
+      if (!res.ok) {
+        throw new Error('Failed to load codes')
+      }
+
       const data = await res.json()
       setCodes(data.codes)
       setStats(data.stats)
     } catch {
-      toast.error('获取激活码列表失败')
+      toast.error('加载激活码列表失败')
     } finally {
       setLoading(false)
     }
   }, [password])
 
   useEffect(() => {
-    if (authenticated) {
-      fetchCodes()
-    }
+    if (!authenticated) return
+    fetchCodes()
   }, [authenticated, fetchCodes])
 
-  async function handleLogin(e: React.FormEvent) {
-    e.preventDefault()
+  async function handleLogin(event: React.FormEvent) {
+    event.preventDefault()
+
     try {
       const res = await fetch('/api/admin/codes', {
         headers: { 'x-admin-key': password },
       })
+
       if (res.ok) {
         setAuthenticated(true)
-      } else {
-        toast.error('密码错误')
+        return
       }
+
+      toast.error('管理密码错误')
     } catch {
-      toast.error('验证失败')
+      toast.error('登录失败，请稍后再试')
     }
   }
 
   async function handleAddCodes() {
     const codesToAdd = newCodes
       .split('\n')
-      .map((c) => c.trim())
-      .filter((c) => c.length > 0)
+      .map((code) => code.trim())
+      .filter(Boolean)
 
     if (codesToAdd.length === 0) {
-      toast.error('请输入激活码（每行一个）')
+      toast.error('请输入激活码，每行一个')
       return
     }
 
@@ -104,21 +146,51 @@ export default function AdminPage() {
         body: JSON.stringify({ codes: codesToAdd, price: newPrice }),
       })
 
+      const data = await res.json()
+
       if (!res.ok) {
-        const data = await res.json()
         throw new Error(data.error || '添加失败')
       }
 
-      const data = await res.json()
       toast.success(`成功添加 ${data.added} 个激活码`)
       setNewCodes('')
-      fetchCodes()
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : '添加失败')
+      await fetchCodes()
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : '添加失败')
     }
   }
 
-  // Login page
+  async function handleDeleteCode(code: Code) {
+    if (code.status !== 'available') return
+    if (!window.confirm(`确认删除未激活码 ${code.code} 吗？`)) return
+
+    setDeletingId(code.id)
+
+    try {
+      const res = await fetch('/api/admin/codes', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-key': password,
+        },
+        body: JSON.stringify({ id: code.id }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || '删除失败')
+      }
+
+      toast.success('激活码已删除')
+      await fetchCodes()
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : '删除失败')
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
   if (!authenticated) {
     return (
       <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center px-4">
@@ -131,12 +203,14 @@ export default function AdminPage() {
           </div>
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <Label htmlFor="password" className="text-zinc-300">密码</Label>
+              <Label htmlFor="password" className="text-zinc-300">
+                密码
+              </Label>
               <Input
                 id="password"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(event) => setPassword(event.target.value)}
                 className="mt-1 bg-zinc-900 border-zinc-700 text-white"
                 placeholder="输入管理密码"
               />
@@ -151,7 +225,6 @@ export default function AdminPage() {
     )
   }
 
-  // Admin panel
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white">
       <Toaster />
@@ -164,7 +237,6 @@ export default function AdminPage() {
           </Button>
         </div>
 
-        {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4">
             <p className="text-sm text-zinc-400">总计</p>
@@ -188,7 +260,6 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {/* Add codes */}
         <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 mb-8">
           <h2 className="text-lg font-semibold mb-4">添加激活码</h2>
           <div className="grid md:grid-cols-2 gap-4">
@@ -196,9 +267,9 @@ export default function AdminPage() {
               <Label className="text-zinc-300">激活码（每行一个）</Label>
               <textarea
                 value={newCodes}
-                onChange={(e) => setNewCodes(e.target.value)}
+                onChange={(event) => setNewCodes(event.target.value)}
                 className="mt-1 w-full h-32 rounded-lg bg-zinc-800 border border-zinc-700 text-white font-mono text-sm p-3 focus:border-emerald-500 focus:outline-none resize-none"
-                placeholder="XXXX-XXXX-XXXX&#10;YYYY-YYYY-YYYY&#10;ZZZZ-ZZZZ-ZZZZ"
+                placeholder={'XXXX-XXXX-XXXX\nYYYY-YYYY-YYYY\nZZZZ-ZZZZ-ZZZZ'}
               />
               <div className="flex items-center gap-3 mt-3">
                 <Button onClick={handleAddCodes} className="bg-emerald-600 hover:bg-emerald-500 text-white">
@@ -213,17 +284,16 @@ export default function AdminPage() {
                 type="number"
                 min={1}
                 value={newPrice}
-                onChange={(e) => setNewPrice(Number(e.target.value))}
+                onChange={(event) => setNewPrice(Number(event.target.value))}
                 className="mt-1 w-32 bg-zinc-800 border-zinc-700 text-white"
               />
               <p className="text-xs text-zinc-500 mt-2">
-                从卡密供应商获取的激活码粘贴到左侧，设置好价格后点击添加。
+                把供应商给你的激活码粘贴到左侧，设置价格后点添加即可。
               </p>
             </div>
           </div>
         </div>
 
-        {/* Codes table */}
         <div className="rounded-xl border border-zinc-800 bg-zinc-900/50">
           <div className="p-4 border-b border-zinc-800">
             <h2 className="text-lg font-semibold">所有激活码</h2>
@@ -242,27 +312,17 @@ export default function AdminPage() {
                   <TableHead className="text-zinc-400">买家邮箱</TableHead>
                   <TableHead className="text-zinc-400">售出时间</TableHead>
                   <TableHead className="text-zinc-400">创建时间</TableHead>
+                  <TableHead className="text-zinc-400 text-right">操作</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {codes.map((code) => (
                   <TableRow key={code.id} className="border-zinc-800">
                     <TableCell className="font-mono font-bold text-white">{code.code}</TableCell>
-                    <TableCell className="text-zinc-300">{code.price}</TableCell>
+                    <TableCell className="text-zinc-300">{Number(code.price).toFixed(2)}</TableCell>
                     <TableCell>
-                      <Badge
-                        variant={
-                          code.status === 'available' ? 'default' :
-                          code.status === 'sold' ? 'secondary' : 'outline'
-                        }
-                        className={
-                          code.status === 'available' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' :
-                          code.status === 'sold' ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' :
-                          'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
-                        }
-                      >
-                        {code.status === 'available' ? '可用' :
-                         code.status === 'sold' ? '已售' : '预留中'}
+                      <Badge variant="outline" className={badgeClass(code.status)}>
+                        {statusLabel(code.status)}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-zinc-400">{code.buyer_email || '-'}</TableCell>
@@ -272,11 +332,32 @@ export default function AdminPage() {
                     <TableCell className="text-zinc-400">
                       {new Date(code.created_at).toLocaleString('zh-CN')}
                     </TableCell>
+                    <TableCell className="text-right">
+                      {code.status === 'available' ? (
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="ghost"
+                          disabled={deletingId === code.id}
+                          onClick={() => handleDeleteCode(code)}
+                          className="text-red-300 hover:bg-red-500/10 hover:text-red-200"
+                        >
+                          {deletingId === code.id ? (
+                            <Loader2 className="size-4 animate-spin" />
+                          ) : (
+                            <Trash2 className="size-4" />
+                          )}
+                          删除
+                        </Button>
+                      ) : (
+                        <span className="text-xs text-zinc-600">-</span>
+                      )}
+                    </TableCell>
                   </TableRow>
                 ))}
                 {codes.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center text-zinc-500 py-8">
+                    <TableCell colSpan={7} className="text-center text-zinc-500 py-8">
                       暂无激活码
                     </TableCell>
                   </TableRow>

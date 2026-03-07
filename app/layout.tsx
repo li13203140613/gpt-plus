@@ -4,11 +4,11 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: {
-    default: 'ChatGPT Plus 充值 - GPT Plus 开通订阅服务',
+    default: 'ChatGPT Plus 开通升级订阅｜支持微信支付宝｜Plus 购买｜代充值网站系统',
     template: '%s | ChatGPT Plus 充值',
   },
   description:
-    'ChatGPT Plus 充值开通服务，支持支付宝、微信支付、信用卡，付款后即时获取 ChatGPT Plus 激活码。安全快捷的 GPT Plus 代开通方案。',
+    '提供 ChatGPT Plus 开通、升级、订阅、代充值服务，20 美元套餐开通仅需 128 元，支持微信、支付宝。包含购买Plus服务、GPT充值网站使用方法。',
   keywords: [
     'chatgpt plus 充值',
     'chatgpt plus 开通',
@@ -23,9 +23,14 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
   },
+  icons: {
+    icon: [{ url: '/icon.svg', type: 'image/svg+xml' }],
+    shortcut: ['/icon.svg'],
+    apple: [{ url: '/icon.svg' }],
+  },
   openGraph: {
-    title: 'ChatGPT Plus 充值 - GPT Plus 开通订阅服务',
-    description: 'ChatGPT Plus 充值开通服务，付款后即时获取激活码。安全快捷的 GPT Plus 代开通方案。',
+    title: 'ChatGPT Plus 开通升级订阅｜支持微信支付宝｜Plus 购买｜代充值网站系统',
+    description: '提供 ChatGPT Plus 开通、升级、订阅、代充值服务，20 美元套餐开通仅需 128 元，支持微信、支付宝。包含购买Plus服务、GPT充值网站使用方法。',
     url: 'https://www.gpt-plus.ai',
     siteName: 'ChatGPT Plus 充值',
     locale: 'zh_CN',
@@ -33,8 +38,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ChatGPT Plus 充值 - GPT Plus 开通订阅服务',
-    description: 'ChatGPT Plus 充值开通服务，付款后即时获取激活码。',
+    title: 'ChatGPT Plus 开通升级订阅｜支持微信支付宝｜Plus 购买｜代充值网站系统',
+    description: '提供 ChatGPT Plus 开通、升级、订阅、代充值服务，20 美元套餐开通仅需 128 元，支持微信、支付宝。包含购买Plus服务、GPT充值网站使用方法。',
   },
   robots: {
     index: true,

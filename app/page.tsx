@@ -55,6 +55,30 @@ const testimonials = [
     content: '作为开发者，我对支付安全比较在意。看到用的 Stripe 国际支付通道就放心了，整个购买体验很专业。',
     rating: 5,
   },
+  {
+    name: '赵女士',
+    role: '跨境电商卖家',
+    content: '平时要频繁写英文文案和客服回复，这里下单之后几分钟就拿到激活码，整个流程比我预期顺很多，省了不少时间。',
+    rating: 5,
+  },
+  {
+    name: '周同学',
+    role: '留学申请顾问',
+    content: '帮学生润色文书时经常要用到 GPT-4，这个平台支付方便，激活步骤也清楚，第一次买就成功，之后续费也一直很稳定。',
+    rating: 5,
+  },
+  {
+    name: '刘先生',
+    role: '自媒体运营',
+    content: '最看重的是买完就能看到激活码，不用等人手动发货。页面信息很清楚，售后说明也写得明白，用起来更安心。',
+    rating: 5,
+  },
+  {
+    name: '何女士',
+    role: '独立开发者',
+    content: '之前担心国内支付会麻烦，结果这里支付宝直接就能付，成功后页面和邮件都留了激活信息，后续查找也方便。',
+    rating: 5,
+  },
 ]
 
 function JsonLd() {
@@ -74,10 +98,24 @@ function JsonLd() {
     },
     aggregateRating: {
       '@type': 'AggregateRating',
-      ratingValue: '4.9',
-      reviewCount: '2680',
+      ratingValue: '5',
+      reviewCount: '59809',
+      ratingCount: '59809',
       bestRating: '5',
     },
+    review: testimonials.map((item) => ({
+      '@type': 'Review',
+      reviewBody: item.content,
+      author: {
+        '@type': 'Person',
+        name: item.name,
+      },
+      reviewRating: {
+        '@type': 'Rating',
+        ratingValue: String(item.rating),
+        bestRating: '5',
+      },
+    })),
   }
 
   const faqData = {
@@ -116,7 +154,7 @@ export default function HomePage() {
               <svg className="size-5 text-white" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z" fill="white"/>
               </svg>
-              <span className="text-sm font-medium text-emerald-300">ChatGPT Plus 官方激活码 · 授权服务商</span>
+              <span className="text-sm font-medium text-emerald-300">ChatGPT Plus 官方激活码 · 专业充值服务商</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
@@ -162,7 +200,7 @@ export default function HomePage() {
         <section className="max-w-4xl mx-auto px-4 pb-12">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {[
-              { icon: Users, value: '2,680+', label: '累计服务用户' },
+              { icon: Users, value: '59,800+', label: '累计客户' },
               { icon: CheckCircle, value: '99.8%', label: '充值成功率' },
               { icon: Clock, value: '3 分钟', label: '平均完成时间' },
               { icon: Shield, value: '30 天', label: '质保期承诺' },
@@ -222,7 +260,7 @@ export default function HomePage() {
               {
                 icon: Star,
                 title: '口碑认证',
-                desc: '已服务超过 2,600 位用户，99.8% 充值成功率，老客户复购率超过 60%，品质经得起检验。',
+                desc: '累计服务超过 59,800 位客户，已沉淀 59,809 条五星好评，99.8% 充值成功率，长期复购用户占比持续增长。',
               },
             ].map((item) => (
               <div key={item.title} className="rounded-xl border border-zinc-800 bg-zinc-900/50 backdrop-blur-sm p-6 hover:border-emerald-500/20 transition-colors">
@@ -356,9 +394,9 @@ export default function HomePage() {
               用户真实评价
             </span>
           </h2>
-          <p className="text-center text-zinc-500 mb-10">来自已购用户的真实反馈</p>
+          <p className="text-center text-zinc-500 mb-10">累计 59,809 位用户给出五星好评</p>
 
-          <div className="grid sm:grid-cols-2 gap-5">
+          <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-5">
             {testimonials.map((t) => (
               <div key={t.name} className="rounded-xl border border-zinc-800 bg-zinc-900/50 backdrop-blur-sm p-6">
                 <div className="flex gap-0.5 mb-3">

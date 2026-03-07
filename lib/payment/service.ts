@@ -1,8 +1,13 @@
 import { getDb } from '@/lib/db'
+import { sendActivationCodeEmail } from '@/lib/email'
 import { getStripe } from './stripe'
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3001'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'http://localhost:3001'
 const RESERVE_TIMEOUT_MINUTES = 5
+
+interface CreatePaymentSessionInput {
+  buyerEmail: string
+}
 
 export async function releaseExpiredReservations() {
   const sql = getDb()
@@ -11,7 +16,7 @@ export async function releaseExpiredReservations() {
   await sql`
     WITH expired_codes AS (
       UPDATE activation_codes
-      SET status = 'available', stripe_session_id = NULL, reserved_at = NULL
+      SET status = 'available', stripe_session_id = NULL, reserved_at = NULL, buyer_email = NULL
       WHERE status = 'reserved' AND reserved_at < ${cutoff}
       RETURNING stripe_session_id
     )
@@ -26,20 +31,29 @@ export async function releaseExpiredReservations() {
   `
 }
 
-export async function createPaymentSession(codeId: string) {
+export async function createPaymentSession({ buyerEmail }: CreatePaymentSessionInput) {
   const sql = getDb()
 
   await releaseExpiredReservations()
 
   const codes = await sql`
-    UPDATE activation_codes
-    SET status = 'reserved', reserved_at = NOW()
-    WHERE id = ${codeId} AND status = 'available'
-    RETURNING *
+    WITH selected_code AS (
+      SELECT id
+      FROM activation_codes
+      WHERE status = 'available'
+      ORDER BY created_at ASC
+      LIMIT 1
+      FOR UPDATE SKIP LOCKED
+    )
+    UPDATE activation_codes AS ac
+    SET status = 'reserved', reserved_at = NOW(), buyer_email = ${buyerEmail}
+    FROM selected_code
+    WHERE ac.id = selected_code.id
+    RETURNING ac.*
   `
 
   if (codes.length === 0) {
-    throw new Error('激活码不可用')
+    throw new Error('No activation code is currently available')
   }
 
   const code = codes[0]
@@ -54,8 +68,8 @@ export async function createPaymentSession(codeId: string) {
         price_data: {
           currency: 'cny',
           product_data: {
-            name: 'ChatGPT Plus 激活码',
-            description: 'ChatGPT Plus 会员激活码，即买即用',
+            name: 'ChatGPT Plus activation code',
+            description: 'Monthly ChatGPT Plus recharge card',
           },
           unit_amount: Math.round(Number(code.price) * 100),
         },
@@ -63,20 +77,28 @@ export async function createPaymentSession(codeId: string) {
       },
     ],
     mode: 'payment',
+    customer_email: buyerEmail,
     success_url: `${SITE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: SITE_URL,
-    metadata: { code_id: codeId },
+    metadata: {
+      buyer_email: buyerEmail,
+      code_id: String(code.id),
+    },
   })
+
+  if (!session.url) {
+    throw new Error('Stripe checkout URL is missing')
+  }
 
   await sql`
     UPDATE activation_codes
     SET stripe_session_id = ${session.id}
-    WHERE id = ${codeId}
+    WHERE id = ${code.id}
   `
 
   await sql`
-    INSERT INTO gptplus_orders (code_id, stripe_session_id, amount, status)
-    VALUES (${codeId}, ${session.id}, ${code.price}, 'pending')
+    INSERT INTO gptplus_orders (code_id, stripe_session_id, amount, status, buyer_email)
+    VALUES (${code.id}, ${session.id}, ${code.price}, 'pending', ${buyerEmail})
   `
 
   return { url: session.url, sessionId: session.id }
@@ -96,11 +118,13 @@ export async function completePayment(sessionId: string, buyerEmail?: string) {
   if (orders.length === 0) return
 
   const order = orders[0]
+  const recipientEmail = buyerEmail ?? order.buyer_email ?? null
+
   if (order.status === 'completed' || order.status !== 'pending') return
 
   const soldCodes = await sql`
     UPDATE activation_codes
-    SET status = 'sold', buyer_email = ${buyerEmail ?? null}, sold_at = NOW()
+    SET status = 'sold', buyer_email = ${recipientEmail}, sold_at = NOW()
     WHERE id = ${order.code_id}
       AND status = 'reserved'
       AND stripe_session_id = ${sessionId}
@@ -111,9 +135,20 @@ export async function completePayment(sessionId: string, buyerEmail?: string) {
 
   await sql`
     UPDATE gptplus_orders
-    SET status = 'completed', buyer_email = ${buyerEmail ?? null}, completed_at = NOW()
+    SET status = 'completed', buyer_email = ${recipientEmail}, completed_at = NOW()
     WHERE stripe_session_id = ${sessionId}
   `
+
+  if (recipientEmail && order.activation_code) {
+    try {
+      await sendActivationCodeEmail({
+        code: order.activation_code,
+        to: recipientEmail,
+      })
+    } catch (error) {
+      console.error('Failed to send activation code email:', error)
+    }
+  }
 }
 
 export async function handleSessionExpired(sessionId: string) {
@@ -121,7 +156,7 @@ export async function handleSessionExpired(sessionId: string) {
 
   await sql`
     UPDATE activation_codes
-    SET status = 'available', stripe_session_id = NULL, reserved_at = NULL
+    SET status = 'available', stripe_session_id = NULL, reserved_at = NULL, buyer_email = NULL
     WHERE stripe_session_id = ${sessionId} AND status = 'reserved'
   `
 

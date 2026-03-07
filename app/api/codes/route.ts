@@ -9,21 +9,26 @@ export async function GET() {
     const sql = getDb()
 
     const codes = await sql`
-      SELECT id, code, price
+      SELECT id, price
       FROM activation_codes
       WHERE status = 'available'
       ORDER BY created_at ASC
     `
 
-    const maskedCodes = codes.map((c) => ({
-      id: c.id,
-      maskedCode: c.code.slice(0, -4) + '****',
-      price: c.price,
-    }))
+    if (codes.length === 0) {
+      return NextResponse.json({ product: null })
+    }
 
-    return NextResponse.json({ codes: maskedCodes })
-  } catch (err) {
-    console.error('Error fetching codes:', err)
-    return NextResponse.json({ error: '获取激活码失败' }, { status: 500 })
+    return NextResponse.json({
+      product: {
+        id: 'chatgpt-plus-monthly',
+        price: Number(codes[0].price),
+        stock: codes.length,
+        title: 'ChatGPT Plus 一个月会员充值卡',
+      },
+    })
+  } catch (error) {
+    console.error('Error fetching product info:', error)
+    return NextResponse.json({ error: 'Failed to load product info' }, { status: 500 })
   }
 }

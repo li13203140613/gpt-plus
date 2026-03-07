@@ -4,7 +4,8 @@ import Link from 'next/link'
 import { Zap } from 'lucide-react'
 
 const NAV_LINKS = [
-  { href: '/', label: 'ChatGPT Plus 充值' },
+  { href: '/', label: '首页' },
+  { href: '/success', label: '查看订单' },
   { href: '/chatgpt-plus-kaitong', label: '开通' },
   { href: '/chatgpt-plus-dingyue', label: '订阅' },
   { href: '/chatgpt-plus-shengji', label: '升级' },
