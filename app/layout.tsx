@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import { Toaster } from '@/components/ui/sonner'
+import { BookmarkPrompt } from '@/components/BookmarkPrompt'
+import { CustomerService } from '@/components/CustomerService'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -52,9 +54,11 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="zh-CN">
-      <body className="min-h-screen bg-[#f6f1e7] text-slate-900 antialiased">
+      <body className="min-h-screen bg-white text-slate-900 antialiased">
         {children}
         <Toaster />
+        <BookmarkPrompt />
+        <CustomerService />
       </body>
     </html>
   )

@@ -23,14 +23,14 @@ const FOOTER_LINKS = [
 
 export function Footer() {
   return (
-    <footer className="mt-20 border-t border-stone-200/80 bg-[#fffaf0]/65">
+    <footer className="mt-20 border-t border-gray-100 bg-gray-50/50">
       <div className="max-w-6xl mx-auto px-4 py-8">
-        <nav className="mb-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 border-b border-stone-200/80 pb-6">
+        <nav className="mb-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 border-b border-gray-100 pb-6">
           {PRIMARY_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-slate-600 transition-colors hover:text-emerald-700"
+              className="text-sm font-medium text-gray-600 transition-colors hover:text-violet-600"
             >
               {link.label}
             </Link>
@@ -41,13 +41,13 @@ export function Footer() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm text-slate-500 transition-colors hover:text-emerald-700"
+              className="text-sm text-gray-400 transition-colors hover:text-violet-600"
             >
               {link.label}
             </Link>
           ))}
         </nav>
-        <div className="flex flex-col items-center justify-between gap-4 text-sm text-slate-500 sm:flex-row">
+        <div className="flex flex-col items-center justify-between gap-4 text-sm text-gray-400 sm:flex-row">
           <p>ChatGPT Plus 充值服务 - 安全快捷的 GPT Plus 开通方案</p>
           <p>&copy; {new Date().getFullYear()} GPT Plus. All rights reserved.</p>
         </div>

@@ -23,13 +23,13 @@ export function SeoInternalLinks({ currentPath }: SeoInternalLinksProps) {
 
   return (
     <section className="max-w-4xl mx-auto px-4 py-12">
-      <h2 className="text-lg font-semibold text-zinc-300 mb-4">相关服务</h2>
+      <h2 className="text-lg font-semibold text-gray-700 mb-4">相关服务</h2>
       <div className="flex flex-wrap gap-2">
         {links.map((link) => (
           <Link
             key={link.href}
             href={link.href}
-            className="text-sm text-zinc-500 hover:text-emerald-300 transition-colors border border-zinc-800 rounded-full px-3 py-1 hover:border-emerald-500/30"
+            className="text-sm text-gray-500 hover:text-violet-600 transition-colors border border-gray-200 rounded-full px-3 py-1 hover:border-violet-200"
           >
             {link.label}
           </Link>

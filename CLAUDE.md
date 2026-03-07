@@ -53,6 +53,8 @@ pnpm start    # 生产模式
 
 | Date | Module | Changes | Scope | Note |
 |------|----------|----------|----------|------|
+| 2026-03-07 | Components | Modified: BookmarkPrompt.tsx | components/BookmarkPrompt.tsx | AI Auto |
+| 2026-03-07 | Components | Modified: SocialProof.tsx | components/SocialProof.tsx | AI Auto |
 | 2026-03-07 | Components | Modified: table.tsx | C:/Users/LILI/Desktop/gpt-plus/components/ui/table.tsx | AI Auto |
 | 2026-03-07 | Components | Modified: badge.tsx | C:/Users/LILI/Desktop/gpt-plus/components/ui/badge.tsx | AI Auto |
 | 2026-03-06 | Components | Modified: label.tsx | C:/Users/LILI/Desktop/gpt-plus/components/ui/label.tsx | AI Auto |

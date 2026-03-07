@@ -41,12 +41,12 @@ export function CodeCard({ id, maskedCode, price, index }: CodeCardProps) {
 
   return (
     <div
-      className="group relative rounded-2xl border border-zinc-800 bg-zinc-900/50 backdrop-blur-sm p-6 hover:border-emerald-500/30 transition-all"
+      className="group relative rounded-2xl border border-gray-100 bg-white p-6 hover:border-violet-200 transition-all shadow-sm"
       style={{ animationDelay: `${index * 50}ms` }}
     >
       <div className="flex items-center justify-between mb-4">
         <span className="text-xs text-zinc-500">ChatGPT Plus 激活码</span>
-        <span className="text-xs text-emerald-400/80 bg-emerald-500/10 px-2 py-0.5 rounded-full">
+        <span className="text-xs text-violet-600 bg-violet-50 px-2 py-0.5 rounded-full">
           可用
         </span>
       </div>
@@ -57,7 +57,7 @@ export function CodeCard({ id, maskedCode, price, index }: CodeCardProps) {
             key={i}
             className="w-8 h-10 rounded-md bg-zinc-800 border border-zinc-700 flex items-center justify-center"
           >
-            <span className={`text-lg font-mono font-bold ${char === '*' ? 'text-zinc-600' : 'text-emerald-400'}`}>
+            <span className={`text-lg font-mono font-bold ${char === '*' ? 'text-zinc-600' : 'text-violet-600'}`}>
               {char}
             </span>
           </div>
@@ -102,7 +102,7 @@ export function CodeCard({ id, maskedCode, price, index }: CodeCardProps) {
         <Button
           onClick={handleBuy}
           disabled={loading}
-          className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-lg shadow-emerald-500/20"
+          className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white shadow-lg shadow-violet-500/20"
         >
           {loading ? (
             <Loader2 className="size-4 animate-spin" />

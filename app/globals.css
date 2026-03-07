@@ -4,25 +4,25 @@
 
 @layer base {
   :root {
-    --background: 38 45% 96%;
-    --foreground: 218 29% 17%;
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
     --card: 0 0% 100%;
-    --card-foreground: 218 29% 17%;
+    --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 218 29% 17%;
-    --primary: 142.1 76.2% 36.3%;
-    --primary-foreground: 355.7 100% 97.3%;
-    --secondary: 42 35% 92%;
-    --secondary-foreground: 218 29% 17%;
-    --muted: 40 30% 92%;
-    --muted-foreground: 217 16% 46%;
-    --accent: 152 32% 92%;
-    --accent-foreground: 160 84% 20%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 262 83% 58%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 5% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 240 5% 96%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 262 30% 96%;
+    --accent-foreground: 262 83% 58%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 32 24% 84%;
-    --input: 32 24% 84%;
-    --ring: 142.4 71.8% 29.2%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 262 83% 58%;
     --radius: 0.75rem;
   }
 }
@@ -37,12 +37,10 @@
 }
 
 .bg-grid {
-  background-color: #f6f1e7;
+  background-color: #ffffff;
   background-image:
-    radial-gradient(circle at 18% 0%, rgba(16, 185, 129, 0.14), transparent 28%),
-    radial-gradient(circle at 82% 10%, rgba(245, 158, 11, 0.12), transparent 24%),
-    radial-gradient(circle at 1px 1px, rgba(15, 23, 42, 0.07) 1px, transparent 0);
-  background-size: auto, auto, 36px 36px;
+    radial-gradient(circle at 18% 0%, rgba(124, 58, 237, 0.06), transparent 28%),
+    radial-gradient(circle at 82% 10%, rgba(124, 58, 237, 0.04), transparent 24%);
 }
 
 @keyframes slot-spin {
@@ -52,4 +50,13 @@
 
 .animate-slot-spin {
   animation: slot-spin 0.3s ease-out;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.animate-pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
 }
