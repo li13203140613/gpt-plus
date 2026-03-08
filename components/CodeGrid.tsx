@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Loader2, Mail, Sparkles, MessageSquare, Image, Brain, Bot, FolderOpen, Video, Code2 } from 'lucide-react'
+import { Loader2, Mail, Sparkles, MessageSquare, Image, Brain, Bot, FolderOpen, Video, Code2, Shield, CreditCard } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
@@ -15,6 +15,19 @@ const plusBenefits = [
   { icon: FolderOpen, text: '整理项目和自定义 GPT' },
   { icon: Video, text: '在 Sora 上制作并共享视频' },
   { icon: Code2, text: '使用 Codex 编写代码并构建应用' },
+]
+
+const trustItems = [
+  {
+    icon: Shield,
+    title: '售后无忧',
+    desc: '失败 30 分钟内退款',
+  },
+  {
+    icon: CreditCard,
+    title: '支付便捷',
+    desc: '支付宝 / 微信支付',
+  },
 ]
 
 export function CodeGrid() {
@@ -68,7 +81,7 @@ export function CodeGrid() {
                 $20/月
               </span>
             </div>
-            <p className="text-3xl font-bold text-gray-900">¥128.00</p>
+            <p className="text-3xl font-bold text-gray-900">¥128.00 <span className="text-base font-normal text-gray-400 line-through">¥145+</span></p>
             <p className="mt-2 text-sm text-gray-400">即刻下单，立省2-5美金开卡费</p>
           </div>
 
@@ -84,11 +97,10 @@ export function CodeGrid() {
                 type="email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
-                placeholder="you@example.com"
+                placeholder="发送激活步骤到邮箱"
                 className="h-12 rounded-xl border-gray-200 bg-white pl-11 text-gray-900 placeholder:text-gray-400 focus-visible:border-violet-400 focus-visible:ring-violet-100"
               />
             </div>
-            <p className="text-xs text-gray-400">邮箱会随订单一起保存，方便后续恢复订单信息。</p>
           </div>
 
           <Button
@@ -98,6 +110,18 @@ export function CodeGrid() {
           >
             {submitting ? <Loader2 className="size-4 animate-spin" /> : '填写邮箱并去支付'}
           </Button>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {trustItems.map((item) => (
+              <div key={item.title} className="flex items-center gap-2 rounded-xl border border-gray-100 bg-gray-50/70 px-3 py-3">
+                <item.icon className="size-4 flex-shrink-0 text-violet-500" />
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-gray-900">{item.title}</p>
+                  <p className="text-xs text-gray-500">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
 
           {/* Plus Benefits */}
           <div className="border-t border-gray-100 pt-6">

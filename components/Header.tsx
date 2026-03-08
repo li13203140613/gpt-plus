@@ -2,7 +2,21 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
+import { ClipboardList, Shield, Star, Users, Clock3 } from 'lucide-react'
 import { ChatGptIcon } from './ChatGptIcon'
+
+const AVATARS = [
+  'https://images.unsplash.com/photo-1643990083137-34669413e267?auto=format&fit=crop&w=64&h=64&q=80&crop=faces',
+  'https://images.unsplash.com/photo-1643990084162-7ea1395ab14e?auto=format&fit=crop&w=64&h=64&q=80&crop=faces',
+  'https://images.unsplash.com/photo-1704731268191-e744c6d96b26?auto=format&fit=crop&w=64&h=64&q=80&crop=faces',
+]
+
+const HEADER_STATS = [
+  { icon: Users, label: '服务用户', value: '5.9万+' },
+  { icon: Shield, label: '成功率', value: '99.8%' },
+  { icon: Clock3, label: '到账时间', value: '≤2分钟' },
+  { icon: Star, label: '用户评分', value: '4.9分' },
+]
 
 const NAMES = ['张', '李', '王', '刘', '陈', '杨', '赵', '黄', '周', '吴', '徐', '孙', '胡', '朱', '高', '林', '何', '郭', '马', '罗']
 const SUFFIXES = ['先生', '女士', '同学']
@@ -52,15 +66,51 @@ export function Header() {
           </Link>
         </div>
 
+        <Link href="/success" className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-violet-600 transition-colors">
+          <ClipboardList className="size-4" />
+          <span>我的订单</span>
+        </Link>
       </div>
 
-      {/* Rolling notification - below header, right side */}
-      <div
-        className={`fixed top-20 right-6 z-40 hidden sm:inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white/90 px-4 py-2 text-sm text-gray-500 shadow-sm backdrop-blur transition-opacity duration-300 ${fade ? 'opacity-100' : 'opacity-0'}`}
-      >
-        <span className="size-2 rounded-full bg-green-500 animate-pulse-dot" />
-        <span className="text-yellow-500">&#9889;</span>
-        <span>{notification.time}，{notification.user}成功充值了 ChatGPT Plus</span>
+      <div className="border-t border-violet-100/80 bg-gradient-to-r from-violet-50/90 via-white to-violet-50/90">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-6 gap-y-3 px-4 py-3 text-sm">
+          {HEADER_STATS.map((item) => (
+            <div key={item.label} className="flex items-center gap-2 text-gray-600">
+              <item.icon className="size-4 flex-shrink-0 text-violet-500" />
+              <span>{item.label}</span>
+              <span className="font-semibold text-gray-900">{item.value}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Fixed right-side widgets below header */}
+      <div className="fixed right-6 top-28 z-40 hidden sm:flex flex-col items-end gap-2">
+        {/* Social proof badge */}
+        <div className="inline-flex items-center gap-2.5 rounded-full border border-gray-200 bg-white/90 px-4 py-2 shadow-sm backdrop-blur">
+          <div className="flex -space-x-1.5">
+            {AVATARS.map((src, i) => (
+              <img
+                key={i}
+                src={src}
+                alt=""
+                className="size-6 rounded-full border-2 border-white object-cover"
+              />
+            ))}
+          </div>
+          <span className="text-sm text-gray-700">
+            已帮助 <span className="font-bold text-violet-600">5.9万+</span> 位用户完成充值
+          </span>
+        </div>
+
+        {/* Rolling notification */}
+        <div
+          className={`inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white/90 px-4 py-2 text-sm text-gray-500 shadow-sm backdrop-blur transition-opacity duration-300 ${fade ? 'opacity-100' : 'opacity-0'}`}
+        >
+          <span className="size-2 rounded-full bg-green-500 animate-pulse-dot" />
+          <span className="text-yellow-500">&#9889;</span>
+          <span>{notification.time}，{notification.user}成功充值了 ChatGPT Plus</span>
+        </div>
       </div>
     </header>
   )

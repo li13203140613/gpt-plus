@@ -3,9 +3,11 @@
 import { useEffect, useState, useCallback } from 'react'
 
 const PHRASES = [
-  '正规充值通道',
-  '专业 ChatGPT Plus 充值服务',
+  '无需国外银行卡',
+  '微信支付宝可付',
   '不成功100%退款',
+  '正规充值通道',
+  '2 分钟自助完成',
 ]
 
 export function Typewriter() {
@@ -41,7 +43,7 @@ export function Typewriter() {
   }, [tick, deleting])
 
   return (
-    <span>
+    <span className="inline-flex min-w-[14ch] justify-center">
       {currentPhrase.slice(0, charIndex)}
       <span className="inline-block w-[2px] h-[1em] bg-violet-600 align-middle ml-0.5 animate-[blink_1s_step-end_infinite]" />
     </span>

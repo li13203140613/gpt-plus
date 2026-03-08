@@ -1,8 +1,7 @@
-import { Shield, Zap, Clock, Star, CheckCircle, Users, Headphones, Globe, CreditCard, UserCheck } from 'lucide-react'
+import { Shield, Clock, Star, CheckCircle, Users, Headphones, Globe, UserCheck, CreditCard } from 'lucide-react'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { CodeGrid } from '@/components/CodeGrid'
-import { SocialProof } from '@/components/SocialProof'
 import { Typewriter } from '@/components/Typewriter'
 
 const faqItems = [
@@ -172,57 +171,27 @@ export default function HomePage() {
           <div className="relative max-w-4xl mx-auto px-4 pt-20 pb-8 text-center">
             {/* Badge */}
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-4 py-1.5">
-              <span className="text-sm font-medium text-violet-700">ChatGPT Plus 官方代充值 · 不成功100%退款</span>
+              <span className="text-sm font-medium text-violet-700">成功率 99.8% · 失败 30 分钟内退款</span>
             </div>
 
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-gray-900">
-              ChatGPT Plus
-              <br />
-              充值服务
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-none text-gray-900">
+              <span className="block">ChatGPT Plus</span>
+              <span className="mt-3 block sm:mt-4">代充值服务</span>
             </h1>
 
             <p className="mx-auto mt-4 inline-block rounded-lg bg-violet-50 px-6 py-2 text-xl font-semibold text-violet-700 sm:text-2xl h-10 leading-10">
               <Typewriter />
             </p>
 
-            <p className="mx-auto mt-6 max-w-2xl text-base text-gray-500">
-              无需国外银行卡，微信支付宝付款，下单自动发货。2分钟完成自助充值
+            <p className="mx-auto mt-6 max-w-2xl text-base text-gray-600">
+              下单后自动发货，按页面指引操作，通常 2 分钟内完成充值。
             </p>
 
-            {/* Social Proof */}
-            <SocialProof />
-
-            {/* Trust Badges Bar */}
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-6 sm:gap-10">
-              <div className="flex items-center gap-2">
-                <Shield className="size-5 text-gray-400" />
-                <div className="text-left">
-                  <p className="text-sm font-semibold text-gray-900">售后无忧</p>
-                  <p className="text-xs text-gray-400">充值失败 100% 当天退款</p>
-                </div>
-              </div>
-              <div className="hidden sm:block h-8 w-px bg-gray-200" />
-              <div className="flex items-center gap-2">
-                <Zap className="size-5 text-gray-400" />
-                <div className="text-left">
-                  <p className="text-sm font-semibold text-gray-900">极速到账</p>
-                  <p className="text-xs text-gray-400">平均 2 分钟内自动完成</p>
-                </div>
-              </div>
-              <div className="hidden sm:block h-8 w-px bg-gray-200" />
-              <div className="flex items-center gap-2">
-                <CreditCard className="size-5 text-gray-400" />
-                <div className="text-left">
-                  <p className="text-sm font-semibold text-gray-900">支付便捷</p>
-                  <p className="text-xs text-gray-400">支持支付宝 / 微信支付</p>
-                </div>
-              </div>
-            </div>
           </div>
         </section>
 
         {/* Product Section */}
-        <section id="product" className="max-w-6xl mx-auto px-4 pt-4 pb-12">
+        <section id="product" className="max-w-6xl mx-auto px-4 pt-4 pb-8">
           <CodeGrid />
         </section>
 
