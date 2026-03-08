@@ -1,46 +1,25 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { Loader2, Mail } from 'lucide-react'
+import { useState } from 'react'
+import { Loader2, Mail, Sparkles, MessageSquare, Image, Brain, Bot, FolderOpen, Video, Code2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 
-interface Product {
-  id: string
-  price: number
-  stock: number
-  title: string
-}
-
-function formatPrice(price: number) {
-  return `¥${price.toFixed(2)}`
-}
+const plusBenefits = [
+  { icon: Sparkles, text: '解决复杂问题' },
+  { icon: MessageSquare, text: '支持在多个会话中进行更长聊天' },
+  { icon: Image, text: '更快地创作更多图像' },
+  { icon: Brain, text: '记住用户目标和过往对话' },
+  { icon: Bot, text: '借助智能体模式规划行程与任务' },
+  { icon: FolderOpen, text: '整理项目和自定义 GPT' },
+  { icon: Video, text: '在 Sora 上制作并共享视频' },
+  { icon: Code2, text: '使用 Codex 编写代码并构建应用' },
+]
 
 export function CodeGrid() {
-  const [product, setProduct] = useState<Product | null>(null)
   const [email, setEmail] = useState('')
-  const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    async function fetchProduct() {
-      try {
-        const res = await fetch('/api/codes')
-        if (!res.ok) throw new Error('加载商品失败')
-
-        const data = await res.json()
-        setProduct(data.product)
-      } catch (err) {
-        setError(err instanceof Error ? err.message : '加载商品失败')
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchProduct()
-  }, [])
 
   async function handleBuy() {
     const normalizedEmail = email.trim().toLowerCase()
@@ -77,39 +56,19 @@ export function CodeGrid() {
     }
   }
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="size-8 text-violet-500 animate-spin" />
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="text-center py-20">
-        <p className="text-gray-500">{error}</p>
-      </div>
-    )
-  }
-
-  if (!product) {
-    return (
-      <div className="text-center py-20">
-        <p className="text-lg text-gray-700">当前暂无可售库存</p>
-        <p className="mt-2 text-sm text-gray-400">稍后再来查看，我们会补充库存。</p>
-      </div>
-    )
-  }
-
   return (
     <div className="max-w-xl mx-auto">
       <div className="overflow-hidden rounded-[28px] border border-gray-100 bg-white shadow-xl shadow-violet-500/5">
         <div className="space-y-6 px-6 py-8 sm:px-10">
-          {/* Price only */}
+          {/* Official badge + Price */}
           <div className="rounded-2xl border border-gray-100 bg-gray-50/50 p-5">
-            <p className="text-xs uppercase tracking-[0.2em] text-gray-400">Price</p>
-            <p className="mt-3 text-3xl font-bold text-gray-900">{formatPrice(product.price)}</p>
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-xs tracking-wide text-gray-400">ChatGPT Plus 官方套餐</p>
+              <span className="inline-flex items-center gap-1 rounded-full bg-violet-100 px-2.5 py-0.5 text-xs font-medium text-violet-700">
+                $20/月
+              </span>
+            </div>
+            <p className="text-3xl font-bold text-gray-900">¥128.00</p>
             <p className="mt-2 text-sm text-gray-400">即刻下单，立省2-5美金开卡费</p>
           </div>
 
@@ -139,6 +98,22 @@ export function CodeGrid() {
           >
             {submitting ? <Loader2 className="size-4 animate-spin" /> : '填写邮箱并去支付'}
           </Button>
+
+          {/* Plus Benefits */}
+          <div className="border-t border-gray-100 pt-6">
+            <div className="mb-4 flex items-center justify-between">
+              <p className="text-sm font-semibold text-gray-800">Plus 套餐权益</p>
+              <span className="text-sm font-semibold text-violet-600">$20/月</span>
+            </div>
+            <ul className="space-y-3">
+              {plusBenefits.map((item) => (
+                <li key={item.text} className="flex items-center gap-3">
+                  <item.icon className="size-4 flex-shrink-0 text-violet-500" />
+                  <span className="text-sm text-gray-600">{item.text}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </div>

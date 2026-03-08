@@ -172,7 +172,7 @@ export default function HomePage() {
           <div className="relative max-w-4xl mx-auto px-4 pt-20 pb-8 text-center">
             {/* Badge */}
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-4 py-1.5">
-              <span className="text-sm font-medium text-violet-700">专业 ChatGPT Plus 代充值 · 不成功100%退款</span>
+              <span className="text-sm font-medium text-violet-700">ChatGPT Plus 官方代充值 · 不成功100%退款</span>
             </div>
 
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-gray-900">
@@ -186,7 +186,7 @@ export default function HomePage() {
             </p>
 
             <p className="mx-auto mt-6 max-w-2xl text-base text-gray-500">
-              无需信用卡、免开卡费，通过正规通道 2 分钟内即可完成充值，让每个人都能轻松充值 ChatGPT Plus。
+              无需国外银行卡，微信支付宝付款，下单自动发货。2分钟完成自助充值
             </p>
 
             {/* Social Proof */}
