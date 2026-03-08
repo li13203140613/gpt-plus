@@ -52,6 +52,7 @@ export function Header() {
   }, [rotate])
 
   return (
+    <>
     <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/90 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <div className="flex items-center gap-2">
@@ -84,34 +85,19 @@ export function Header() {
         </div>
       </div>
 
-      {/* Fixed right-side widgets below header */}
-      <div className="fixed right-6 top-28 z-40 hidden sm:flex flex-col items-end gap-2">
-        {/* Social proof badge */}
-        <div className="inline-flex items-center gap-2.5 rounded-full border border-gray-200 bg-white/90 px-4 py-2 shadow-sm backdrop-blur">
-          <div className="flex -space-x-1.5">
-            {AVATARS.map((src, i) => (
-              <img
-                key={i}
-                src={src}
-                alt=""
-                className="size-6 rounded-full border-2 border-white object-cover"
-              />
-            ))}
-          </div>
-          <span className="text-sm text-gray-700">
-            已帮助 <span className="font-bold text-violet-600">5.9万+</span> 位用户完成充值
-          </span>
-        </div>
-
-        {/* Rolling notification */}
-        <div
-          className={`inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white/90 px-4 py-2 text-sm text-gray-500 shadow-sm backdrop-blur transition-opacity duration-300 ${fade ? 'opacity-100' : 'opacity-0'}`}
-        >
-          <span className="size-2 rounded-full bg-green-500 animate-pulse-dot" />
-          <span className="text-yellow-500">&#9889;</span>
-          <span>{notification.time}，{notification.user}成功充值了 ChatGPT Plus</span>
-        </div>
-      </div>
     </header>
+
+      {/* Rolling notification - fixed bottom left */}
+      <div
+        className={`fixed bottom-6 left-6 z-[9999] inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white/95 px-5 py-3 text-sm shadow-lg backdrop-blur transition-opacity duration-300 ${fade ? 'opacity-100' : 'opacity-0'}`}
+      >
+        <span className="size-2.5 rounded-full bg-green-500 animate-pulse-dot" />
+        <span className="text-yellow-500">&#9889;</span>
+        <span className="text-gray-700">
+          <span className="font-semibold text-gray-900">{notification.user}</span>
+          {' '}成功充值了 ChatGPT Plus · {notification.time}
+        </span>
+      </div>
+    </>
   )
 }
