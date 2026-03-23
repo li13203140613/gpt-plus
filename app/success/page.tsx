@@ -209,19 +209,19 @@ function SuccessContent() {
                   <p className="text-sm text-slate-700">
                     充值网站地址：
                     <a
-                      href="https://shop.gptai.vip/"
+                      href="https://chong.plus"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="ml-1 break-all text-emerald-700 underline hover:text-emerald-600"
                     >
-                      https://shop.gptai.vip/
+                      https://chong.plus
                     </a>
                   </p>
                 </div>
               </div>
             </div>
             <a
-              href="https://shop.gptai.vip/"
+              href="https://chong.plus"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 w-full rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 transition-colors"

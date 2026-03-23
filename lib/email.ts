@@ -3,7 +3,7 @@ interface ActivationCodeEmailOptions {
   to: string
 }
 
-const ACTIVATION_SITE_URL = 'https://shop.gptai.vip/'
+const ACTIVATION_SITE_URL = 'https://chong.plus'
 const ORDER_SITE_URL = 'https://gpt-plus.ai/success'
 const RESEND_API_URL = 'https://api.resend.com/emails'
 const SUPPORT_WECHAT = 'fanxx2029'

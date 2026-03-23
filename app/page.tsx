@@ -354,7 +354,7 @@ export default function HomePage() {
                 step: '3',
                 title: '前往充值网站完成充值',
                 desc: '打开充值网站，粘贴刚才复制的代码，再输入激活码，提交即可自动完成充值。',
-                cta: { url: 'https://shop.gptai.vip/', text: '前往充值网站' },
+                cta: { url: 'https://chong.plus', text: '前往充值网站' },
               },
             ].map((item) => (
               <div key={item.step} className="flex gap-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
