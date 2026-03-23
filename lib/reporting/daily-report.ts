@@ -1,8 +1,18 @@
 import { createHmac } from 'node:crypto'
+import { BetaAnalyticsDataClient } from '@google-analytics/data'
+import { google } from 'googleapis'
 import { getDb } from '@/lib/db'
 
 const REPORT_TIMEZONE = 'Asia/Shanghai'
 const DEFAULT_SITE_NAME = 'GPT Plus'
+
+function getGoogleCredentials() {
+  const clientEmail = process.env.GOOGLE_SA_CLIENT_EMAIL?.trim()
+  const privateKey = process.env.GOOGLE_SA_PRIVATE_KEY?.replace(/\\n/g, '\n')
+
+  if (!clientEmail || !privateKey) return null
+  return { client_email: clientEmail, private_key: privateKey }
+}
 
 interface ReportWindow {
   label: string
@@ -158,6 +168,96 @@ async function getRevenueSection(window: ReportWindow): Promise<ReportSection> {
   }
 }
 
+function formatPercent(value: number) {
+  return `${(value * 100).toFixed(2)}%`
+}
+
+function formatDecimal(value: number, digits = 1) {
+  return value.toFixed(digits)
+}
+
+async function getGA4Section(window: ReportWindow): Promise<ReportSection | null> {
+  const credentials = getGoogleCredentials()
+  const propertyId = process.env.GA4_PROPERTY_ID?.trim()
+
+  if (!credentials || !propertyId) return null
+
+  const client = new BetaAnalyticsDataClient({ credentials })
+
+  const [response] = await client.runReport({
+    property: `properties/${propertyId}`,
+    dateRanges: [{ startDate: window.label, endDate: window.label }],
+    metrics: [
+      { name: 'activeUsers' },
+      { name: 'newUsers' },
+      { name: 'screenPageViews' },
+      { name: 'sessions' },
+      { name: 'bounceRate' },
+      { name: 'averageSessionDuration' },
+    ],
+  })
+
+  const row = response.rows?.[0]
+  const get = (i: number) => toNumber(row?.metricValues?.[i]?.value)
+
+  return {
+    icon: '📊',
+    title: '网站流量',
+    source: 'GA4',
+    date: window.label,
+    metrics: [
+      { label: '活跃用户', value: formatInteger(get(0)) },
+      { label: '新用户', value: formatInteger(get(1)) },
+      { label: '页面浏览', value: formatInteger(get(2)) },
+      { label: '会话数', value: formatInteger(get(3)) },
+      { label: '跳出率', value: formatPercent(get(4)) },
+      { label: '平均会话时长', value: `${formatDecimal(get(5))}s` },
+    ],
+  }
+}
+
+async function getGSCSection(window: ReportWindow): Promise<ReportSection | null> {
+  const credentials = getGoogleCredentials()
+  const siteUrl = process.env.GSC_SITE_URL?.trim()
+
+  if (!credentials || !siteUrl) return null
+
+  const auth = new google.auth.JWT({
+    email: credentials.client_email,
+    key: credentials.private_key,
+    scopes: ['https://www.googleapis.com/auth/webmasters.readonly'],
+  })
+
+  const searchconsole = google.searchconsole({ version: 'v1', auth })
+
+  // GSC data usually has 2-3 day delay, query a wider range and show totals
+  const gscStart = shiftDateKey(window.label, -3)
+
+  const res = await searchconsole.searchanalytics.query({
+    siteUrl,
+    requestBody: {
+      startDate: gscStart,
+      endDate: window.label,
+      dimensions: [],
+    },
+  })
+
+  const row = res.data.rows?.[0]
+
+  return {
+    icon: '🔍',
+    title: '搜索表现',
+    source: 'GSC',
+    date: `${gscStart} ~ ${window.label}`,
+    metrics: [
+      { label: '展示量', value: formatInteger(row?.impressions ?? 0) },
+      { label: '点击量', value: formatInteger(row?.clicks ?? 0) },
+      { label: '平均点击率', value: formatPercent(row?.ctr ?? 0) },
+      { label: '平均排名', value: formatDecimal(row?.position ?? 0) },
+    ],
+  }
+}
+
 function buildSectionElements(section: ReportSection) {
   return [
     {
@@ -219,10 +319,16 @@ export async function buildDailyReport(dateKey?: string): Promise<DailyReportPay
   const siteName = process.env.REPORT_SITE_NAME?.trim() || DEFAULT_SITE_NAME
   const window = resolveReportWindow(dateKey)
 
-  const sections = await Promise.all([
+  const [business, revenue, ga4, gsc] = await Promise.all([
     getBusinessSection(window),
     getRevenueSection(window),
+    getGA4Section(window).catch(() => null),
+    getGSCSection(window).catch(() => null),
   ])
+
+  const sections = [business, revenue, ga4, gsc].filter(
+    (s): s is ReportSection => s !== null,
+  )
 
   return {
     siteName,
