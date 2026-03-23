@@ -3,7 +3,7 @@ import { sendActivationCodeEmail } from '@/lib/email'
 import { getStripe } from './stripe'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'http://localhost:3001'
-const RESERVE_TIMEOUT_MINUTES = 5
+const RESERVE_TIMEOUT_MINUTES = 10
 
 interface CreatePaymentSessionInput {
   buyerEmail: string
