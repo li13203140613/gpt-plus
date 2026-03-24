@@ -398,51 +398,82 @@ async function getFunnelSection(window: ReportWindow): Promise<ReportSection | n
 
   const client = new BetaAnalyticsDataClient({ credentials })
 
-  const eventNames = ['email_focus', 'begin_checkout', 'checkout_redirect', 'purchase']
-
-  const [response] = await client.runReport({
-    property: `properties/${propertyId}`,
-    dateRanges: [{ startDate: window.label, endDate: window.label }],
-    dimensions: [{ name: 'eventName' }],
-    metrics: [{ name: 'eventCount' }],
-    dimensionFilter: {
-      filter: {
-        fieldName: 'eventName',
-        inListFilter: { values: eventNames },
+  // Get active users + funnel events in parallel
+  const [[usersResponse], [eventsResponse]] = await Promise.all([
+    client.runReport({
+      property: `properties/${propertyId}`,
+      dateRanges: [{ startDate: window.label, endDate: window.label }],
+      metrics: [{ name: 'activeUsers' }],
+    }),
+    client.runReport({
+      property: `properties/${propertyId}`,
+      dateRanges: [{ startDate: window.label, endDate: window.label }],
+      dimensions: [{ name: 'eventName' }],
+      metrics: [{ name: 'eventCount' }],
+      dimensionFilter: {
+        filter: {
+          fieldName: 'eventName',
+          inListFilter: {
+            values: ['email_focus', 'begin_checkout', 'checkout_redirect', 'purchase'],
+          },
+        },
       },
-    },
-  })
+    }),
+  ])
+
+  const activeUsers = toNumber(usersResponse.rows?.[0]?.metricValues?.[0]?.value)
 
   const counts: Record<string, number> = {}
-  for (const r of response.rows || []) {
+  for (const r of eventsResponse.rows || []) {
     const name = r.dimensionValues?.[0]?.value || ''
     counts[name] = toNumber(r.metricValues?.[0]?.value)
   }
 
-  // Only show if at least one funnel event has data
-  if (Object.values(counts).every((v) => v === 0)) return null
+  const emailFocus = counts['email_focus'] || 0
+  const beginCheckout = counts['begin_checkout'] || 0
+  const checkoutRedirect = counts['checkout_redirect'] || 0
+  const purchase = counts['purchase'] || 0
 
-  const funnelLabels: Record<string, string> = {
-    email_focus: '📧 邮箱聚焦',
-    begin_checkout: '💳 发起支付',
-    checkout_redirect: '🔀 跳转Stripe',
-    purchase: '✅ 支付完成',
+  // Show funnel even if only visitors exist (to show 0 conversions)
+  if (activeUsers === 0 && Object.values(counts).every((v) => v === 0)) return null
+
+  const steps = [
+    { label: '访客', count: activeUsers },
+    { label: '邮箱聚焦', count: emailFocus },
+    { label: '发起支付', count: beginCheckout },
+    { label: '跳转Stripe', count: checkoutRedirect },
+    { label: '支付完成', count: purchase },
+  ]
+
+  // Build summary line: 访客 16 → 聚焦 5 → 支付 3 → 完成 2
+  const summaryLine = steps.map((s) => `${s.label} ${s.count}`).join(' → ')
+
+  const metrics: ReportMetric[] = [
+    { label: '转化路径', value: summaryLine },
+  ]
+
+  // Add step-by-step conversion rates
+  for (let i = 1; i < steps.length; i++) {
+    const prev = steps[i - 1]
+    const curr = steps[i]
+    const rate = prev.count > 0 ? curr.count / prev.count : 0
+    metrics.push({
+      label: `① ${prev.label} → ${curr.label}`,
+      value: `**${formatPercent(rate)}**  ${curr.count}/${prev.count}`,
+    })
   }
 
-  const metrics: ReportMetric[] = eventNames.map((name, i) => {
-    const count = counts[name] || 0
-    const prev = i > 0 ? counts[eventNames[i - 1]] || 0 : 0
-    const rate = i > 0 && prev > 0 ? ` (${formatPercent(count / prev)})` : ''
-    return {
-      label: funnelLabels[name] || name,
-      value: `${formatInteger(count)}${rate}`,
-    }
+  // Overall conversion rate
+  const overallRate = activeUsers > 0 ? purchase / activeUsers : 0
+  metrics.push({
+    label: '⭐ 访客 → 支付（整体）',
+    value: `**${formatPercent(overallRate)}**  ${purchase}/${activeUsers}`,
   })
 
   return {
     icon: '🔄',
     title: '转化漏斗',
-    source: 'GA4 Events',
+    source: 'GA4+后台',
     date: window.label,
     metrics,
   }
