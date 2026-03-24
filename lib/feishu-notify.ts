@@ -113,6 +113,48 @@ export async function notifyPaymentSuccess({
   })
 }
 
+export async function notifyPaymentAnomaly({
+  email,
+  amount,
+  sessionId,
+  reason,
+}: {
+  email: string
+  amount: string | number
+  sessionId: string
+  reason: string
+}) {
+  const now = new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })
+
+  await sendFeishuMessage({
+    config: { wide_screen_mode: true },
+    header: {
+      template: 'yellow',
+      title: { tag: 'plain_text', content: '⚠️ 支付异常' },
+    },
+    elements: [
+      {
+        tag: 'div',
+        fields: [
+          { is_short: true, text: { tag: 'lark_md', content: `**买家邮箱**\n${email}` } },
+          { is_short: true, text: { tag: 'lark_md', content: `**金额**\n¥${amount}` } },
+        ],
+      },
+      {
+        tag: 'div',
+        fields: [
+          { is_short: true, text: { tag: 'lark_md', content: `**异常原因**\n${reason}` } },
+          { is_short: true, text: { tag: 'lark_md', content: `**时间**\n${now}` } },
+        ],
+      },
+      {
+        tag: 'note',
+        elements: [{ tag: 'plain_text', content: `需人工处理 · Session: ${sessionId.slice(0, 20)}...` }],
+      },
+    ],
+  })
+}
+
 export async function notifyPaymentExpired({
   email,
   amount,

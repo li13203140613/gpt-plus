@@ -1,6 +1,6 @@
 import { getDb } from '@/lib/db'
 import { sendActivationCodeEmail, sendPaymentFailedEmail } from '@/lib/email'
-import { notifyNewOrder, notifyPaymentSuccess, notifyPaymentExpired } from '@/lib/feishu-notify'
+import { notifyNewOrder, notifyPaymentSuccess, notifyPaymentExpired, notifyPaymentAnomaly } from '@/lib/feishu-notify'
 import { getStripe } from './stripe'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'http://localhost:3001'
@@ -123,12 +123,23 @@ export async function completePayment(sessionId: string, buyerEmail?: string) {
     LIMIT 1
   `
 
-  if (orders.length === 0) return
+  if (orders.length === 0) {
+    console.warn(`[completePayment] No order found for session: ${sessionId}`)
+    return
+  }
 
   const order = orders[0]
   const recipientEmail = buyerEmail ?? order.buyer_email ?? null
 
-  if (order.status === 'completed' || order.status !== 'pending') return
+  if (order.status === 'completed') {
+    console.log(`[completePayment] Order already completed for session: ${sessionId}`)
+    return
+  }
+
+  if (order.status !== 'pending') {
+    console.warn(`[completePayment] Order status is '${order.status}', expected 'pending' for session: ${sessionId}`)
+    return
+  }
 
   const soldCodes = await sql`
     UPDATE activation_codes
@@ -139,13 +150,28 @@ export async function completePayment(sessionId: string, buyerEmail?: string) {
     RETURNING id
   `
 
-  if (soldCodes.length === 0) return
+  if (soldCodes.length === 0) {
+    console.error(`[completePayment] Failed to mark code as sold - code may have been released. Session: ${sessionId}, Code ID: ${order.code_id}`)
+
+    // Send Feishu anomaly alert - payment received but code not assigned
+    if (recipientEmail) {
+      notifyPaymentAnomaly({
+        email: recipientEmail,
+        amount: order.amount,
+        sessionId,
+        reason: '已收款但激活码已释放，需人工补发',
+      }).catch((err) => console.error('Feishu anomaly notify failed:', err))
+    }
+    return
+  }
 
   await sql`
     UPDATE gptplus_orders
     SET status = 'completed', buyer_email = ${recipientEmail}, completed_at = NOW()
     WHERE stripe_session_id = ${sessionId}
   `
+
+  console.log(`[completePayment] Order completed for session: ${sessionId}, email: ${recipientEmail}`)
 
   if (recipientEmail && order.activation_code) {
     try {
@@ -162,6 +188,16 @@ export async function completePayment(sessionId: string, buyerEmail?: string) {
       email: recipientEmail,
       amount: order.amount,
       code: order.activation_code,
+      sessionId: sessionId,
+    }).catch((err) => console.error('Feishu payment success notify failed:', err))
+  } else {
+    console.warn(`[completePayment] Missing email or code, skipping notifications. email: ${recipientEmail}, hasCode: ${!!order.activation_code}`)
+
+    // Still notify Feishu even if email is missing
+    notifyPaymentSuccess({
+      email: recipientEmail || '未知邮箱',
+      amount: order.amount,
+      code: order.activation_code || '未知',
       sessionId: sessionId,
     }).catch((err) => console.error('Feishu payment success notify failed:', err))
   }
