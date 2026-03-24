@@ -1,5 +1,6 @@
 import { getDb } from '@/lib/db'
 import { sendActivationCodeEmail, sendPaymentFailedEmail } from '@/lib/email'
+import { notifyNewOrder, notifyPaymentSuccess } from '@/lib/feishu-notify'
 import { getStripe } from './stripe'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'http://localhost:3001'
@@ -101,6 +102,11 @@ export async function createPaymentSession({ buyerEmail }: CreatePaymentSessionI
     VALUES (${code.id}, ${session.id}, ${code.price}, 'pending', ${buyerEmail})
   `
 
+  // Notify new order to Feishu
+  notifyNewOrder({ email: buyerEmail, amount: code.price, sessionId: session.id }).catch((err) =>
+    console.error('Feishu new order notify failed:', err)
+  )
+
   return { url: session.url, sessionId: session.id }
 }
 
@@ -148,6 +154,14 @@ export async function completePayment(sessionId: string, buyerEmail?: string) {
     } catch (error) {
       console.error('Failed to send activation code email:', error)
     }
+
+    // Notify payment success to Feishu
+    notifyPaymentSuccess({
+      email: recipientEmail,
+      amount: order.amount,
+      code: order.activation_code,
+      sessionId: sessionId,
+    }).catch((err) => console.error('Feishu payment success notify failed:', err))
   }
 }
 
