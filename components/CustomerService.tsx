@@ -29,9 +29,9 @@ export function CustomerService() {
       {/* Popup */}
       {open && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop (no overlay, just click-to-close) */}
           <div
-            className="fixed inset-0 z-[100] bg-black/20 backdrop-blur-sm"
+            className="fixed inset-0 z-[100]"
             onClick={() => setOpen(false)}
           />
 
