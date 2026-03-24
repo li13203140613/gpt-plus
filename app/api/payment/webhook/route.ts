@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getStripe } from '@/lib/payment/stripe'
-import { completePayment, handleSessionExpired } from '@/lib/payment/service'
+import { completePayment, handleSessionExpired, handlePaymentFailed } from '@/lib/payment/service'
 
 export async function POST(request: NextRequest) {
   const body = await request.text()
@@ -28,6 +28,11 @@ export async function POST(request: NextRequest) {
     case 'checkout.session.expired': {
       const session = event.data.object
       await handleSessionExpired(session.id)
+      break
+    }
+    case 'checkout.session.async_payment_failed': {
+      const session = event.data.object
+      await handlePaymentFailed(session.id, session.customer_details?.email ?? undefined)
       break
     }
   }

@@ -1,5 +1,5 @@
 import { getDb } from '@/lib/db'
-import { sendActivationCodeEmail } from '@/lib/email'
+import { sendActivationCodeEmail, sendPaymentFailedEmail } from '@/lib/email'
 import { getStripe } from './stripe'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'http://localhost:3001'
@@ -154,6 +154,57 @@ export async function completePayment(sessionId: string, buyerEmail?: string) {
 export async function handleSessionExpired(sessionId: string) {
   const sql = getDb()
 
+  // Get buyer email before clearing it
+  const codes = await sql`
+    SELECT buyer_email FROM activation_codes
+    WHERE stripe_session_id = ${sessionId} AND status = 'reserved'
+    LIMIT 1
+  `
+  const buyerEmail = codes[0]?.buyer_email ?? null
+
+  await sql`
+    UPDATE activation_codes
+    SET status = 'available', stripe_session_id = NULL, reserved_at = NULL, buyer_email = NULL
+    WHERE stripe_session_id = ${sessionId} AND status = 'reserved'
+  `
+
+  await sql`
+    UPDATE gptplus_orders
+    SET status = 'expired'
+    WHERE stripe_session_id = ${sessionId} AND status = 'pending'
+  `
+
+  // Send payment failed email
+  if (buyerEmail) {
+    try {
+      await sendPaymentFailedEmail({ to: buyerEmail })
+    } catch (error) {
+      console.error('Failed to send payment failed email:', error)
+    }
+  }
+}
+
+export async function handlePaymentFailed(sessionId: string, buyerEmail?: string) {
+  const sql = getDb()
+
+  // Look up buyer email from order if not provided
+  if (!buyerEmail) {
+    const orders = await sql`
+      SELECT buyer_email FROM gptplus_orders
+      WHERE stripe_session_id = ${sessionId} LIMIT 1
+    `
+    buyerEmail = orders[0]?.buyer_email ?? undefined
+  }
+
+  if (buyerEmail) {
+    try {
+      await sendPaymentFailedEmail({ to: buyerEmail })
+    } catch (error) {
+      console.error('Failed to send payment failed email:', error)
+    }
+  }
+
+  // Release the reserved code
   await sql`
     UPDATE activation_codes
     SET status = 'available', stripe_session_id = NULL, reserved_at = NULL, buyer_email = NULL

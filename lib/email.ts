@@ -3,8 +3,14 @@ interface ActivationCodeEmailOptions {
   to: string
 }
 
+interface PaymentFailedEmailOptions {
+  to: string
+}
+
 const ACTIVATION_SITE_URL = 'https://chong.plus'
 const ORDER_SITE_URL = 'https://gpt-plus.ai/success'
+const SITE_URL = 'https://gpt-plus.ai'
+const QR_URL = 'https://www.gpt-plus.ai/wechat-qr.png'
 const RESEND_API_URL = 'https://api.resend.com/emails'
 const SUPPORT_WECHAT = 'fanxx2029'
 
@@ -168,5 +174,167 @@ export async function sendActivationCodeEmail({ code, to }: ActivationCodeEmailO
   if (!response.ok) {
     const body = await response.text()
     throw new Error(`Failed to send activation code email: ${body}`)
+  }
+}
+
+const FAILED_EMAIL_COPY = {
+  subject: '【GPT Plus】付款未完成？我们可以帮你',
+  title: '付款遇到问题？别担心！',
+  intro: '我们注意到您的 ChatGPT Plus 充值订单尚未完成付款。没关系，我们提供多种付款方式帮您轻松搞定。',
+  altPayTitle: '支持多种付款方式',
+  altPayDesc: '除了在线支付，您还可以通过以下方式完成充值：',
+  altPayMethods: ['支付宝转账', '微信转账', '信用卡 / 借记卡'],
+  benefits: [
+    '¥128 超值价，立省 2-5 美金开卡费',
+    '下单后自动发货，1 分钟完成充值',
+    '成功率 99.9%，失败 100% 全额退款',
+    '不封号，封号包售后',
+    '正规充值通道，无需提供账号密码',
+  ],
+  qrTitle: '扫码添加客服微信',
+  qrDesc: '添加客服微信，支持支付宝/微信直接转账付款',
+  wechatLabel: '客服微信号',
+  retryButton: '返回网站重新购买',
+}
+
+function buildPaymentFailedEmailHtml() {
+  const benefitsHtml = FAILED_EMAIL_COPY.benefits
+    .map(
+      (b) =>
+        `<li style="padding:6px 0;color:#cbd5e1;font-size:14px;">✅ ${b}</li>`
+    )
+    .join('')
+
+  const methodsHtml = FAILED_EMAIL_COPY.altPayMethods
+    .map(
+      (m) =>
+        `<li style="padding:4px 0;color:#e2e8f0;font-size:14px;">• ${m}</li>`
+    )
+    .join('')
+
+  return `
+    <!doctype html>
+    <html lang="zh-CN">
+      <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>${FAILED_EMAIL_COPY.subject}</title>
+      </head>
+      <body style="margin:0;padding:32px 16px;background:#050816;font-family:'PingFang SC','Microsoft YaHei',Arial,sans-serif;color:#e5e7eb;">
+        <div style="max-width:640px;margin:0 auto;border:1px solid rgba(139,92,246,0.18);border-radius:24px;overflow:hidden;background:#0b1020;">
+          <div style="padding:32px 32px 24px;background:radial-gradient(circle at top, rgba(139,92,246,0.24), rgba(11,16,32,1) 60%);">
+            <div style="display:inline-block;padding:6px 12px;border-radius:999px;background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.22);font-size:12px;letter-spacing:0.08em;color:#c4b5fd;">
+              GPT Plus Recharge
+            </div>
+            <h1 style="margin:18px 0 12px;font-size:28px;line-height:1.3;color:#ffffff;">
+              ${FAILED_EMAIL_COPY.title}
+            </h1>
+            <p style="margin:0;font-size:15px;line-height:1.8;color:#cbd5e1;">
+              ${FAILED_EMAIL_COPY.intro}
+            </p>
+          </div>
+
+          <div style="padding:0 32px 32px;">
+            <!-- Alternative Payment Methods -->
+            <div style="margin:0 0 20px;padding:20px 22px;border-radius:20px;background:rgba(8,15,34,0.9);border:1px solid rgba(148,163,184,0.14);">
+              <div style="font-size:14px;font-weight:700;color:#e2e8f0;margin-bottom:8px;">
+                💳 ${FAILED_EMAIL_COPY.altPayTitle}
+              </div>
+              <p style="margin:0 0 10px;font-size:14px;color:#94a3b8;">${FAILED_EMAIL_COPY.altPayDesc}</p>
+              <ul style="margin:0;padding-left:4px;list-style:none;">
+                ${methodsHtml}
+              </ul>
+            </div>
+
+            <!-- Benefits -->
+            <div style="margin:0 0 20px;padding:20px 22px;border-radius:20px;background:rgba(8,15,34,0.9);border:1px solid rgba(148,163,184,0.14);">
+              <div style="font-size:14px;font-weight:700;color:#e2e8f0;margin-bottom:8px;">
+                🌟 为什么选择我们
+              </div>
+              <ul style="margin:0;padding-left:0;list-style:none;">
+                ${benefitsHtml}
+              </ul>
+            </div>
+
+            <!-- WeChat QR Code -->
+            <div style="margin:0 0 20px;padding:20px 22px;border-radius:20px;background:rgba(8,15,34,0.9);border:1px solid rgba(139,92,246,0.2);text-align:center;">
+              <div style="font-size:14px;font-weight:700;color:#e2e8f0;margin-bottom:12px;">
+                ${FAILED_EMAIL_COPY.qrTitle}
+              </div>
+              <p style="margin:0 0 14px;font-size:13px;color:#94a3b8;">
+                ${FAILED_EMAIL_COPY.qrDesc}
+              </p>
+              <img src="${QR_URL}" alt="客服微信二维码" style="width:160px;height:160px;border-radius:12px;border:1px solid rgba(148,163,184,0.14);" />
+              <div style="margin-top:12px;padding:10px 16px;border-radius:12px;background:rgba(139,92,246,0.1);display:inline-block;">
+                <span style="font-size:12px;color:#94a3b8;">${FAILED_EMAIL_COPY.wechatLabel}：</span>
+                <span style="font-size:16px;font-weight:700;color:#c4b5fd;letter-spacing:1px;">${SUPPORT_WECHAT}</span>
+              </div>
+              <p style="margin:10px 0 0;font-size:12px;color:#94a3b8;">添加时请备注：gpt</p>
+            </div>
+
+            <!-- CTA Button -->
+            <div style="text-align:center;margin:0 0 20px;">
+              <a href="${SITE_URL}" style="display:inline-block;padding:14px 32px;border-radius:14px;background:linear-gradient(90deg,#7c3aed,#a855f7);color:#ffffff;text-decoration:none;font-size:15px;font-weight:700;">
+                ${FAILED_EMAIL_COPY.retryButton}
+              </a>
+            </div>
+
+            <p style="margin:0;font-size:13px;line-height:1.8;color:#94a3b8;text-align:center;">
+              如有问题，请联系客服微信：${SUPPORT_WECHAT}
+            </p>
+          </div>
+        </div>
+      </body>
+    </html>
+  `
+}
+
+function buildPaymentFailedEmailText() {
+  return [
+    FAILED_EMAIL_COPY.subject,
+    '',
+    FAILED_EMAIL_COPY.intro,
+    '',
+    `${FAILED_EMAIL_COPY.altPayTitle}：`,
+    ...FAILED_EMAIL_COPY.altPayMethods.map((m) => `  - ${m}`),
+    '',
+    '为什么选择我们：',
+    ...FAILED_EMAIL_COPY.benefits.map((b) => `  ✅ ${b}`),
+    '',
+    `${FAILED_EMAIL_COPY.qrTitle}`,
+    `${FAILED_EMAIL_COPY.wechatLabel}：${SUPPORT_WECHAT}`,
+    '添加时请备注：gpt',
+    '',
+    `返回网站重新购买：${SITE_URL}`,
+  ].join('\n')
+}
+
+export async function sendPaymentFailedEmail({ to }: PaymentFailedEmailOptions) {
+  const resendApiKey = process.env.RESEND_API_KEY?.trim()
+  const resendFromEmail = process.env.RESEND_FROM_EMAIL?.trim()
+
+  if (!resendApiKey || !resendFromEmail || !to) {
+    return
+  }
+
+  const response = await fetch(RESEND_API_URL, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${resendApiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: resendFromEmail,
+      to: [to],
+      subject: FAILED_EMAIL_COPY.subject,
+      html: buildPaymentFailedEmailHtml(),
+      text: buildPaymentFailedEmailText(),
+    }),
+  })
+
+  if (!response.ok) {
+    const body = await response.text()
+    throw new Error(`Failed to send payment failed email: ${body}`)
   }
 }
