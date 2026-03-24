@@ -94,7 +94,7 @@ function SuccessContent() {
               value: 128,
               currency: 'CNY',
             })
-            trackGoogleAdsConversion('purchase', 128)
+            trackGoogleAdsConversion('izOyCJuqvY4cELOXuYhD', 128)
           }
           return
         }

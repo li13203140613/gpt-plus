@@ -216,6 +216,98 @@ async function getGA4Section(window: ReportWindow): Promise<ReportSection | null
   }
 }
 
+async function getGoogleAdsSection(window: ReportWindow): Promise<ReportSection | null> {
+  const credentials = getGoogleCredentials()
+  const propertyId = process.env.GA4_PROPERTY_ID?.trim()
+
+  if (!credentials || !propertyId) return null
+
+  const client = new BetaAnalyticsDataClient({ credentials })
+
+  const [response] = await client.runReport({
+    property: `properties/${propertyId}`,
+    dateRanges: [{ startDate: window.label, endDate: window.label }],
+    metrics: [
+      { name: 'advertiserAdClicks' },
+      { name: 'advertiserAdCost' },
+      { name: 'advertiserAdCostPerClick' },
+      { name: 'advertiserAdImpressions' },
+    ],
+  })
+
+  const row = response.rows?.[0]
+  const get = (i: number) => toNumber(row?.metricValues?.[i]?.value)
+
+  const clicks = get(0)
+  const cost = get(1)
+  const cpc = get(2)
+  const impressions = get(3)
+
+  // If no ad data at all, skip this section
+  if (clicks === 0 && cost === 0 && impressions === 0) return null
+
+  const ctr = impressions > 0 ? clicks / impressions : 0
+
+  return {
+    icon: '📣',
+    title: '广告投放',
+    source: 'Google Ads via GA4',
+    date: window.label,
+    metrics: [
+      { label: '展示量', value: formatInteger(impressions) },
+      { label: '点击量', value: formatInteger(clicks) },
+      { label: '点击率', value: formatPercent(ctr) },
+      { label: '花费', value: formatCurrency(cost) },
+      { label: '平均CPC', value: formatCurrency(cpc) },
+    ],
+  }
+}
+
+async function getGoogleAdsCampaignSection(window: ReportWindow): Promise<ReportSection | null> {
+  const credentials = getGoogleCredentials()
+  const propertyId = process.env.GA4_PROPERTY_ID?.trim()
+
+  if (!credentials || !propertyId) return null
+
+  const client = new BetaAnalyticsDataClient({ credentials })
+
+  const [response] = await client.runReport({
+    property: `properties/${propertyId}`,
+    dateRanges: [{ startDate: window.label, endDate: window.label }],
+    dimensions: [{ name: 'sessionCampaignName' }],
+    metrics: [
+      { name: 'advertiserAdClicks' },
+      { name: 'advertiserAdCost' },
+      { name: 'advertiserAdImpressions' },
+    ],
+    orderBys: [{ metric: { metricName: 'advertiserAdCost' }, desc: true }],
+    limit: 5,
+  })
+
+  const rows = response.rows
+  if (!rows || rows.length === 0) return null
+
+  const metrics: ReportMetric[] = []
+  for (const r of rows) {
+    const campaign = r.dimensionValues?.[0]?.value || '(unknown)'
+    const clicks = toNumber(r.metricValues?.[0]?.value)
+    const cost = toNumber(r.metricValues?.[1]?.value)
+    const impressions = toNumber(r.metricValues?.[2]?.value)
+    metrics.push({
+      label: campaign,
+      value: `展示 ${formatInteger(impressions)} · 点击 ${formatInteger(clicks)} · 花费 ${formatCurrency(cost)}`,
+    })
+  }
+
+  return {
+    icon: '🎯',
+    title: '广告系列明细',
+    source: 'Google Ads via GA4',
+    date: window.label,
+    metrics,
+  }
+}
+
 async function getGSCSection(window: ReportWindow): Promise<ReportSection | null> {
   const credentials = getGoogleCredentials()
   const siteUrl = process.env.GSC_SITE_URL?.trim()
@@ -319,14 +411,16 @@ export async function buildDailyReport(dateKey?: string): Promise<DailyReportPay
   const siteName = process.env.REPORT_SITE_NAME?.trim() || DEFAULT_SITE_NAME
   const window = resolveReportWindow(dateKey)
 
-  const [business, revenue, ga4, gsc] = await Promise.all([
+  const [business, revenue, ga4, gsc, googleAds, googleAdsCampaign] = await Promise.all([
     getBusinessSection(window),
     getRevenueSection(window),
     getGA4Section(window).catch(() => null),
     getGSCSection(window).catch(() => null),
+    getGoogleAdsSection(window).catch(() => null),
+    getGoogleAdsCampaignSection(window).catch(() => null),
   ])
 
-  const sections = [business, revenue, ga4, gsc].filter(
+  const sections = [business, revenue, ga4, gsc, googleAds, googleAdsCampaign].filter(
     (s): s is ReportSection => s !== null,
   )
 
