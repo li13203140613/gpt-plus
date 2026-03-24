@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Loader2, Mail, Sparkles, MessageSquare, Image, Brain, Bot, FolderOpen, Video, Code2, Shield, CreditCard } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
+import { trackEvent } from '@/lib/analytics'
 
 const plusBenefits = [
   { icon: Sparkles, text: '解决复杂问题' },
@@ -21,7 +22,7 @@ const trustItems = [
   {
     icon: Shield,
     title: '售后无忧',
-    desc: '失败 30 分钟内退款',
+    desc: '失败 1 分钟内退款',
   },
   {
     icon: CreditCard,
@@ -33,16 +34,28 @@ const trustItems = [
 export function CodeGrid() {
   const [email, setEmail] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const emailFocusTracked = useRef(false)
+
+  function handleEmailFocus() {
+    if (!emailFocusTracked.current) {
+      emailFocusTracked.current = true
+      trackEvent('email_focus', { source_page: window.location.pathname })
+    }
+  }
 
   async function handleBuy() {
+    const sourcePage = window.location.pathname
     const normalizedEmail = email.trim().toLowerCase()
     const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)
 
     if (!isValidEmail) {
+      trackEvent('email_error', { error_type: 'invalid_format', source_page: sourcePage })
       toast.error('请输入正确的邮箱地址')
       return
     }
 
+    trackEvent('begin_checkout', { value: 128, currency: 'CNY', source_page: sourcePage })
+    trackEvent('email_submit', { source_page: sourcePage })
     setSubmitting(true)
 
     try {
@@ -62,9 +75,12 @@ export function CodeGrid() {
         throw new Error('未获取到支付链接')
       }
 
+      trackEvent('checkout_redirect', { source_page: sourcePage })
       window.location.href = data.url
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : '支付发起失败，请稍后重试')
+      const message = err instanceof Error ? err.message : '支付发起失败，请稍后重试'
+      trackEvent('checkout_api_error', { error_message: message, source_page: sourcePage })
+      toast.error(message)
       setSubmitting(false)
     }
   }
@@ -97,6 +113,7 @@ export function CodeGrid() {
                 type="email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
+                onFocus={handleEmailFocus}
                 placeholder="发送激活步骤到邮箱"
                 className="h-12 rounded-xl border-gray-200 bg-white pl-11 text-gray-900 placeholder:text-gray-400 focus-visible:border-violet-400 focus-visible:ring-violet-100"
               />

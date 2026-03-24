@@ -11,7 +11,7 @@ const AI_TOOLS = [
 ]
 
 export function CustomerService() {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(true)
 
   return (
     <>
@@ -71,7 +71,7 @@ export function CustomerService() {
 
               {/* QR Code */}
               <div className="text-center space-y-3">
-                <p className="text-sm text-gray-600">遇到充值问题？添加企业微信获取专业帮助</p>
+                <p className="text-sm text-gray-600">遇到充值问题？添加微信获取专业帮助</p>
                 <div className="mx-auto w-40 h-40 rounded-lg border border-gray-100 overflow-hidden">
                   <img
                     src="/wechat-qr.png"

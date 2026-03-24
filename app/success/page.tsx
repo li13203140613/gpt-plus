@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { CheckCircle, Copy, Loader2, XCircle } from 'lucide-react'
 import { toast } from 'sonner'
@@ -9,6 +9,7 @@ import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { Button } from '@/components/ui/button'
 import { ORDER_HISTORY_COOKIE, parseOrderHistoryCookie, serializeOrderHistoryCookie } from '@/lib/order-history'
+import { trackEvent, trackGoogleAdsConversion } from '@/lib/analytics'
 
 type PaymentStatus = 'loading' | 'pending' | 'completed' | 'expired' | 'failed' | 'empty'
 
@@ -43,6 +44,7 @@ function SuccessContent() {
   const [order, setOrder] = useState<OrderInfo | null>(null)
   const [pollCount, setPollCount] = useState(0)
   const [restoredFromCookie, setRestoredFromCookie] = useState(false)
+  const purchaseTracked = useRef(false)
 
   useEffect(() => {
     const storedSessionId = parseOrderHistoryCookie(readCookie(ORDER_HISTORY_COOKIE))
@@ -56,7 +58,11 @@ function SuccessContent() {
       window.history.replaceState({}, '', url)
     }
 
-    setRestoredFromCookie(!querySessionId && !!storedSessionId)
+    const isRecovery = !querySessionId && !!storedSessionId
+    setRestoredFromCookie(isRecovery)
+    if (isRecovery) {
+      trackEvent('order_recovery', { source: 'cookie' })
+    }
     setActiveSessionId(nextSessionId)
     setOrder(null)
     setPollCount(0)
@@ -81,6 +87,15 @@ function SuccessContent() {
         if (data.status === 'completed' && data.code) {
           setStatus('completed')
           setOrder(data)
+          if (!purchaseTracked.current) {
+            purchaseTracked.current = true
+            trackEvent('purchase', {
+              transaction_id: activeSessionId!,
+              value: 128,
+              currency: 'CNY',
+            })
+            trackGoogleAdsConversion('purchase', 128)
+          }
           return
         }
 
@@ -123,7 +138,12 @@ function SuccessContent() {
     if (!order?.code) return
 
     navigator.clipboard.writeText(order.code)
+    trackEvent('copy_activation_code', { method: 'click' })
     toast.success('激活码已复制到剪贴板')
+  }
+
+  function handleActivationSiteClick() {
+    trackEvent('click_activation_site', { destination: 'chong.plus' })
   }
 
   return (
@@ -224,6 +244,7 @@ function SuccessContent() {
               href="https://chong.plus"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={handleActivationSiteClick}
               className="flex items-center justify-center gap-2 w-full rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 transition-colors"
             >
               前往充值网站

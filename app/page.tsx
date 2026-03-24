@@ -35,7 +35,7 @@ const testimonials = [
   {
     name: '张先生',
     role: '产品经理',
-    content: '之前一直找不到靠谱的 ChatGPT Plus 充值渠道，试了好几家都不放心。这个网站用 Stripe 支付，流程很顺畅，3 分钟就搞定了，激活码立马就能用。',
+    content: '之前一直找不到靠谱的 ChatGPT Plus 充值渠道，试了好几家都不放心。这个网站用 Stripe 支付，流程很顺畅，1 分钟就搞定了，激活码立马就能用。',
     avatar: 'https://images.unsplash.com/photo-1643990083137-34669413e267?auto=format&fit=crop&w=160&h=160&q=80&crop=faces',
     rating: 5,
   },
@@ -171,7 +171,7 @@ export default function HomePage() {
           <div className="relative max-w-4xl mx-auto px-4 pt-20 pb-8 text-center">
             {/* Badge */}
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-4 py-1.5">
-              <span className="text-sm font-medium text-violet-700">成功率 99.8% · 失败 30 分钟内退款</span>
+              <span className="text-sm font-medium text-violet-700">成功率 99.99% · 失败 1 分钟内退款</span>
             </div>
 
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-none text-gray-900">
@@ -184,7 +184,7 @@ export default function HomePage() {
             </p>
 
             <p className="mx-auto mt-6 max-w-2xl text-base text-gray-600">
-              下单后自动发货，按页面指引操作，通常 2 分钟内完成充值。
+              下单后自动发货，1 分钟完成充值。不封号，封号包售后。
             </p>
 
             {/* Social proof badge */}
@@ -216,8 +216,8 @@ export default function HomePage() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {[
               { icon: Users, value: '59,800+', label: '累计客户' },
-              { icon: CheckCircle, value: '99.8%', label: '充值成功率' },
-              { icon: Clock, value: '3 分钟', label: '平均完成时间' },
+              { icon: CheckCircle, value: '99.9%', label: '充值成功率' },
+              { icon: Clock, value: '1 分钟', label: '平均完成时间' },
               { icon: Shield, value: '30 天', label: '质保期承诺' },
             ].map((item) => (
               <div key={item.label} className="rounded-2xl border border-gray-100 bg-white p-4 text-center shadow-sm">
@@ -405,7 +405,7 @@ export default function HomePage() {
           <div className="space-y-2 rounded-2xl border border-rose-200 bg-rose-50/80 p-5">
             <h3 className="text-sm font-semibold text-rose-700">风险提示</h3>
             <p className="text-sm leading-relaxed text-gray-500">
-              由于 OpenAI 政策原因，国内用户的 ChatGPT 账号存在被封号的可能，此类情况全网均有发生，属于不可控因素，不在售后范围内。本站仅保证在官网不封号的前提下，充值会员有效期至少满 30 天。
+              不封号，封号包售后。本站保证充值会员有效期至少满 30 天，如遇封号问题请联系客服处理。
             </p>
           </div>
 

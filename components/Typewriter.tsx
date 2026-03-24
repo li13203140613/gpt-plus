@@ -7,7 +7,7 @@ const PHRASES = [
   '微信支付宝可付',
   '不成功100%退款',
   '正规充值通道',
-  '2 分钟自助完成',
+  '1 分钟自助完成',
 ]
 
 export function Typewriter() {

@@ -10,11 +10,8 @@ export function BookmarkPrompt() {
     const dismissed = sessionStorage.getItem('bookmark-dismissed')
     if (dismissed) return
 
-    const timer = setTimeout(() => {
-      setShow(true)
-    }, 3000)
-
-    return () => clearTimeout(timer)
+    // Disabled: bookmark prompt not shown on page load
+    return
   }, [])
 
   function handleBookmark() {

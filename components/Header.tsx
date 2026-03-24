@@ -13,9 +13,9 @@ const AVATARS = [
 
 const HEADER_STATS = [
   { icon: Users, label: '服务用户', value: '5.9万+' },
-  { icon: Shield, label: '成功率', value: '99.8%' },
-  { icon: Clock3, label: '到账时间', value: '≤2分钟' },
-  { icon: Star, label: '用户评分', value: '4.9分' },
+  { icon: Shield, label: '成功率', value: '99.9%' },
+  { icon: Clock3, label: '到账时间', value: '≤1分钟' },
+  { icon: Star, label: '用户评分', value: '5.0分' },
 ]
 
 const NAMES = ['张', '李', '王', '刘', '陈', '杨', '赵', '黄', '周', '吴', '徐', '孙', '胡', '朱', '高', '林', '何', '郭', '马', '罗']
