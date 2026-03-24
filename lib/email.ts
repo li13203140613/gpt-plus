@@ -163,7 +163,7 @@ export async function sendActivationCodeEmail({ code, to }: ActivationCodeEmailO
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      from: resendFromEmail,
+      from: `GPT Plus <${resendFromEmail}>`,
       to: [to],
       subject: EMAIL_COPY.subject,
       html: buildActivationEmailHtml(safeCode),
@@ -185,7 +185,7 @@ const FAILED_EMAIL_COPY = {
   altPayDesc: '除了在线支付，您还可以通过以下方式完成充值：',
   altPayMethods: ['支付宝转账', '微信转账', '信用卡 / 借记卡'],
   benefits: [
-    '¥128 超值价，立省 2-5 美金开卡费',
+    '超值价，立省 2-5 美金开卡费',
     '下单后自动发货，1 分钟完成充值',
     '成功率 99.9%，失败 100% 全额退款',
     '不封号，封号包售后',
@@ -247,16 +247,6 @@ function buildPaymentFailedEmailHtml() {
               </ul>
             </div>
 
-            <!-- Benefits -->
-            <div style="margin:0 0 20px;padding:20px 22px;border-radius:20px;background:rgba(8,15,34,0.9);border:1px solid rgba(148,163,184,0.14);">
-              <div style="font-size:14px;font-weight:700;color:#e2e8f0;margin-bottom:8px;">
-                🌟 为什么选择我们
-              </div>
-              <ul style="margin:0;padding-left:0;list-style:none;">
-                ${benefitsHtml}
-              </ul>
-            </div>
-
             <!-- WeChat QR Code -->
             <div style="margin:0 0 20px;padding:20px 22px;border-radius:20px;background:rgba(8,15,34,0.9);border:1px solid rgba(139,92,246,0.2);text-align:center;">
               <div style="font-size:14px;font-weight:700;color:#e2e8f0;margin-bottom:12px;">
@@ -271,6 +261,16 @@ function buildPaymentFailedEmailHtml() {
                 <span style="font-size:16px;font-weight:700;color:#c4b5fd;letter-spacing:1px;">${SUPPORT_WECHAT}</span>
               </div>
               <p style="margin:10px 0 0;font-size:12px;color:#94a3b8;">添加时请备注：gpt</p>
+            </div>
+
+            <!-- Benefits -->
+            <div style="margin:0 0 20px;padding:20px 22px;border-radius:20px;background:rgba(8,15,34,0.9);border:1px solid rgba(148,163,184,0.14);">
+              <div style="font-size:14px;font-weight:700;color:#e2e8f0;margin-bottom:8px;">
+                🌟 为什么选择我们
+              </div>
+              <ul style="margin:0;padding-left:0;list-style:none;">
+                ${benefitsHtml}
+              </ul>
             </div>
 
             <!-- CTA Button -->
@@ -325,7 +325,7 @@ export async function sendPaymentFailedEmail({ to }: PaymentFailedEmailOptions) 
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      from: resendFromEmail,
+      from: `GPT Plus <${resendFromEmail}>`,
       to: [to],
       subject: FAILED_EMAIL_COPY.subject,
       html: buildPaymentFailedEmailHtml(),
