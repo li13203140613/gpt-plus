@@ -36,10 +36,10 @@ export function CustomerService() {
           />
 
           {/* Dialog */}
-          <div className="fixed right-6 bottom-24 z-[101] w-[340px] max-w-[90vw] rounded-2xl border border-gray-100 bg-white shadow-2xl shadow-violet-500/10">
+          <div className="fixed right-3 bottom-20 z-[101] w-[280px] sm:right-6 sm:bottom-24 sm:w-[340px] max-w-[85vw] rounded-2xl border border-gray-100 bg-white shadow-2xl shadow-violet-500/10">
             {/* Header */}
-            <div className="flex items-center justify-between px-6 pt-5 pb-3">
-              <h3 className="text-lg font-bold text-gray-900">联系客服</h3>
+            <div className="flex items-center justify-between px-4 pt-4 pb-2 sm:px-6 sm:pt-5 sm:pb-3">
+              <h3 className="text-base sm:text-lg font-bold text-gray-900">联系客服</h3>
               <button
                 onClick={() => setOpen(false)}
                 className="text-gray-300 hover:text-gray-500 transition-colors"
@@ -49,9 +49,9 @@ export function CustomerService() {
             </div>
 
             {/* Content */}
-            <div className="px-6 pb-6 space-y-5">
-              {/* AI Tools Card */}
-              <div className="rounded-xl border border-gray-100 bg-gray-50/50 p-4">
+            <div className="px-4 pb-4 space-y-3 sm:px-6 sm:pb-6 sm:space-y-5">
+              {/* AI Tools Card - hidden on mobile */}
+              <div className="hidden sm:block rounded-xl border border-gray-100 bg-gray-50/50 p-4">
                 <div className="flex items-center gap-2.5 mb-2.5">
                   <div className="flex size-8 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-purple-500">
                     <Sparkles className="size-4 text-white" />
@@ -70,9 +70,9 @@ export function CustomerService() {
               </div>
 
               {/* QR Code */}
-              <div className="text-center space-y-3">
-                <p className="text-sm text-gray-600">遇到充值问题？添加微信获取专业帮助</p>
-                <div className="mx-auto w-40 h-40 rounded-lg border border-gray-100 overflow-hidden">
+              <div className="text-center space-y-2 sm:space-y-3">
+                <p className="text-xs sm:text-sm text-gray-600">遇到充值问题？添加微信获取专业帮助</p>
+                <div className="mx-auto w-28 h-28 sm:w-40 sm:h-40 rounded-lg border border-gray-100 overflow-hidden">
                   <img
                     src="/wechat-qr.png"
                     alt="微信客服二维码"
@@ -82,7 +82,7 @@ export function CustomerService() {
               </div>
 
               {/* Footer tips */}
-              <div className="space-y-1.5 text-sm">
+              <div className="space-y-1 sm:space-y-1.5 text-xs sm:text-sm">
                 <p className="text-gray-500">
                   <span className="text-amber-500">💡</span>{' '}
                   <span className="text-violet-600 font-medium">专业客服团队，为您服务</span>
