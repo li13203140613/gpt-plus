@@ -1,6 +1,6 @@
 import { getDb } from '@/lib/db'
 import { sendActivationCodeEmail, sendPaymentFailedEmail } from '@/lib/email'
-import { notifyNewOrder, notifyPaymentSuccess } from '@/lib/feishu-notify'
+import { notifyNewOrder, notifyPaymentSuccess, notifyPaymentExpired } from '@/lib/feishu-notify'
 import { getStripe } from './stripe'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'http://localhost:3001'
@@ -188,13 +188,20 @@ export async function handleSessionExpired(sessionId: string) {
     WHERE stripe_session_id = ${sessionId} AND status = 'pending'
   `
 
-  // Send payment failed email
+  // Send payment failed email + Feishu notification
   if (buyerEmail) {
     try {
       await sendPaymentFailedEmail({ to: buyerEmail })
     } catch (error) {
       console.error('Failed to send payment failed email:', error)
     }
+
+    notifyPaymentExpired({
+      email: buyerEmail,
+      amount: 128,
+      sessionId,
+      reason: '未支付过期',
+    }).catch((err) => console.error('Feishu expired notify failed:', err))
   }
 }
 
@@ -216,6 +223,13 @@ export async function handlePaymentFailed(sessionId: string, buyerEmail?: string
     } catch (error) {
       console.error('Failed to send payment failed email:', error)
     }
+
+    notifyPaymentExpired({
+      email: buyerEmail,
+      amount: 128,
+      sessionId,
+      reason: '支付失败',
+    }).catch((err) => console.error('Feishu payment failed notify failed:', err))
   }
 
   // Release the reserved code

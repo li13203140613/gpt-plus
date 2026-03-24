@@ -112,3 +112,45 @@ export async function notifyPaymentSuccess({
     ],
   })
 }
+
+export async function notifyPaymentExpired({
+  email,
+  amount,
+  sessionId,
+  reason,
+}: {
+  email: string
+  amount: string | number
+  sessionId: string
+  reason: '未支付过期' | '支付失败'
+}) {
+  const now = new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })
+
+  await sendFeishuMessage({
+    config: { wide_screen_mode: true },
+    header: {
+      template: 'red',
+      title: { tag: 'plain_text', content: `❌ 订单${reason}` },
+    },
+    elements: [
+      {
+        tag: 'div',
+        fields: [
+          { is_short: true, text: { tag: 'lark_md', content: `**买家邮箱**\n${email}` } },
+          { is_short: true, text: { tag: 'lark_md', content: `**金额**\n¥${amount}` } },
+        ],
+      },
+      {
+        tag: 'div',
+        fields: [
+          { is_short: true, text: { tag: 'lark_md', content: `**原因**\n${reason}` } },
+          { is_short: true, text: { tag: 'lark_md', content: `**时间**\n${now}` } },
+        ],
+      },
+      {
+        tag: 'note',
+        elements: [{ tag: 'plain_text', content: `已发送挽回邮件 · Session: ${sessionId.slice(0, 20)}...` }],
+      },
+    ],
+  })
+}
