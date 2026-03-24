@@ -184,7 +184,7 @@ export default function HomePage() {
             </p>
 
             <p className="mx-auto mt-6 max-w-2xl text-base text-gray-600">
-              下单后自动发货，1 分钟完成充值。不封号，封号包售后。
+              下单后自动发货，1 分钟完成充值。
             </p>
 
             {/* Social proof badge */}
