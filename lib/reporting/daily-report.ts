@@ -124,6 +124,10 @@ async function getBusinessSection(window: ReportWindow): Promise<ReportSection> 
       (SELECT COUNT(*)::int FROM gptplus_orders WHERE status = 'completed' AND completed_at >= ${window.startIso} AND completed_at < ${window.endIso}) AS daily_completed_orders
   `
 
+  const newOrders = toNumber(row.daily_new_orders)
+  const completedOrders = toNumber(row.daily_completed_orders)
+  const paymentRate = newOrders > 0 ? completedOrders / newOrders : 0
+
   return {
     icon: '📋',
     title: '业务数据',
@@ -134,8 +138,9 @@ async function getBusinessSection(window: ReportWindow): Promise<ReportSection> 
       { label: '可售库存', value: formatInteger(toNumber(row.available_codes)) },
       { label: '预留中', value: formatInteger(toNumber(row.reserved_codes)) },
       { label: '累计已售', value: formatInteger(toNumber(row.sold_codes)) },
-      { label: '昨日新订单', value: formatInteger(toNumber(row.daily_new_orders)) },
-      { label: '昨日成交订单', value: formatInteger(toNumber(row.daily_completed_orders)) },
+      { label: '昨日新订单', value: formatInteger(newOrders) },
+      { label: '昨日成交订单', value: formatInteger(completedOrders) },
+      { label: '下单→支付转化率', value: formatPercent(paymentRate) },
       { label: '待支付订单', value: formatInteger(toNumber(row.pending_orders)) },
       { label: '已过期订单', value: formatInteger(toNumber(row.expired_orders)) },
     ],
@@ -144,6 +149,9 @@ async function getBusinessSection(window: ReportWindow): Promise<ReportSection> 
 
 async function getRevenueSection(window: ReportWindow): Promise<ReportSection> {
   const sql = getDb()
+
+  const prevDateKey = shiftDateKey(window.label, -1)
+  const prevStart = new Date(`${prevDateKey}T00:00:00+08:00`).toISOString()
 
   const [row] = await sql`
     SELECT
@@ -157,10 +165,26 @@ async function getRevenueSection(window: ReportWindow): Promise<ReportSection> {
           AND completed_at >= ${window.startIso}
           AND completed_at < ${window.endIso}
       ), 0)::numeric AS daily_revenue,
+      COUNT(*) FILTER (
+        WHERE status = 'completed'
+          AND completed_at >= ${prevStart}
+          AND completed_at < ${window.startIso}
+      )::int AS prev_orders,
+      COALESCE(SUM(amount) FILTER (
+        WHERE status = 'completed'
+          AND completed_at >= ${prevStart}
+          AND completed_at < ${window.startIso}
+      ), 0)::numeric AS prev_revenue,
       COUNT(*) FILTER (WHERE status = 'completed')::int AS total_orders,
       COALESCE(SUM(amount) FILTER (WHERE status = 'completed'), 0)::numeric AS total_revenue
     FROM gptplus_orders
   `
+
+  const dailyOrders = toNumber(row.daily_orders)
+  const dailyRevenue = toNumber(row.daily_revenue)
+  const prevOrders = toNumber(row.prev_orders)
+  const prevRevenue = toNumber(row.prev_revenue)
+  const avgOrderValue = dailyOrders > 0 ? dailyRevenue / dailyOrders : 0
 
   return {
     icon: '💰',
@@ -168,8 +192,9 @@ async function getRevenueSection(window: ReportWindow): Promise<ReportSection> {
     source: '后台',
     date: window.label,
     metrics: [
-      { label: '昨日订单数', value: formatInteger(toNumber(row.daily_orders)) },
-      { label: '昨日收入', value: formatCurrency(toNumber(row.daily_revenue)) },
+      { label: '昨日订单数', value: `${formatInteger(dailyOrders)}  ${formatChange(dailyOrders, prevOrders)}` },
+      { label: '昨日收入', value: `${formatCurrency(dailyRevenue)}  ${formatChange(dailyRevenue, prevRevenue)}` },
+      { label: '客单价', value: formatCurrency(avgOrderValue) },
       { label: '累计订单数', value: formatInteger(toNumber(row.total_orders)) },
       { label: '累计收入', value: formatCurrency(toNumber(row.total_revenue)) },
     ],
@@ -182,6 +207,20 @@ function formatPercent(value: number) {
 
 function formatDecimal(value: number, digits = 1) {
   return value.toFixed(digits)
+}
+
+function formatDuration(seconds: number) {
+  const mins = Math.floor(seconds / 60)
+  const secs = Math.round(seconds % 60)
+  if (mins === 0) return `${secs}秒`
+  return `${mins}分${secs}秒`
+}
+
+function formatChange(current: number, previous: number) {
+  if (previous === 0) return current > 0 ? '📈 新增' : '-'
+  const change = ((current - previous) / previous) * 100
+  const sign = change >= 0 ? '📈' : '📉'
+  return `${sign} ${change >= 0 ? '+' : ''}${change.toFixed(1)}%`
 }
 
 async function getGA4Section(window: ReportWindow): Promise<ReportSection | null> {
@@ -219,7 +258,7 @@ async function getGA4Section(window: ReportWindow): Promise<ReportSection | null
       { label: '页面浏览', value: formatInteger(get(2)) },
       { label: '会话数', value: formatInteger(get(3)) },
       { label: '跳出率', value: formatPercent(get(4)) },
-      { label: '平均会话时长', value: `${formatDecimal(get(5))}s` },
+      { label: '平均停留', value: formatDuration(get(5)) },
     ],
   }
 }

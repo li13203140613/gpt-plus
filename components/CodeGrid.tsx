@@ -31,7 +31,11 @@ const trustItems = [
   },
 ]
 
-export function CodeGrid() {
+interface CodeGridProps {
+  priceOverride?: number
+}
+
+export function CodeGrid({ priceOverride }: CodeGridProps = {}) {
   const [email, setEmail] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const emailFocusTracked = useRef(false)
@@ -54,7 +58,7 @@ export function CodeGrid() {
       return
     }
 
-    trackEvent('begin_checkout', { value: 128, currency: 'CNY', source_page: sourcePage })
+    trackEvent('begin_checkout', { value: priceOverride ?? 128, currency: 'CNY', source_page: sourcePage })
     trackEvent('email_submit', { source_page: sourcePage })
     setSubmitting(true)
 
@@ -62,7 +66,7 @@ export function CodeGrid() {
       const res = await fetch('/api/payment/create-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ buyerEmail: normalizedEmail }),
+        body: JSON.stringify({ buyerEmail: normalizedEmail, ...(priceOverride ? { priceOverride } : {}) }),
       })
 
       const data = await res.json()
@@ -97,8 +101,8 @@ export function CodeGrid() {
                 $20/月
               </span>
             </div>
-            <p className="text-3xl font-bold text-gray-900">¥128.00 <span className="text-base font-normal text-gray-400 line-through">¥145+</span></p>
-            <p className="mt-2 text-sm text-gray-400">即刻下单，立省2-5美金开卡费</p>
+            <p className="text-3xl font-bold text-gray-900">¥{priceOverride ? `${priceOverride}.00` : '128.00'} <span className="text-base font-normal text-gray-400 line-through">{priceOverride ? '¥128' : '¥145+'}</span></p>
+            <p className="mt-2 text-sm text-gray-400">{priceOverride ? '限时特惠，立省开卡费' : '即刻下单，立省2-5美金开卡费'}</p>
           </div>
 
           {/* Email */}

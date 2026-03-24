@@ -4,7 +4,7 @@ import { createPaymentSession } from '@/lib/payment/service'
 
 export async function POST(request: NextRequest) {
   try {
-    const { buyerEmail } = await request.json()
+    const { buyerEmail, priceOverride } = await request.json()
     const email = typeof buyerEmail === 'string' ? buyerEmail.trim().toLowerCase() : ''
     const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 
@@ -12,7 +12,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Please provide a valid email address' }, { status: 400 })
     }
 
-    const { url, sessionId } = await createPaymentSession({ buyerEmail: email })
+    // Only allow whitelisted price overrides
+    const ALLOWED_PRICES = [99]
+    const validatedPrice = ALLOWED_PRICES.includes(priceOverride) ? priceOverride : undefined
+
+    const { url, sessionId } = await createPaymentSession({ buyerEmail: email, priceOverride: validatedPrice })
     const response = NextResponse.json({ url, sessionId })
 
     response.cookies.set({

@@ -8,6 +8,7 @@ const RESERVE_TIMEOUT_MINUTES = 10
 
 interface CreatePaymentSessionInput {
   buyerEmail: string
+  priceOverride?: number
 }
 
 export async function releaseExpiredReservations() {
@@ -32,7 +33,7 @@ export async function releaseExpiredReservations() {
   `
 }
 
-export async function createPaymentSession({ buyerEmail }: CreatePaymentSessionInput) {
+export async function createPaymentSession({ buyerEmail, priceOverride }: CreatePaymentSessionInput) {
   const sql = getDb()
 
   await releaseExpiredReservations()
@@ -58,6 +59,7 @@ export async function createPaymentSession({ buyerEmail }: CreatePaymentSessionI
   }
 
   const code = codes[0]
+  const finalPrice = priceOverride ?? Number(code.price)
 
   const session = await getStripe().checkout.sessions.create({
     payment_method_types: ['card', 'alipay', 'wechat_pay'],
@@ -72,7 +74,7 @@ export async function createPaymentSession({ buyerEmail }: CreatePaymentSessionI
             name: 'ChatGPT Plus 一个月会员充值卡',
             description: '月度 ChatGPT Plus 代充值卡',
           },
-          unit_amount: Math.round(Number(code.price) * 100),
+          unit_amount: Math.round(finalPrice * 100),
         },
         quantity: 1,
       },
@@ -99,11 +101,11 @@ export async function createPaymentSession({ buyerEmail }: CreatePaymentSessionI
 
   await sql`
     INSERT INTO gptplus_orders (code_id, stripe_session_id, amount, status, buyer_email)
-    VALUES (${code.id}, ${session.id}, ${code.price}, 'pending', ${buyerEmail})
+    VALUES (${code.id}, ${session.id}, ${finalPrice}, 'pending', ${buyerEmail})
   `
 
   // Notify new order to Feishu
-  notifyNewOrder({ email: buyerEmail, amount: code.price, sessionId: session.id }).catch((err) =>
+  notifyNewOrder({ email: buyerEmail, amount: finalPrice, sessionId: session.id }).catch((err) =>
     console.error('Feishu new order notify failed:', err)
   )
 
@@ -168,13 +170,16 @@ export async function completePayment(sessionId: string, buyerEmail?: string) {
 export async function handleSessionExpired(sessionId: string) {
   const sql = getDb()
 
-  // Get buyer email before clearing it
+  // Get buyer email and order amount before clearing
   const codes = await sql`
-    SELECT buyer_email FROM activation_codes
-    WHERE stripe_session_id = ${sessionId} AND status = 'reserved'
+    SELECT ac.buyer_email, o.amount
+    FROM activation_codes ac
+    LEFT JOIN gptplus_orders o ON o.stripe_session_id = ac.stripe_session_id AND o.status = 'pending'
+    WHERE ac.stripe_session_id = ${sessionId} AND ac.status = 'reserved'
     LIMIT 1
   `
   const buyerEmail = codes[0]?.buyer_email ?? null
+  const orderAmount = codes[0]?.amount ?? 128
 
   await sql`
     UPDATE activation_codes
@@ -198,7 +203,7 @@ export async function handleSessionExpired(sessionId: string) {
 
     notifyPaymentExpired({
       email: buyerEmail,
-      amount: 128,
+      amount: orderAmount,
       sessionId,
       reason: '未支付过期',
     }).catch((err) => console.error('Feishu expired notify failed:', err))
@@ -208,14 +213,15 @@ export async function handleSessionExpired(sessionId: string) {
 export async function handlePaymentFailed(sessionId: string, buyerEmail?: string) {
   const sql = getDb()
 
-  // Look up buyer email from order if not provided
+  // Look up buyer email and amount from order if not provided
+  const orders = await sql`
+    SELECT buyer_email, amount FROM gptplus_orders
+    WHERE stripe_session_id = ${sessionId} LIMIT 1
+  `
   if (!buyerEmail) {
-    const orders = await sql`
-      SELECT buyer_email FROM gptplus_orders
-      WHERE stripe_session_id = ${sessionId} LIMIT 1
-    `
     buyerEmail = orders[0]?.buyer_email ?? undefined
   }
+  const failedAmount = orders[0]?.amount ?? 128
 
   if (buyerEmail) {
     try {
@@ -226,7 +232,7 @@ export async function handlePaymentFailed(sessionId: string, buyerEmail?: string
 
     notifyPaymentExpired({
       email: buyerEmail,
-      amount: 128,
+      amount: failedAmount,
       sessionId,
       reason: '支付失败',
     }).catch((err) => console.error('Feishu payment failed notify failed:', err))
