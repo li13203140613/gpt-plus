@@ -216,6 +216,191 @@ async function getGA4Section(window: ReportWindow): Promise<ReportSection | null
   }
 }
 
+async function getTrafficSourceSection(window: ReportWindow): Promise<ReportSection | null> {
+  const credentials = getGoogleCredentials()
+  const propertyId = process.env.GA4_PROPERTY_ID?.trim()
+
+  if (!credentials || !propertyId) return null
+
+  const client = new BetaAnalyticsDataClient({ credentials })
+
+  const [response] = await client.runReport({
+    property: `properties/${propertyId}`,
+    dateRanges: [{ startDate: window.label, endDate: window.label }],
+    dimensions: [{ name: 'sessionDefaultChannelGroup' }],
+    metrics: [
+      { name: 'sessions' },
+      { name: 'activeUsers' },
+    ],
+    orderBys: [{ metric: { metricName: 'sessions' }, desc: true }],
+    limit: 8,
+  })
+
+  const rows = response.rows
+  if (!rows || rows.length === 0) return null
+
+  const metrics: ReportMetric[] = rows.map((r) => {
+    const channel = r.dimensionValues?.[0]?.value || '(unknown)'
+    const sessions = toNumber(r.metricValues?.[0]?.value)
+    const users = toNumber(r.metricValues?.[1]?.value)
+    return {
+      label: channel,
+      value: `会话 ${formatInteger(sessions)} · 用户 ${formatInteger(users)}`,
+    }
+  })
+
+  return {
+    icon: '🔗',
+    title: '流量来源',
+    source: 'GA4',
+    date: window.label,
+    metrics,
+  }
+}
+
+async function getTopPagesSection(window: ReportWindow): Promise<ReportSection | null> {
+  const credentials = getGoogleCredentials()
+  const propertyId = process.env.GA4_PROPERTY_ID?.trim()
+
+  if (!credentials || !propertyId) return null
+
+  const client = new BetaAnalyticsDataClient({ credentials })
+
+  const [response] = await client.runReport({
+    property: `properties/${propertyId}`,
+    dateRanges: [{ startDate: window.label, endDate: window.label }],
+    dimensions: [{ name: 'pagePath' }],
+    metrics: [
+      { name: 'screenPageViews' },
+      { name: 'activeUsers' },
+    ],
+    orderBys: [{ metric: { metricName: 'screenPageViews' }, desc: true }],
+    limit: 8,
+  })
+
+  const rows = response.rows
+  if (!rows || rows.length === 0) return null
+
+  const metrics: ReportMetric[] = rows.map((r) => {
+    const page = r.dimensionValues?.[0]?.value || '/'
+    const views = toNumber(r.metricValues?.[0]?.value)
+    const users = toNumber(r.metricValues?.[1]?.value)
+    return {
+      label: page,
+      value: `浏览 ${formatInteger(views)} · 用户 ${formatInteger(users)}`,
+    }
+  })
+
+  return {
+    icon: '📄',
+    title: '热门页面',
+    source: 'GA4',
+    date: window.label,
+    metrics,
+  }
+}
+
+async function getDeviceSection(window: ReportWindow): Promise<ReportSection | null> {
+  const credentials = getGoogleCredentials()
+  const propertyId = process.env.GA4_PROPERTY_ID?.trim()
+
+  if (!credentials || !propertyId) return null
+
+  const client = new BetaAnalyticsDataClient({ credentials })
+
+  const [response] = await client.runReport({
+    property: `properties/${propertyId}`,
+    dateRanges: [{ startDate: window.label, endDate: window.label }],
+    dimensions: [{ name: 'deviceCategory' }],
+    metrics: [
+      { name: 'sessions' },
+      { name: 'activeUsers' },
+    ],
+    orderBys: [{ metric: { metricName: 'sessions' }, desc: true }],
+  })
+
+  const rows = response.rows
+  if (!rows || rows.length === 0) return null
+
+  const deviceMap: Record<string, string> = { desktop: '💻 桌面端', mobile: '📱 移动端', tablet: '📟 平板' }
+
+  const metrics: ReportMetric[] = rows.map((r) => {
+    const device = r.dimensionValues?.[0]?.value || 'unknown'
+    const sessions = toNumber(r.metricValues?.[0]?.value)
+    const users = toNumber(r.metricValues?.[1]?.value)
+    return {
+      label: deviceMap[device] || device,
+      value: `会话 ${formatInteger(sessions)} · 用户 ${formatInteger(users)}`,
+    }
+  })
+
+  return {
+    icon: '📱',
+    title: '设备分布',
+    source: 'GA4',
+    date: window.label,
+    metrics,
+  }
+}
+
+async function getFunnelSection(window: ReportWindow): Promise<ReportSection | null> {
+  const credentials = getGoogleCredentials()
+  const propertyId = process.env.GA4_PROPERTY_ID?.trim()
+
+  if (!credentials || !propertyId) return null
+
+  const client = new BetaAnalyticsDataClient({ credentials })
+
+  const eventNames = ['email_focus', 'begin_checkout', 'checkout_redirect', 'purchase']
+
+  const [response] = await client.runReport({
+    property: `properties/${propertyId}`,
+    dateRanges: [{ startDate: window.label, endDate: window.label }],
+    dimensions: [{ name: 'eventName' }],
+    metrics: [{ name: 'eventCount' }],
+    dimensionFilter: {
+      filter: {
+        fieldName: 'eventName',
+        inListFilter: { values: eventNames },
+      },
+    },
+  })
+
+  const counts: Record<string, number> = {}
+  for (const r of response.rows || []) {
+    const name = r.dimensionValues?.[0]?.value || ''
+    counts[name] = toNumber(r.metricValues?.[0]?.value)
+  }
+
+  // Only show if at least one funnel event has data
+  if (Object.values(counts).every((v) => v === 0)) return null
+
+  const funnelLabels: Record<string, string> = {
+    email_focus: '📧 邮箱聚焦',
+    begin_checkout: '💳 发起支付',
+    checkout_redirect: '🔀 跳转Stripe',
+    purchase: '✅ 支付完成',
+  }
+
+  const metrics: ReportMetric[] = eventNames.map((name, i) => {
+    const count = counts[name] || 0
+    const prev = i > 0 ? counts[eventNames[i - 1]] || 0 : 0
+    const rate = i > 0 && prev > 0 ? ` (${formatPercent(count / prev)})` : ''
+    return {
+      label: funnelLabels[name] || name,
+      value: `${formatInteger(count)}${rate}`,
+    }
+  })
+
+  return {
+    icon: '🔄',
+    title: '转化漏斗',
+    source: 'GA4 Events',
+    date: window.label,
+    metrics,
+  }
+}
+
 async function getGoogleAdsSection(window: ReportWindow): Promise<ReportSection | null> {
   const credentials = getGoogleCredentials()
   const propertyId = process.env.GA4_PROPERTY_ID?.trim()
@@ -411,16 +596,20 @@ export async function buildDailyReport(dateKey?: string): Promise<DailyReportPay
   const siteName = process.env.REPORT_SITE_NAME?.trim() || DEFAULT_SITE_NAME
   const window = resolveReportWindow(dateKey)
 
-  const [business, revenue, ga4, gsc, googleAds, googleAdsCampaign] = await Promise.all([
+  const results = await Promise.all([
     getBusinessSection(window),
     getRevenueSection(window),
     getGA4Section(window).catch(() => null),
+    getTrafficSourceSection(window).catch(() => null),
+    getTopPagesSection(window).catch(() => null),
+    getDeviceSection(window).catch(() => null),
+    getFunnelSection(window).catch(() => null),
     getGSCSection(window).catch(() => null),
     getGoogleAdsSection(window).catch(() => null),
     getGoogleAdsCampaignSection(window).catch(() => null),
   ])
 
-  const sections = [business, revenue, ga4, gsc, googleAds, googleAdsCampaign].filter(
+  const sections = results.filter(
     (s): s is ReportSection => s !== null,
   )
 
