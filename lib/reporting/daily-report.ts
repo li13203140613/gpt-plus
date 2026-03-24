@@ -2,6 +2,14 @@ import { createHmac } from 'node:crypto'
 import { BetaAnalyticsDataClient } from '@google-analytics/data'
 import { google } from 'googleapis'
 import { getDb } from '@/lib/db'
+import {
+  getAdsOverview,
+  getAdsCampaigns,
+  getAdsKeywords,
+  getAdsSearchTerms,
+  getAdsDevicePerformance,
+  microsToCny,
+} from './google-ads'
 
 const REPORT_TIMEZONE = 'Asia/Shanghai'
 const DEFAULT_SITE_NAME = 'GPT Plus'
@@ -401,93 +409,121 @@ async function getFunnelSection(window: ReportWindow): Promise<ReportSection | n
   }
 }
 
-async function getGoogleAdsSection(window: ReportWindow): Promise<ReportSection | null> {
-  const credentials = getGoogleCredentials()
-  const propertyId = process.env.GA4_PROPERTY_ID?.trim()
+async function getAdsOverviewSection(window: ReportWindow): Promise<ReportSection | null> {
+  const overview = await getAdsOverview(window.label)
+  if (!overview || (overview.impressions === 0 && overview.costMicros === 0)) return null
 
-  if (!credentials || !propertyId) return null
-
-  const client = new BetaAnalyticsDataClient({ credentials })
-
-  const [response] = await client.runReport({
-    property: `properties/${propertyId}`,
-    dateRanges: [{ startDate: window.label, endDate: window.label }],
-    metrics: [
-      { name: 'advertiserAdClicks' },
-      { name: 'advertiserAdCost' },
-      { name: 'advertiserAdCostPerClick' },
-      { name: 'advertiserAdImpressions' },
-    ],
-  })
-
-  const row = response.rows?.[0]
-  const get = (i: number) => toNumber(row?.metricValues?.[i]?.value)
-
-  const clicks = get(0)
-  const cost = get(1)
-  const cpc = get(2)
-  const impressions = get(3)
-
-  // If no ad data at all, skip this section
-  if (clicks === 0 && cost === 0 && impressions === 0) return null
-
-  const ctr = impressions > 0 ? clicks / impressions : 0
+  const cost = microsToCny(overview.costMicros)
+  const cpa = overview.conversions > 0 ? cost / overview.conversions : 0
 
   return {
     icon: '📣',
-    title: '广告投放',
-    source: 'Google Ads via GA4',
+    title: '广告总览',
+    source: 'Google Ads API',
     date: window.label,
     metrics: [
-      { label: '展示量', value: formatInteger(impressions) },
-      { label: '点击量', value: formatInteger(clicks) },
-      { label: '点击率', value: formatPercent(ctr) },
+      { label: '展示量', value: formatInteger(overview.impressions) },
+      { label: '点击量', value: formatInteger(overview.clicks) },
+      { label: '点击率', value: formatPercent(overview.ctr) },
       { label: '花费', value: formatCurrency(cost) },
-      { label: '平均CPC', value: formatCurrency(cpc) },
+      { label: '平均CPC', value: formatCurrency(overview.avgCpc) },
+      { label: '转化数', value: formatDecimal(overview.conversions) },
+      ...(cpa > 0 ? [{ label: '转化成本', value: formatCurrency(cpa) }] : []),
     ],
   }
 }
 
-async function getGoogleAdsCampaignSection(window: ReportWindow): Promise<ReportSection | null> {
-  const credentials = getGoogleCredentials()
-  const propertyId = process.env.GA4_PROPERTY_ID?.trim()
+async function getAdsCampaignSection(window: ReportWindow): Promise<ReportSection | null> {
+  const campaigns = await getAdsCampaigns(window.label)
+  if (!campaigns || campaigns.length === 0) return null
 
-  if (!credentials || !propertyId) return null
-
-  const client = new BetaAnalyticsDataClient({ credentials })
-
-  const [response] = await client.runReport({
-    property: `properties/${propertyId}`,
-    dateRanges: [{ startDate: window.label, endDate: window.label }],
-    dimensions: [{ name: 'sessionCampaignName' }],
-    metrics: [
-      { name: 'advertiserAdClicks' },
-      { name: 'advertiserAdCost' },
-      { name: 'advertiserAdImpressions' },
-    ],
-    orderBys: [{ metric: { metricName: 'advertiserAdCost' }, desc: true }],
-    limit: 5,
+  const metrics: ReportMetric[] = campaigns.map((c) => {
+    const cost = microsToCny(c.costMicros)
+    const ctr = c.impressions > 0 ? (c.clicks / c.impressions * 100).toFixed(1) + '%' : '0%'
+    return {
+      label: c.name,
+      value: `展示 ${formatInteger(c.impressions)} · 点击 ${formatInteger(c.clicks)}(${ctr}) · 花费 ${formatCurrency(cost)} · 转化 ${formatDecimal(c.conversions)}`,
+    }
   })
-
-  const rows = response.rows
-  if (!rows || rows.length === 0) return null
-
-  const metrics: ReportMetric[] = []
-  for (const r of rows) {
-    const campaign = r.dimensionValues?.[0]?.value || '(unknown)'
-    const clicks = toNumber(r.metricValues?.[0]?.value)
-    const cost = toNumber(r.metricValues?.[1]?.value)
-    const impressions = toNumber(r.metricValues?.[2]?.value)
-    metrics.push({
-      label: campaign,
-      value: `展示 ${formatInteger(impressions)} · 点击 ${formatInteger(clicks)} · 花费 ${formatCurrency(cost)}`,
-    })
-  }
 
   return {
     icon: '🎯',
-    title: '广告系列明细',
-    source: 'Google Ads via GA4',
+    title: '广告系列',
+    source: 'Google Ads API',
+    date: window.label,
+    metrics,
+  }
+}
+
+async function getAdsKeywordSection(window: ReportWindow): Promise<ReportSection | null> {
+  const keywords = await getAdsKeywords(window.label)
+  if (!keywords || keywords.length === 0) return null
+
+  const metrics: ReportMetric[] = keywords.map((k) => {
+    const cost = microsToCny(k.costMicros)
+    const qs = k.qualityScore !== null ? ` · QS ${k.qualityScore}` : ''
+    return {
+      label: k.keyword,
+      value: `点击 ${formatInteger(k.clicks)} · 花费 ${formatCurrency(cost)} · 转化 ${formatDecimal(k.conversions)}${qs}`,
+    }
+  })
+
+  return {
+    icon: '🔑',
+    title: '关键词表现',
+    source: 'Google Ads API',
+    date: window.label,
+    metrics,
+  }
+}
+
+async function getAdsSearchTermSection(window: ReportWindow): Promise<ReportSection | null> {
+  const terms = await getAdsSearchTerms(window.label)
+  if (!terms || terms.length === 0) return null
+
+  const metrics: ReportMetric[] = terms.map((t) => {
+    const cost = microsToCny(t.costMicros)
+    return {
+      label: t.searchTerm,
+      value: `展示 ${formatInteger(t.impressions)} · 点击 ${formatInteger(t.clicks)} · 花费 ${formatCurrency(cost)}`,
+    }
+  })
+
+  return {
+    icon: '🔍',
+    title: '搜索词报告',
+    source: 'Google Ads API',
+    date: window.label,
+    metrics,
+  }
+}
+
+async function getAdsDeviceSection(window: ReportWindow): Promise<ReportSection | null> {
+  const devices = await getAdsDevicePerformance(window.label)
+  if (!devices || devices.length === 0) return null
+
+  const deviceNames: Record<string, string> = {
+    MOBILE: '📱 移动端',
+    DESKTOP: '💻 桌面端',
+    TABLET: '📟 平板',
+    OTHER: '❓ 其他',
+    CONNECTED_TV: '📺 智能电视',
+    UNKNOWN: '❓ 未知',
+  }
+
+  const metrics: ReportMetric[] = devices.map((d) => {
+    const cost = microsToCny(d.costMicros)
+    const ctr = d.impressions > 0 ? (d.clicks / d.impressions * 100).toFixed(1) + '%' : '0%'
+    return {
+      label: deviceNames[d.device] || d.device,
+      value: `点击 ${formatInteger(d.clicks)}(${ctr}) · 花费 ${formatCurrency(cost)} · 转化 ${formatDecimal(d.conversions)}`,
+    }
+  })
+
+  return {
+    icon: '📱',
+    title: '广告设备分布',
+    source: 'Google Ads API',
     date: window.label,
     metrics,
   }
@@ -605,8 +641,11 @@ export async function buildDailyReport(dateKey?: string): Promise<DailyReportPay
     getDeviceSection(window).catch(() => null),
     getFunnelSection(window).catch(() => null),
     getGSCSection(window).catch(() => null),
-    getGoogleAdsSection(window).catch(() => null),
-    getGoogleAdsCampaignSection(window).catch(() => null),
+    getAdsOverviewSection(window).catch(() => null),
+    getAdsCampaignSection(window).catch(() => null),
+    getAdsKeywordSection(window).catch(() => null),
+    getAdsSearchTermSection(window).catch(() => null),
+    getAdsDeviceSection(window).catch(() => null),
   ])
 
   const sections = results.filter(
