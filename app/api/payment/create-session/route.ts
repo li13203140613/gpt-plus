@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { ORDER_HISTORY_COOKIE, serializeOrderHistoryCookie } from '@/lib/order-history'
 import { createPaymentSession } from '@/lib/payment/service'
+import { SUPPORTED_LOCALES, type Locale } from '@/lib/i18n/config'
 
 export async function POST(request: NextRequest) {
   try {
-    const { buyerEmail, priceOverride } = await request.json()
+    const { buyerEmail, priceOverride, locale: rawLocale } = await request.json()
     const email = typeof buyerEmail === 'string' ? buyerEmail.trim().toLowerCase() : ''
     const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 
@@ -12,11 +13,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Please provide a valid email address' }, { status: 400 })
     }
 
+    // Validate locale
+    const locale: Locale = (SUPPORTED_LOCALES as readonly string[]).includes(rawLocale) ? rawLocale : 'zh'
+
     // Only allow whitelisted price overrides
     const ALLOWED_PRICES = [99]
     const validatedPrice = ALLOWED_PRICES.includes(priceOverride) ? priceOverride : undefined
 
-    const { url, sessionId } = await createPaymentSession({ buyerEmail: email, priceOverride: validatedPrice })
+    const { url, sessionId } = await createPaymentSession({ buyerEmail: email, priceOverride: validatedPrice, locale })
     const response = NextResponse.json({ url, sessionId })
 
     response.cookies.set({

@@ -21,7 +21,8 @@ CREATE TABLE IF NOT EXISTS gptplus_orders (
   status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'completed', 'expired', 'failed', 'refunded')),
   buyer_email TEXT,
   completed_at TIMESTAMPTZ,
-  created_at TIMESTAMPTZ DEFAULT NOW()
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  reminder_sent BOOLEAN DEFAULT FALSE
 );
 
 -- Indexes

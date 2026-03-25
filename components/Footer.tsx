@@ -1,14 +1,9 @@
+'use client'
+
 import Link from 'next/link'
+import { useT, useLocale } from '@/lib/i18n/context'
 
-const PRIMARY_LINKS = [
-  { href: '/', label: '首页' },
-  { href: '/success', label: '查看订单' },
-  { href: '/chatgpt-plus-kaitong', label: '开通' },
-  { href: '/chatgpt-plus-dingyue', label: '订阅' },
-  { href: '/chatgpt-plus-shengji', label: '升级' },
-]
-
-const FOOTER_LINKS = [
+const FOOTER_SEO_LINKS = [
   { href: '/chatgpt-plus-kaitong', label: 'ChatGPT Plus 开通' },
   { href: '/chatgpt-plus-shengji', label: 'ChatGPT Plus 升级' },
   { href: '/chatgpt-plus-dingyue', label: 'ChatGPT Plus 订阅' },
@@ -22,11 +17,14 @@ const FOOTER_LINKS = [
 ]
 
 export function Footer() {
+  const t = useT()
+  const { locale } = useLocale()
+
   return (
     <footer className="mt-20 border-t border-gray-100 bg-gray-50/50">
       <div className="max-w-6xl mx-auto px-4 py-8">
         <nav className="mb-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 border-b border-gray-100 pb-6">
-          {PRIMARY_LINKS.map((link) => (
+          {t.footerPrimaryLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -36,19 +34,21 @@ export function Footer() {
             </Link>
           ))}
         </nav>
-        <nav className="flex flex-wrap justify-center gap-x-4 gap-y-2 mb-6">
-          {FOOTER_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm text-gray-400 transition-colors hover:text-violet-600"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
+        {locale === 'zh' && (
+          <nav className="flex flex-wrap justify-center gap-x-4 gap-y-2 mb-6">
+            {FOOTER_SEO_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-sm text-gray-400 transition-colors hover:text-violet-600"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+        )}
         <div className="flex flex-col items-center justify-between gap-4 text-sm text-gray-400 sm:flex-row">
-          <p>ChatGPT Plus 充值服务 - 安全快捷的 GPT Plus 开通方案</p>
+          <p>{t.footerDesc}</p>
           <p>&copy; {new Date().getFullYear()} GPT Plus. All rights reserved.</p>
         </div>
       </div>

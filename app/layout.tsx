@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Toaster } from '@/components/ui/sonner'
 import { BookmarkPrompt } from '@/components/BookmarkPrompt'
 import { CustomerService } from '@/components/CustomerService'
+import { LocaleProvider } from '@/lib/i18n/context'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -108,10 +109,12 @@ gtag('config', 'AW-18002889651');`,
         />
       </head>
       <body className="min-h-screen bg-white text-slate-900 antialiased">
-        {children}
-        <Toaster />
-        <BookmarkPrompt />
-        <CustomerService />
+        <LocaleProvider>
+          {children}
+          <Toaster />
+          <BookmarkPrompt />
+          <CustomerService />
+        </LocaleProvider>
       </body>
     </html>
   )

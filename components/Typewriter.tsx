@@ -1,21 +1,17 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-
-const PHRASES = [
-  '无需国外银行卡',
-  '微信支付宝可付',
-  '不成功100%退款',
-  '正规充值通道',
-  '1 分钟自助完成',
-]
+import { useT } from '@/lib/i18n/context'
 
 export function Typewriter() {
+  const t = useT()
+  const phrases = t.typewriterPhrases
+
   const [phraseIndex, setPhraseIndex] = useState(0)
   const [charIndex, setCharIndex] = useState(0)
   const [deleting, setDeleting] = useState(false)
 
-  const currentPhrase = PHRASES[phraseIndex]
+  const currentPhrase = phrases[phraseIndex]
 
   const tick = useCallback(() => {
     if (!deleting) {
@@ -30,11 +26,11 @@ export function Typewriter() {
         setCharIndex((c) => c - 1)
       } else {
         setDeleting(false)
-        setPhraseIndex((p) => (p + 1) % PHRASES.length)
+        setPhraseIndex((p) => (p + 1) % phrases.length)
         return
       }
     }
-  }, [charIndex, deleting, currentPhrase.length])
+  }, [charIndex, deleting, currentPhrase.length, phrases.length])
 
   useEffect(() => {
     const speed = deleting ? 40 : 80

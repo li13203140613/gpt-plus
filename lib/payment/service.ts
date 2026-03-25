@@ -2,6 +2,7 @@ import { getDb } from '@/lib/db'
 import { sendActivationCodeEmail, sendPaymentFailedEmail } from '@/lib/email'
 import { notifyNewOrder, notifyPaymentSuccess, notifyPaymentExpired, notifyPaymentAnomaly } from '@/lib/feishu-notify'
 import { getStripe } from './stripe'
+import { LOCALE_CONFIGS, type Locale } from '@/lib/i18n/config'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'http://localhost:3001'
 const RESERVE_TIMEOUT_MINUTES = 10
@@ -9,6 +10,7 @@ const RESERVE_TIMEOUT_MINUTES = 10
 interface CreatePaymentSessionInput {
   buyerEmail: string
   priceOverride?: number
+  locale?: Locale
 }
 
 export async function releaseExpiredReservations() {
@@ -33,7 +35,7 @@ export async function releaseExpiredReservations() {
   `
 }
 
-export async function createPaymentSession({ buyerEmail, priceOverride }: CreatePaymentSessionInput) {
+export async function createPaymentSession({ buyerEmail, priceOverride, locale = 'zh' }: CreatePaymentSessionInput) {
   const sql = getDb()
 
   await releaseExpiredReservations()
@@ -59,33 +61,54 @@ export async function createPaymentSession({ buyerEmail, priceOverride }: Create
   }
 
   const code = codes[0]
-  const finalPrice = priceOverride ?? Number(code.price)
+  const localeConfig = LOCALE_CONFIGS[locale] || LOCALE_CONFIGS.zh
+
+  // Use locale-specific price; for zh with priceOverride, use the override directly
+  const finalPrice = priceOverride
+    ? localeConfig.priceOverride
+    : localeConfig.price
+
+  // For CNY amount stored in DB (used for Feishu notifications & order tracking)
+  const cnyAmount = priceOverride ?? Number(code.price)
+
+  // Compute unit_amount: JPY and KRW have zero-decimal currencies
+  const zeroDecimalCurrencies = ['jpy', 'krw']
+  const unitAmount = zeroDecimalCurrencies.includes(localeConfig.currency)
+    ? Math.round(finalPrice)
+    : Math.round(finalPrice * 100)
+
+  // Build payment method types and options
+  const paymentMethodTypes = localeConfig.paymentMethods as ('card' | 'alipay' | 'wechat_pay')[]
+  const paymentMethodOptions: Record<string, unknown> = {}
+  if (paymentMethodTypes.includes('wechat_pay')) {
+    paymentMethodOptions.wechat_pay = { client: 'web' }
+  }
 
   const session = await getStripe().checkout.sessions.create({
-    payment_method_types: ['card', 'alipay', 'wechat_pay'],
-    payment_method_options: {
-      wechat_pay: { client: 'web' },
-    },
+    payment_method_types: paymentMethodTypes,
+    ...(Object.keys(paymentMethodOptions).length > 0 ? { payment_method_options: paymentMethodOptions } : {}),
     line_items: [
       {
         price_data: {
-          currency: 'cny',
+          currency: localeConfig.currency,
           product_data: {
-            name: 'ChatGPT Plus 一个月会员充值卡',
-            description: '月度 ChatGPT Plus 代充值卡',
+            name: 'ChatGPT Plus 1-Month Activation Code',
+            description: 'ChatGPT Plus monthly membership activation code',
           },
-          unit_amount: Math.round(finalPrice * 100),
+          unit_amount: unitAmount,
         },
         quantity: 1,
       },
     ],
     mode: 'payment',
+    locale: localeConfig.stripeLocale as 'zh' | 'en' | 'ja' | 'ko' | 'fr' | 'de' | 'es',
     customer_email: buyerEmail,
     success_url: `${SITE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: SITE_URL,
     metadata: {
       buyer_email: buyerEmail,
       code_id: String(code.id),
+      locale,
     },
   })
 
@@ -101,13 +124,14 @@ export async function createPaymentSession({ buyerEmail, priceOverride }: Create
 
   await sql`
     INSERT INTO gptplus_orders (code_id, stripe_session_id, amount, status, buyer_email)
-    VALUES (${code.id}, ${session.id}, ${finalPrice}, 'pending', ${buyerEmail})
+    VALUES (${code.id}, ${session.id}, ${cnyAmount}, 'pending', ${buyerEmail})
   `
 
-  // Notify new order to Feishu
-  notifyNewOrder({ email: buyerEmail, amount: finalPrice, sessionId: session.id }).catch((err) =>
+  // Notify new order to Feishu (use CNY amount for internal tracking)
+  notifyNewOrder({ email: buyerEmail, amount: cnyAmount, sessionId: session.id }).catch((err) =>
     console.error('Feishu new order notify failed:', err)
   )
+
 
   return { url: session.url, sessionId: session.id }
 }

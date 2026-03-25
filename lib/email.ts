@@ -247,26 +247,20 @@ function buildPaymentFailedEmailHtml() {
               </ul>
             </div>
 
-            <!-- WeChat QR Code -->
-            <div style="margin:0 0 20px;padding:20px 22px;border-radius:20px;background:rgba(8,15,34,0.9);border:1px solid rgba(139,92,246,0.2);text-align:center;">
-              <div style="font-size:14px;font-weight:700;color:#e2e8f0;margin-bottom:12px;">
-                ${FAILED_EMAIL_COPY.qrTitle}
+            <!-- WeChat Support -->
+            <div style="margin:0 0 20px;padding:22px;border-radius:20px;background:linear-gradient(135deg, rgba(139,92,246,0.15), rgba(99,102,241,0.1));border:1px solid rgba(139,92,246,0.3);text-align:center;">
+              <div style="font-size:16px;font-weight:700;color:#ffffff;margin-bottom:6px;">添加客服微信，立即协助您完成充值</div>
+              <div style="margin-top:14px;padding:14px 24px;border-radius:14px;background:rgba(139,92,246,0.2);display:inline-block;">
+                <span style="font-size:13px;color:#c4b5fd;">客服微信号</span>
+                <div style="margin-top:4px;font-size:24px;font-weight:800;color:#ffffff;letter-spacing:2px;">${SUPPORT_WECHAT}</div>
               </div>
-              <p style="margin:0 0 14px;font-size:13px;color:#94a3b8;">
-                ${FAILED_EMAIL_COPY.qrDesc}
-              </p>
-              <img src="${QR_URL}" alt="客服微信二维码" style="width:160px;height:160px;border-radius:12px;border:1px solid rgba(148,163,184,0.14);" />
-              <div style="margin-top:12px;padding:10px 16px;border-radius:12px;background:rgba(139,92,246,0.1);display:inline-block;">
-                <span style="font-size:12px;color:#94a3b8;">${FAILED_EMAIL_COPY.wechatLabel}：</span>
-                <span style="font-size:16px;font-weight:700;color:#c4b5fd;letter-spacing:1px;">${SUPPORT_WECHAT}</span>
-              </div>
-              <p style="margin:10px 0 0;font-size:12px;color:#94a3b8;">添加时请备注：gpt</p>
+              <p style="margin:12px 0 0;font-size:13px;color:#a5b4fc;">添加时请备注：gpt</p>
             </div>
 
             <!-- Benefits -->
             <div style="margin:0 0 20px;padding:20px 22px;border-radius:20px;background:rgba(8,15,34,0.9);border:1px solid rgba(148,163,184,0.14);">
               <div style="font-size:14px;font-weight:700;color:#e2e8f0;margin-bottom:8px;">
-                🌟 为什么选择我们
+                为什么选择我们
               </div>
               <ul style="margin:0;padding-left:0;list-style:none;">
                 ${benefitsHtml}
@@ -279,10 +273,6 @@ function buildPaymentFailedEmailHtml() {
                 ${FAILED_EMAIL_COPY.retryButton}
               </a>
             </div>
-
-            <p style="margin:0;font-size:13px;line-height:1.8;color:#94a3b8;text-align:center;">
-              如有问题，请联系客服微信：${SUPPORT_WECHAT}
-            </p>
           </div>
         </div>
       </body>
@@ -301,10 +291,6 @@ function buildPaymentFailedEmailText() {
     '',
     '为什么选择我们：',
     ...FAILED_EMAIL_COPY.benefits.map((b) => `  ✅ ${b}`),
-    '',
-    `${FAILED_EMAIL_COPY.qrTitle}`,
-    `${FAILED_EMAIL_COPY.wechatLabel}：${SUPPORT_WECHAT}`,
-    '添加时请备注：gpt',
     '',
     `返回网站重新购买：${SITE_URL}`,
   ].join('\n')

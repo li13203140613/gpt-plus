@@ -10,6 +10,7 @@ import { Footer } from '@/components/Footer'
 import { Button } from '@/components/ui/button'
 import { ORDER_HISTORY_COOKIE, parseOrderHistoryCookie, serializeOrderHistoryCookie } from '@/lib/order-history'
 import { trackEvent, trackGoogleAdsConversion } from '@/lib/analytics'
+import { useT } from '@/lib/i18n/context'
 
 type PaymentStatus = 'loading' | 'pending' | 'completed' | 'expired' | 'failed' | 'empty'
 
@@ -36,6 +37,7 @@ function writeLastOrderCookie(sessionId: string) {
 }
 
 function SuccessContent() {
+  const t = useT()
   const searchParams = useSearchParams()
   const querySessionId = searchParams.get('session_id')?.trim() || null
 
@@ -139,7 +141,7 @@ function SuccessContent() {
 
     navigator.clipboard.writeText(order.code)
     trackEvent('copy_activation_code', { method: 'click' })
-    toast.success('激活码已复制到剪贴板')
+    toast.success(t.success.codeCopied)
   }
 
   function handleActivationSiteClick() {
@@ -152,8 +154,8 @@ function SuccessContent() {
         <div className="space-y-6">
           <Loader2 className="size-16 text-emerald-400 animate-spin mx-auto" />
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">正在确认支付</h1>
-            <p className="mt-2 text-slate-600">请稍候，我们正在同步你的订单状态。</p>
+            <h1 className="text-2xl font-bold text-slate-900">{t.success.confirming}</h1>
+            <p className="mt-2 text-slate-600">{t.success.confirmingDesc}</p>
           </div>
         </div>
       )}
@@ -162,10 +164,10 @@ function SuccessContent() {
         <div className="space-y-8">
           <div className="space-y-4">
             <CheckCircle className="size-16 text-emerald-400 mx-auto" />
-            <h1 className="text-2xl font-bold text-slate-900">支付成功</h1>
-            <p className="text-slate-600">你的 ChatGPT Plus 激活码如下，请妥善保存。</p>
+            <h1 className="text-2xl font-bold text-slate-900">{t.success.paymentSuccess}</h1>
+            <p className="text-slate-600">{t.success.codeDesc}</p>
             {restoredFromCookie && (
-              <p className="text-sm text-emerald-700">已从当前浏览器恢复上一次订单记录。</p>
+              <p className="text-sm text-emerald-700">{t.success.restoredFromCookie}</p>
             )}
           </div>
 
@@ -187,30 +189,30 @@ function SuccessContent() {
               className="mt-6 w-full border-emerald-200 bg-white/70 text-emerald-700 hover:bg-emerald-50"
             >
               <Copy className="size-4" />
-              复制激活码
+              {t.success.copyCode}
             </Button>
           </div>
 
           {order.email && (
             <div className="rounded-xl border border-stone-200 bg-white/82 px-4 py-3 text-left shadow-[0_18px_45px_-34px_rgba(15,23,42,0.24)]">
-              <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Backup email</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{t.success.backupEmailLabel}</p>
               <p className="mt-2 text-sm text-slate-900">{order.email}</p>
-              <p className="mt-1 text-xs text-slate-500">如果邮件发送已配置，激活码也会同步发到这个邮箱。</p>
+              <p className="mt-1 text-xs text-slate-500">{t.success.backupEmailDesc}</p>
             </div>
           )}
 
           <div className="space-y-4 rounded-xl border border-emerald-200 bg-emerald-50/85 p-5 text-left">
-            <p className="text-base font-semibold text-emerald-700">接下来按以下步骤完成充值：</p>
+            <p className="text-base font-semibold text-emerald-700">{t.success.nextStepsTitle}</p>
             <div className="space-y-3">
               <div className="flex gap-3">
                 <span className="flex size-6 flex-shrink-0 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-700">1</span>
                 <p className="text-sm text-slate-700">
-                  在已登录 ChatGPT 的浏览器中，打开：
+                  {t.success.step1}
                   <a
                     href="https://chatgpt.com/api/auth/session"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="break-all text-emerald-700 underline hover:text-emerald-600"
+                    className="break-all text-emerald-700 underline hover:text-emerald-600 ml-1"
                   >
                     chatgpt.com/api/auth/session
                   </a>
@@ -218,16 +220,14 @@ function SuccessContent() {
               </div>
               <div className="flex gap-3">
                 <span className="flex size-6 flex-shrink-0 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-700">2</span>
-                <p className="text-sm text-slate-700">
-                  页面会显示一段代码，<strong className="text-slate-900">完整复制</strong> 这段内容。
-                </p>
+                <p className="text-sm text-slate-700">{t.success.step2}</p>
               </div>
               <div className="flex gap-3">
                 <span className="flex size-6 flex-shrink-0 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-700">3</span>
                 <div className="space-y-2">
-                  <p className="text-sm text-slate-700">打开充值网站，粘贴代码并输入激活码，提交即可完成充值。</p>
+                  <p className="text-sm text-slate-700">{t.success.step3prefix}</p>
                   <p className="text-sm text-slate-700">
-                    充值网站地址：
+                    {t.success.step3site}
                     <a
                       href="https://chong.plus"
                       target="_blank"
@@ -247,7 +247,7 @@ function SuccessContent() {
               onClick={handleActivationSiteClick}
               className="flex items-center justify-center gap-2 w-full rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 transition-colors"
             >
-              前往充值网站
+              {t.success.goToActivation}
               <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
               </svg>
@@ -255,17 +255,17 @@ function SuccessContent() {
           </div>
 
           <div className="rounded-lg border border-amber-200 bg-amber-50/90 px-4 py-3 text-left">
-            <p className="text-xs text-amber-700">如果充值失败，可以多提交几次；系统会自动处理订单状态。</p>
+            <p className="text-xs text-amber-700">{t.success.retryHint}</p>
           </div>
 
           <Link href="/">
             <Button variant="ghost" className="text-slate-600 hover:bg-white/70 hover:text-slate-900">
-              返回首页
+              {t.success.backToHome}
             </Button>
           </Link>
 
           <p className="text-sm text-slate-500">
-            遇到问题？客服微信：<span className="text-slate-900">fanxx2029</span>
+            {t.success.contactSupportText}<span className="text-slate-900">fanxx2029</span>
           </p>
         </div>
       )}
@@ -274,12 +274,12 @@ function SuccessContent() {
         <div className="space-y-6">
           <XCircle className="size-16 text-slate-400 mx-auto" />
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">没有可恢复的订单</h1>
-            <p className="mt-2 text-slate-600">当前浏览器里还没有最近支付记录，请返回首页重新购买。</p>
+            <h1 className="text-2xl font-bold text-slate-900">{t.success.noOrder}</h1>
+            <p className="mt-2 text-slate-600">{t.success.noOrderDesc}</p>
           </div>
           <Link href="/">
             <Button className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white">
-              返回首页
+              {t.success.backToHome}
             </Button>
           </Link>
         </div>
@@ -289,12 +289,12 @@ function SuccessContent() {
         <div className="space-y-6">
           <XCircle className="size-16 text-amber-400 mx-auto" />
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">支付已过期</h1>
-            <p className="mt-2 text-slate-600">这个支付会话已过期，请返回首页重新下单。</p>
+            <h1 className="text-2xl font-bold text-slate-900">{t.success.expired}</h1>
+            <p className="mt-2 text-slate-600">{t.success.expiredDesc}</p>
           </div>
           <Link href="/">
             <Button className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white">
-              返回首页
+              {t.success.backToHome}
             </Button>
           </Link>
         </div>
@@ -304,14 +304,14 @@ function SuccessContent() {
         <div className="space-y-6">
           <XCircle className="size-16 text-red-400 mx-auto" />
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">订单确认失败</h1>
+            <h1 className="text-2xl font-bold text-slate-900">{t.success.failed}</h1>
             <p className="mt-2 text-slate-600">
-              {!activeSessionId ? '缺少订单记录' : '订单确认超时，如已付款请联系客服处理'}
+              {!activeSessionId ? t.success.failedNoSession : t.success.failedTimeout}
             </p>
           </div>
           <Link href="/">
             <Button className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white">
-              返回首页
+              {t.success.backToHome}
             </Button>
           </Link>
         </div>
