@@ -153,14 +153,18 @@ export async function completePayment(sessionId: string, buyerEmail?: string) {
   if (soldCodes.length === 0) {
     console.error(`[completePayment] Failed to mark code as sold - code may have been released. Session: ${sessionId}, Code ID: ${order.code_id}`)
 
-    // Send Feishu anomaly alert - payment received but code not assigned
+    // Send Feishu anomaly alert - payment received but code not assigned (must await)
     if (recipientEmail) {
-      notifyPaymentAnomaly({
-        email: recipientEmail,
-        amount: order.amount,
-        sessionId,
-        reason: '已收款但激活码已释放，需人工补发',
-      }).catch((err) => console.error('Feishu anomaly notify failed:', err))
+      try {
+        await notifyPaymentAnomaly({
+          email: recipientEmail,
+          amount: order.amount,
+          sessionId,
+          reason: '已收款但激活码已释放，需人工补发',
+        })
+      } catch (err) {
+        console.error('Feishu anomaly notify failed:', err)
+      }
     }
     return
   }
@@ -183,23 +187,31 @@ export async function completePayment(sessionId: string, buyerEmail?: string) {
       console.error('Failed to send activation code email:', error)
     }
 
-    // Notify payment success to Feishu
-    notifyPaymentSuccess({
-      email: recipientEmail,
-      amount: order.amount,
-      code: order.activation_code,
-      sessionId: sessionId,
-    }).catch((err) => console.error('Feishu payment success notify failed:', err))
+    // Notify payment success to Feishu (must await to prevent Vercel from killing the request)
+    try {
+      await notifyPaymentSuccess({
+        email: recipientEmail,
+        amount: order.amount,
+        code: order.activation_code,
+        sessionId: sessionId,
+      })
+    } catch (err) {
+      console.error('Feishu payment success notify failed:', err)
+    }
   } else {
     console.warn(`[completePayment] Missing email or code, skipping notifications. email: ${recipientEmail}, hasCode: ${!!order.activation_code}`)
 
-    // Still notify Feishu even if email is missing
-    notifyPaymentSuccess({
-      email: recipientEmail || '未知邮箱',
-      amount: order.amount,
-      code: order.activation_code || '未知',
-      sessionId: sessionId,
-    }).catch((err) => console.error('Feishu payment success notify failed:', err))
+    // Still notify Feishu even if email is missing (must await)
+    try {
+      await notifyPaymentSuccess({
+        email: recipientEmail || '未知邮箱',
+        amount: order.amount,
+        code: order.activation_code || '未知',
+        sessionId: sessionId,
+      })
+    } catch (err) {
+      console.error('Feishu payment success notify failed:', err)
+    }
   }
 }
 
@@ -237,12 +249,16 @@ export async function handleSessionExpired(sessionId: string) {
       console.error('Failed to send payment failed email:', error)
     }
 
-    notifyPaymentExpired({
-      email: buyerEmail,
-      amount: orderAmount,
-      sessionId,
-      reason: '未支付过期',
-    }).catch((err) => console.error('Feishu expired notify failed:', err))
+    try {
+      await notifyPaymentExpired({
+        email: buyerEmail,
+        amount: orderAmount,
+        sessionId,
+        reason: '未支付过期',
+      })
+    } catch (err) {
+      console.error('Feishu expired notify failed:', err)
+    }
   }
 }
 
@@ -266,12 +282,16 @@ export async function handlePaymentFailed(sessionId: string, buyerEmail?: string
       console.error('Failed to send payment failed email:', error)
     }
 
-    notifyPaymentExpired({
-      email: buyerEmail,
-      amount: failedAmount,
-      sessionId,
-      reason: '支付失败',
-    }).catch((err) => console.error('Feishu payment failed notify failed:', err))
+    try {
+      await notifyPaymentExpired({
+        email: buyerEmail,
+        amount: failedAmount,
+        sessionId,
+        reason: '支付失败',
+      })
+    } catch (err) {
+      console.error('Feishu payment failed notify failed:', err)
+    }
   }
 
   // Release the reserved code
