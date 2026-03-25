@@ -1,7 +1,9 @@
 'use client'
 
 import Link from 'next/link'
+import { Globe } from 'lucide-react'
 import { useT, useLocale } from '@/lib/i18n/context'
+import type { Locale } from '@/lib/i18n/config'
 
 const FOOTER_SEO_LINKS = [
   { href: '/chatgpt-plus-kaitong', label: 'ChatGPT Plus 开通' },
@@ -16,9 +18,19 @@ const FOOTER_SEO_LINKS = [
   { href: '/chatgpt-plus-dai-dingyue', label: '代订阅' },
 ]
 
+const LANGUAGE_OPTIONS: { value: Locale; flag: string; label: string }[] = [
+  { value: 'zh', flag: '🇨🇳', label: '中文' },
+  { value: 'en', flag: '🇺🇸', label: 'English' },
+  { value: 'ja', flag: '🇯🇵', label: '日本語' },
+  { value: 'ko', flag: '🇰🇷', label: '한국어' },
+  { value: 'fr', flag: '🇫🇷', label: 'Français' },
+  { value: 'de', flag: '🇩🇪', label: 'Deutsch' },
+  { value: 'es', flag: '🇪🇸', label: 'Español' },
+]
+
 export function Footer() {
   const t = useT()
-  const { locale } = useLocale()
+  const { locale, setLocale } = useLocale()
 
   return (
     <footer className="mt-20 border-t border-gray-100 bg-gray-50/50">
@@ -47,6 +59,29 @@ export function Footer() {
             ))}
           </nav>
         )}
+
+        {/* Language Switcher */}
+        <div className="mb-6 flex items-center justify-center">
+          <div className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-2">
+            <Globe className="size-4 text-gray-400" />
+            <div className="flex flex-wrap items-center justify-center gap-1">
+              {LANGUAGE_OPTIONS.map((lang) => (
+                <button
+                  key={lang.value}
+                  onClick={() => setLocale(lang.value)}
+                  className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
+                    locale === lang.value
+                      ? 'bg-violet-100 text-violet-700'
+                      : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                  }`}
+                >
+                  {lang.flag} {lang.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
         <div className="flex flex-col items-center justify-between gap-4 text-sm text-gray-400 sm:flex-row">
           <p>{t.footerDesc}</p>
           <p>&copy; {new Date().getFullYear()} GPT Plus. All rights reserved.</p>
