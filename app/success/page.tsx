@@ -50,6 +50,23 @@ function SuccessContent() {
   const activationUrl = useActivationUrl()
   const purchaseTracked = useRef(false)
 
+  // Check if this session's purchase was already tracked (survives page refresh)
+  const isConversionTracked = (sid: string) => {
+    try {
+      const tracked = JSON.parse(sessionStorage.getItem('tracked_purchases') || '[]')
+      return tracked.includes(sid)
+    } catch { return false }
+  }
+  const markConversionTracked = (sid: string) => {
+    try {
+      const tracked = JSON.parse(sessionStorage.getItem('tracked_purchases') || '[]')
+      if (!tracked.includes(sid)) {
+        tracked.push(sid)
+        sessionStorage.setItem('tracked_purchases', JSON.stringify(tracked))
+      }
+    } catch { /* ignore */ }
+  }
+
   useEffect(() => {
     const storedSessionId = parseOrderHistoryCookie(readCookie(ORDER_HISTORY_COOKIE))
     const nextSessionId = querySessionId || storedSessionId
@@ -91,14 +108,15 @@ function SuccessContent() {
         if (data.status === 'completed' && data.code) {
           setStatus('completed')
           setOrder(data)
-          if (!purchaseTracked.current) {
+          if (!purchaseTracked.current && !isConversionTracked(activeSessionId!)) {
             purchaseTracked.current = true
+            markConversionTracked(activeSessionId!)
             trackEvent('purchase', {
               transaction_id: activeSessionId!,
               value: 128,
               currency: 'CNY',
             })
-            trackGoogleAdsConversion('izOyCJuqvY4cELOXuYhD', 128)
+            trackGoogleAdsConversion('izOyCJuqvY4cELOXuYhD', 128, data.email || undefined)
           }
           return
         }

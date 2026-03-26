@@ -1,11 +1,11 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Loader2, Mail, Sparkles, MessageSquare, Image, Brain, Bot, FolderOpen, Video, Code2, Shield, CreditCard } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
-import { trackEvent } from '@/lib/analytics'
+import { trackEvent, setUserDataForAds, trackGoogleAdsSecondaryConversion, trackViewItem } from '@/lib/analytics'
 import { useT, useLocale } from '@/lib/i18n/context'
 import { formatPrice } from '@/lib/i18n/config'
 
@@ -22,8 +22,17 @@ export function CodeGrid({ priceOverride }: CodeGridProps = {}) {
   const [email, setEmail] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const emailFocusTracked = useRef(false)
+  const viewItemTracked = useRef(false)
 
   const displayPrice = priceOverride ? config.priceOverride : config.price
+
+  // Track view_item when component mounts (Google recommended e-commerce event)
+  useEffect(() => {
+    if (!viewItemTracked.current) {
+      viewItemTracked.current = true
+      trackViewItem(displayPrice, config.currency.toUpperCase())
+    }
+  }, [])
   const originalPrice = priceOverride ? config.price : undefined
 
   function handleEmailFocus() {
@@ -46,6 +55,11 @@ export function CodeGrid({ priceOverride }: CodeGridProps = {}) {
 
     trackEvent('begin_checkout', { value: displayPrice, currency: config.currency.toUpperCase(), source_page: sourcePage })
     trackEvent('email_submit', { source_page: sourcePage })
+
+    // Set user email for Enhanced Conversions (hashed) — improves Google Ads attribution
+    setUserDataForAds(normalizedEmail)
+    // Fire begin_checkout as Google Ads secondary conversion (needs separate label in Google Ads)
+    trackGoogleAdsSecondaryConversion('qgLwCJ_b448cELOXuYhD', displayPrice)
     setSubmitting(true)
 
     try {
