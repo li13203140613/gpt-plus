@@ -1,6 +1,7 @@
 'use client'
 
 import { Shield, Clock, Star, CheckCircle, Users, Headphones, CreditCard, UserCheck } from 'lucide-react'
+import { useActivationUrl } from '@/lib/useActivationUrl'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { CodeGrid } from '@/components/CodeGrid'
@@ -59,6 +60,7 @@ function JsonLd() {
 export default function HomePage() {
   const t = useT()
   const { locale } = useLocale()
+  const activationUrl = useActivationUrl()
 
   return (
     <div className="min-h-screen flex flex-col bg-grid text-gray-900">
@@ -228,7 +230,7 @@ export default function HomePage() {
                   )}
                   {item.extra && <p className="text-sm text-gray-500">{item.extra}</p>}
                   {item.cta && (
-                    <a href={item.cta.url} target="_blank" rel="noopener noreferrer" className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-violet-600 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-violet-500">
+                    <a href={activationUrl} target="_blank" rel="noopener noreferrer" className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-violet-600 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-violet-500">
                       {item.cta.text}
                       <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
                     </a>

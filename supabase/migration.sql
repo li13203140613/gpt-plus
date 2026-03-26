@@ -25,6 +25,17 @@ CREATE TABLE IF NOT EXISTS gptplus_orders (
   reminder_sent BOOLEAN DEFAULT FALSE
 );
 
+-- Site settings table (key-value)
+CREATE TABLE IF NOT EXISTS site_settings (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Default activation URL
+INSERT INTO site_settings (key, value) VALUES ('activation_url', 'https://chong.plus')
+ON CONFLICT (key) DO NOTHING;
+
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_codes_status ON activation_codes(status);
 CREATE INDEX IF NOT EXISTS idx_codes_session ON activation_codes(stripe_session_id);

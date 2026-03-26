@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { ORDER_HISTORY_COOKIE, parseOrderHistoryCookie, serializeOrderHistoryCookie } from '@/lib/order-history'
 import { trackEvent, trackGoogleAdsConversion } from '@/lib/analytics'
 import { useT } from '@/lib/i18n/context'
+import { useActivationUrl } from '@/lib/useActivationUrl'
 
 type PaymentStatus = 'loading' | 'pending' | 'completed' | 'expired' | 'failed' | 'empty'
 
@@ -46,6 +47,7 @@ function SuccessContent() {
   const [order, setOrder] = useState<OrderInfo | null>(null)
   const [pollCount, setPollCount] = useState(0)
   const [restoredFromCookie, setRestoredFromCookie] = useState(false)
+  const activationUrl = useActivationUrl()
   const purchaseTracked = useRef(false)
 
   useEffect(() => {
@@ -145,7 +147,7 @@ function SuccessContent() {
   }
 
   function handleActivationSiteClick() {
-    trackEvent('click_activation_site', { destination: 'chong.plus' })
+    trackEvent('click_activation_site', { destination: activationUrl })
   }
 
   return (
@@ -229,19 +231,19 @@ function SuccessContent() {
                   <p className="text-sm text-slate-700">
                     {t.success.step3site}
                     <a
-                      href="https://chong.plus"
+                      href={activationUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="ml-1 break-all text-emerald-700 underline hover:text-emerald-600"
                     >
-                      https://chong.plus
+                      {activationUrl}
                     </a>
                   </p>
                 </div>
               </div>
             </div>
             <a
-              href="https://chong.plus"
+              href={activationUrl}
               target="_blank"
               rel="noopener noreferrer"
               onClick={handleActivationSiteClick}

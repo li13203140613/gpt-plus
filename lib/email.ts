@@ -7,8 +7,20 @@ interface PaymentFailedEmailOptions {
   to: string
 }
 
-const ACTIVATION_SITE_URL = 'https://chong.plus'
+import { getDb } from '@/lib/db'
+
+const DEFAULT_ACTIVATION_SITE_URL = 'https://chong.plus'
 const ORDER_SITE_URL = 'https://gpt-plus.ai/success'
+
+async function getActivationSiteUrl(): Promise<string> {
+  try {
+    const sql = getDb()
+    const rows = await sql`SELECT value FROM site_settings WHERE key = 'activation_url'`
+    return rows[0]?.value || DEFAULT_ACTIVATION_SITE_URL
+  } catch {
+    return DEFAULT_ACTIVATION_SITE_URL
+  }
+}
 const SITE_URL = 'https://gpt-plus.ai'
 const QR_URL = 'https://www.gpt-plus.ai/wechat-qr.png'
 const RESEND_API_URL = 'https://api.resend.com/emails'
@@ -48,7 +60,7 @@ function escapeHtml(value: string) {
     .replaceAll("'", '&#39;')
 }
 
-function buildActivationEmailHtml(code: string) {
+function buildActivationEmailHtml(code: string, ACTIVATION_SITE_URL: string) {
   return `
     <!doctype html>
     <html lang="zh-CN">
@@ -128,7 +140,7 @@ function buildActivationEmailHtml(code: string) {
   `
 }
 
-function buildActivationEmailText(code: string) {
+function buildActivationEmailText(code: string, ACTIVATION_SITE_URL: string) {
   return [
     EMAIL_COPY.subject,
     '',
@@ -154,6 +166,7 @@ export async function sendActivationCodeEmail({ code, to }: ActivationCodeEmailO
     return
   }
 
+  const activationSiteUrl = await getActivationSiteUrl()
   const safeCode = escapeHtml(code)
 
   const response = await fetch(RESEND_API_URL, {
@@ -166,8 +179,8 @@ export async function sendActivationCodeEmail({ code, to }: ActivationCodeEmailO
       from: `GPT Plus <${resendFromEmail}>`,
       to: [to],
       subject: EMAIL_COPY.subject,
-      html: buildActivationEmailHtml(safeCode),
-      text: buildActivationEmailText(code),
+      html: buildActivationEmailHtml(safeCode, activationSiteUrl),
+      text: buildActivationEmailText(code, activationSiteUrl),
     }),
   })
 

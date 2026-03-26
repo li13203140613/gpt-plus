@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { Loader2, Lock, LogIn, Plus, RefreshCw, Trash2 } from 'lucide-react'
+import { Loader2, Lock, LogIn, Plus, RefreshCw, Save, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -78,6 +78,9 @@ export default function AdminPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [newCodes, setNewCodes] = useState('')
   const [newPrice, setNewPrice] = useState(99)
+  const [activationUrl, setActivationUrl] = useState('')
+  const [savedActivationUrl, setSavedActivationUrl] = useState('')
+  const [savingSettings, setSavingSettings] = useState(false)
 
   const fetchCodes = useCallback(async () => {
     setLoading(true)
@@ -101,10 +104,52 @@ export default function AdminPage() {
     }
   }, [password])
 
+  const fetchSettings = useCallback(async () => {
+    try {
+      const res = await fetch('/api/admin/settings', {
+        headers: { 'x-admin-key': password },
+      })
+      if (!res.ok) return
+      const data = await res.json()
+      const url = data.settings?.activation_url || ''
+      setActivationUrl(url)
+      setSavedActivationUrl(url)
+    } catch {
+      // ignore
+    }
+  }, [password])
+
+  async function handleSaveSettings() {
+    const trimmed = activationUrl.trim()
+    if (!trimmed) {
+      toast.error('请输入激活网址')
+      return
+    }
+    setSavingSettings(true)
+    try {
+      const res = await fetch('/api/admin/settings', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-key': password,
+        },
+        body: JSON.stringify({ key: 'activation_url', value: trimmed }),
+      })
+      if (!res.ok) throw new Error('保存失败')
+      setSavedActivationUrl(trimmed)
+      toast.success('激活网址已更新')
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : '保存失败')
+    } finally {
+      setSavingSettings(false)
+    }
+  }
+
   useEffect(() => {
     if (!authenticated) return
     fetchCodes()
-  }, [authenticated, fetchCodes])
+    fetchSettings()
+  }, [authenticated, fetchCodes, fetchSettings])
 
   async function handleLogin(event: React.FormEvent) {
     event.preventDefault()
@@ -278,18 +323,44 @@ export default function AdminPage() {
                 </Button>
               </div>
             </div>
-            <div>
-              <Label className="text-zinc-300">单价（元）</Label>
-              <Input
-                type="number"
-                min={1}
-                value={newPrice}
-                onChange={(event) => setNewPrice(Number(event.target.value))}
-                className="mt-1 w-32 bg-zinc-800 border-zinc-700 text-white"
-              />
-              <p className="text-xs text-zinc-500 mt-2">
-                把供应商给你的激活码粘贴到左侧，设置价格后点添加即可。
-              </p>
+            <div className="space-y-5">
+              <div>
+                <Label className="text-zinc-300">单价（元）</Label>
+                <Input
+                  type="number"
+                  min={1}
+                  value={newPrice}
+                  onChange={(event) => setNewPrice(Number(event.target.value))}
+                  className="mt-1 w-32 bg-zinc-800 border-zinc-700 text-white"
+                />
+                <p className="text-xs text-zinc-500 mt-2">
+                  把供应商给你的激活码粘贴到左侧，设置价格后点添加即可。
+                </p>
+              </div>
+              <div>
+                <Label className="text-zinc-300">激活连接地址</Label>
+                <div className="flex gap-2 mt-1">
+                  <Input
+                    type="url"
+                    value={activationUrl}
+                    onChange={(event) => setActivationUrl(event.target.value)}
+                    className="flex-1 bg-zinc-800 border-zinc-700 text-white font-mono text-sm"
+                    placeholder="https://chong.plus"
+                  />
+                  <Button
+                    onClick={handleSaveSettings}
+                    disabled={savingSettings || activationUrl.trim() === savedActivationUrl}
+                    className="bg-emerald-600 hover:bg-emerald-500 text-white"
+                    size="sm"
+                  >
+                    {savingSettings ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
+                    保存
+                  </Button>
+                </div>
+                <p className="text-xs text-zinc-500 mt-2">
+                  用户付款后跳转的充值网站，修改后全站立即生效。
+                </p>
+              </div>
             </div>
           </div>
         </div>
