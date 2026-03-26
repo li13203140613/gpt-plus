@@ -25,6 +25,7 @@ export function CodeGrid({ priceOverride }: CodeGridProps = {}) {
   const viewItemTracked = useRef(false)
 
   const displayPrice = priceOverride ? config.priceOverride : config.price
+  const originalPrice = priceOverride ? config.price : config.originalPrice
 
   // Track view_item when component mounts (Google recommended e-commerce event)
   useEffect(() => {
@@ -33,7 +34,6 @@ export function CodeGrid({ priceOverride }: CodeGridProps = {}) {
       trackViewItem(displayPrice, config.currency.toUpperCase())
     }
   }, [])
-  const originalPrice = priceOverride ? config.price : undefined
 
   function handleEmailFocus() {
     if (!emailFocusTracked.current) {

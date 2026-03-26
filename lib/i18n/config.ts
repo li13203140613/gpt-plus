@@ -7,6 +7,7 @@ export interface LocaleConfig {
   currency: string
   currencySymbol: string
   price: number
+  originalPrice: number
   priceOverride: number
   paymentMethods: string[]
   stripeLocale: string
@@ -17,6 +18,7 @@ export const LOCALE_CONFIGS: Record<Locale, LocaleConfig> = {
     currency: 'cny',
     currencySymbol: '¥',
     price: 128,
+    originalPrice: 145,
     priceOverride: 99,
     paymentMethods: ['alipay', 'wechat_pay'],
     stripeLocale: 'zh',
@@ -25,6 +27,7 @@ export const LOCALE_CONFIGS: Record<Locale, LocaleConfig> = {
     currency: 'usd',
     currencySymbol: '$',
     price: 17.99,
+    originalPrice: 20.99,
     priceOverride: 13.99,
     paymentMethods: ['card'],
     stripeLocale: 'en',
@@ -33,6 +36,7 @@ export const LOCALE_CONFIGS: Record<Locale, LocaleConfig> = {
     currency: 'jpy',
     currencySymbol: '¥',
     price: 2680,
+    originalPrice: 3100,
     priceOverride: 2080,
     paymentMethods: ['card'],
     stripeLocale: 'ja',
@@ -41,6 +45,7 @@ export const LOCALE_CONFIGS: Record<Locale, LocaleConfig> = {
     currency: 'krw',
     currencySymbol: '₩',
     price: 24800,
+    originalPrice: 28800,
     priceOverride: 19200,
     paymentMethods: ['card'],
     stripeLocale: 'ko',
@@ -49,6 +54,7 @@ export const LOCALE_CONFIGS: Record<Locale, LocaleConfig> = {
     currency: 'eur',
     currencySymbol: '€',
     price: 16.99,
+    originalPrice: 19.99,
     priceOverride: 12.99,
     paymentMethods: ['card'],
     stripeLocale: 'fr',
@@ -57,6 +63,7 @@ export const LOCALE_CONFIGS: Record<Locale, LocaleConfig> = {
     currency: 'eur',
     currencySymbol: '€',
     price: 16.99,
+    originalPrice: 19.99,
     priceOverride: 12.99,
     paymentMethods: ['card'],
     stripeLocale: 'de',
@@ -65,6 +72,7 @@ export const LOCALE_CONFIGS: Record<Locale, LocaleConfig> = {
     currency: 'eur',
     currencySymbol: '€',
     price: 16.99,
+    originalPrice: 19.99,
     priceOverride: 12.99,
     paymentMethods: ['card'],
     stripeLocale: 'es',

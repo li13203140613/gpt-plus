@@ -7,7 +7,7 @@ export const zh: Translations = {
   headerStats: [
     { label: '服务用户', value: '5.9万+' },
     { label: '成功率', value: '99.9%' },
-    { label: '到账时间', value: '≤1分钟' },
+    { label: '充值时间', value: '≤1分钟' },
     { label: '用户评分', value: '5.0分' },
   ],
   notificationNames: ['张', '李', '王', '刘', '陈', '杨', '赵', '黄', '周', '吴', '徐', '孙', '胡', '朱', '高', '林', '何', '郭', '马', '罗'],
@@ -21,8 +21,8 @@ export const zh: Translations = {
   heroTitleLine1: 'ChatGPT Plus',
   heroTitleLine2: '代充值服务',
   heroDesc: '下单后自动发货，1 分钟完成充值。',
-  socialProofCount: '5.9万+',
-  socialProofText: '位用户完成充值',
+  socialProofCount: '个人独享',
+  socialProofText: '直接充值到你的账号',
 
   // Typewriter
   typewriterPhrases: [
@@ -39,7 +39,7 @@ export const zh: Translations = {
   priceNote: '即刻下单，立省2-5美金开卡费',
   priceNoteOverride: '限时特惠，立省开卡费',
   emailLabel: '接收邮箱',
-  emailPlaceholder: '发送激活步骤到邮箱',
+  emailPlaceholder: '发卡密及教程到邮箱',
   buyButton: '填写邮箱并去支付',
   invalidEmail: '请输入正确的邮箱地址',
   paymentCreateFailed: '创建支付失败',
@@ -47,8 +47,8 @@ export const zh: Translations = {
   paymentRetry: '支付发起失败，请稍后重试',
   trustAfterSale: '售后无忧',
   trustAfterSaleDesc: '失败 1 分钟内退款',
-  trustPayment: '支付便捷',
-  trustPaymentDesc: '支付宝 / 微信支付',
+  trustPayment: '独享账户',
+  trustPaymentDesc: '充值到你自己账号',
   plusBenefitsTitle: 'Plus 套餐权益',
   plusBenefits: [
     '解决复杂问题',
