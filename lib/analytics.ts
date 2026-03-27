@@ -63,7 +63,7 @@ export async function setUserDataForAds(email: string) {
 /**
  * Fire a Google Ads conversion event with Enhanced Conversion data.
  */
-export async function trackGoogleAdsConversion(conversionLabel: string, value?: number, email?: string) {
+export async function trackGoogleAdsConversion(conversionLabel: string, value?: number, email?: string, currency?: string) {
   if (typeof window === 'undefined' || !window.gtag) return
 
   // Set user_data right before the conversion for best match rate
@@ -73,7 +73,7 @@ export async function trackGoogleAdsConversion(conversionLabel: string, value?: 
 
   window.gtag('event', 'conversion', {
     send_to: `AW-18002889651/${conversionLabel}`,
-    ...(value != null && { value, currency: 'CNY' }),
+    ...(value != null && { value, currency: (currency || 'CNY').toUpperCase() }),
   })
 }
 
@@ -81,11 +81,11 @@ export async function trackGoogleAdsConversion(conversionLabel: string, value?: 
  * Track Google Ads secondary conversion (begin_checkout as micro-conversion).
  * This helps Google Ads optimize for users with purchase intent, not just final buyers.
  */
-export function trackGoogleAdsSecondaryConversion(conversionLabel: string, value?: number) {
+export function trackGoogleAdsSecondaryConversion(conversionLabel: string, value?: number, currency?: string) {
   if (typeof window === 'undefined' || !window.gtag) return
   window.gtag('event', 'conversion', {
     send_to: `AW-18002889651/${conversionLabel}`,
-    ...(value != null && { value, currency: 'CNY' }),
+    ...(value != null && { value, currency: (currency || 'CNY').toUpperCase() }),
   })
 }
 

@@ -3,6 +3,7 @@ import { sendActivationCodeEmail, sendPaymentFailedEmail } from '@/lib/email'
 import { notifyNewOrder, notifyPaymentSuccess, notifyPaymentExpired, notifyPaymentAnomaly } from '@/lib/feishu-notify'
 import { getStripe } from './stripe'
 import { LOCALE_CONFIGS, type Locale } from '@/lib/i18n/config'
+import { uploadPurchaseConversion } from '@/lib/conversion-upload'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'http://localhost:3001'
 const RESERVE_TIMEOUT_MINUTES = 10
@@ -11,6 +12,8 @@ interface CreatePaymentSessionInput {
   buyerEmail: string
   priceOverride?: number
   locale?: Locale
+  cancelPath?: string
+  gclid?: string
 }
 
 export async function releaseExpiredReservations() {
@@ -35,7 +38,7 @@ export async function releaseExpiredReservations() {
   `
 }
 
-export async function createPaymentSession({ buyerEmail, priceOverride, locale = 'zh' }: CreatePaymentSessionInput) {
+export async function createPaymentSession({ buyerEmail, priceOverride, locale = 'zh', cancelPath = '/', gclid }: CreatePaymentSessionInput) {
   const sql = getDb()
 
   await releaseExpiredReservations()
@@ -104,7 +107,7 @@ export async function createPaymentSession({ buyerEmail, priceOverride, locale =
     locale: localeConfig.stripeLocale as 'zh' | 'en' | 'ja' | 'ko' | 'fr' | 'de' | 'es',
     customer_email: buyerEmail,
     success_url: `${SITE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: SITE_URL,
+    cancel_url: `${SITE_URL}${cancelPath}`,
     metadata: {
       buyer_email: buyerEmail,
       code_id: String(code.id),
@@ -123,14 +126,16 @@ export async function createPaymentSession({ buyerEmail, priceOverride, locale =
   `
 
   await sql`
-    INSERT INTO gptplus_orders (code_id, stripe_session_id, amount, status, buyer_email)
-    VALUES (${code.id}, ${session.id}, ${cnyAmount}, 'pending', ${buyerEmail})
+    INSERT INTO gptplus_orders (code_id, stripe_session_id, amount, status, buyer_email, currency, paid_amount, gclid)
+    VALUES (${code.id}, ${session.id}, ${cnyAmount}, 'pending', ${buyerEmail}, ${localeConfig.currency}, ${finalPrice}, ${gclid || null})
   `
 
   // Notify new order to Feishu (use CNY amount for internal tracking)
-  notifyNewOrder({ email: buyerEmail, amount: cnyAmount, sessionId: session.id }).catch((err) =>
+  try {
+    await notifyNewOrder({ email: buyerEmail, amount: cnyAmount, sessionId: session.id })
+  } catch (err) {
     console.error('Feishu new order notify failed:', err)
-  )
+  }
 
 
   return { url: session.url, sessionId: session.id }
@@ -237,6 +242,21 @@ export async function completePayment(sessionId: string, buyerEmail?: string) {
       console.error('Feishu payment success notify failed:', err)
     }
   }
+
+  // Server-side GA4 conversion tracking (doesn't depend on client-side gtag)
+  try {
+    const convValue = order.paid_amount ? Number(order.paid_amount) : Number(order.amount)
+    const convCurrency = order.currency || 'cny'
+    await uploadPurchaseConversion({
+      sessionId,
+      value: convValue,
+      currency: convCurrency,
+      email: recipientEmail || undefined,
+      gclid: order.gclid || undefined,
+    })
+  } catch (err) {
+    console.error('[completePayment] Server-side conversion upload failed:', err)
+  }
 }
 
 export async function handleSessionExpired(sessionId: string) {
@@ -338,7 +358,7 @@ export async function getOrderBySessionId(sessionId: string) {
   await releaseExpiredReservations()
 
   const orders = await sql`
-    SELECT o.status, o.buyer_email, ac.code
+    SELECT o.status, o.buyer_email, o.currency, o.paid_amount, ac.code
     FROM gptplus_orders o
     JOIN activation_codes ac ON o.code_id = ac.id
     WHERE o.stripe_session_id = ${sessionId}
@@ -353,5 +373,7 @@ export async function getOrderBySessionId(sessionId: string) {
     status: order.status,
     code: order.status === 'completed' ? order.code : null,
     email: order.buyer_email,
+    currency: order.currency || 'cny',
+    paidAmount: order.paid_amount ? Number(order.paid_amount) : null,
   }
 }

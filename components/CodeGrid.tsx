@@ -8,6 +8,7 @@ import { Input } from './ui/input'
 import { trackEvent, setUserDataForAds, trackGoogleAdsSecondaryConversion, trackViewItem } from '@/lib/analytics'
 import { useT, useLocale } from '@/lib/i18n/context'
 import { formatPrice } from '@/lib/i18n/config'
+import { captureGclid, getGclid } from '@/lib/gclid'
 
 const BENEFIT_ICONS = [Sparkles, MessageSquare, Image, Brain, Bot, FolderOpen, Video, Code2]
 
@@ -26,6 +27,9 @@ export function CodeGrid({ priceOverride }: CodeGridProps = {}) {
 
   const displayPrice = priceOverride ? config.priceOverride : config.price
   const originalPrice = priceOverride ? config.price : config.originalPrice
+
+  // Capture gclid from URL on mount (for server-side conversion tracking)
+  useEffect(() => { captureGclid() }, [])
 
   // Track view_item when component mounts (Google recommended e-commerce event)
   useEffect(() => {
@@ -59,7 +63,7 @@ export function CodeGrid({ priceOverride }: CodeGridProps = {}) {
     // Set user email for Enhanced Conversions (hashed) — improves Google Ads attribution
     setUserDataForAds(normalizedEmail)
     // Fire begin_checkout as Google Ads secondary conversion (needs separate label in Google Ads)
-    trackGoogleAdsSecondaryConversion('qgLwCJ_b448cELOXuYhD', displayPrice)
+    trackGoogleAdsSecondaryConversion('qgLwCJ_b448cELOXuYhD', displayPrice, config.currency)
     setSubmitting(true)
 
     try {
@@ -70,6 +74,8 @@ export function CodeGrid({ priceOverride }: CodeGridProps = {}) {
           buyerEmail: normalizedEmail,
           locale,
           ...(priceOverride ? { priceOverride } : {}),
+          sourcePage: window.location.pathname,
+          gclid: getGclid() || undefined,
         }),
       })
 

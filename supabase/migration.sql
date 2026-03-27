@@ -36,6 +36,13 @@ CREATE TABLE IF NOT EXISTS site_settings (
 INSERT INTO site_settings (key, value) VALUES ('activation_url', 'https://chong.plus')
 ON CONFLICT (key) DO NOTHING;
 
+-- Payment currency and amount in payment currency (may differ from internal CNY amount)
+ALTER TABLE gptplus_orders ADD COLUMN IF NOT EXISTS currency TEXT NOT NULL DEFAULT 'cny';
+ALTER TABLE gptplus_orders ADD COLUMN IF NOT EXISTS paid_amount DECIMAL(10,2);
+
+-- Google Click ID for server-side conversion tracking
+ALTER TABLE gptplus_orders ADD COLUMN IF NOT EXISTS gclid TEXT;
+
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_codes_status ON activation_codes(status);
 CREATE INDEX IF NOT EXISTS idx_codes_session ON activation_codes(stripe_session_id);

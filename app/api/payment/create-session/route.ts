@@ -5,7 +5,7 @@ import { SUPPORTED_LOCALES, type Locale } from '@/lib/i18n/config'
 
 export async function POST(request: NextRequest) {
   try {
-    const { buyerEmail, priceOverride, locale: rawLocale } = await request.json()
+    const { buyerEmail, priceOverride, locale: rawLocale, sourcePage, gclid } = await request.json()
     const email = typeof buyerEmail === 'string' ? buyerEmail.trim().toLowerCase() : ''
     const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 
@@ -20,7 +20,9 @@ export async function POST(request: NextRequest) {
     const ALLOWED_PRICES = [99]
     const validatedPrice = ALLOWED_PRICES.includes(priceOverride) ? priceOverride : undefined
 
-    const { url, sessionId } = await createPaymentSession({ buyerEmail: email, priceOverride: validatedPrice, locale })
+    const cancelPath = typeof sourcePage === 'string' && sourcePage.startsWith('/') ? sourcePage : '/'
+    const validGclid = typeof gclid === 'string' && gclid.length > 0 ? gclid : undefined
+    const { url, sessionId } = await createPaymentSession({ buyerEmail: email, priceOverride: validatedPrice, locale, cancelPath, gclid: validGclid })
     const response = NextResponse.json({ url, sessionId })
 
     response.cookies.set({
