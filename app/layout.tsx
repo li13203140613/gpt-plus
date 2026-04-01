@@ -63,7 +63,8 @@ export default function RootLayout({
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-WW5E5CHYQT');
-gtag('config', 'AW-18002889651', { allow_enhanced_conversions: true });`,
+gtag('config', 'AW-18002889651', { allow_enhanced_conversions: true });
+gtag('config', 'AW-18052938775');`,
           }}
         />
         {/* Microsoft Clarity - heatmaps & session replay */}
