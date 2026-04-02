@@ -7,6 +7,11 @@ interface PaymentFailedEmailOptions {
   to: string
 }
 
+interface RenewalReminderEmailOptions {
+  to: string
+  type: 'day_before' | 'day_of'
+}
+
 import { getDb } from '@/lib/db'
 
 const DEFAULT_ACTIVATION_SITE_URL = 'https://chong.plus'
@@ -335,5 +340,148 @@ export async function sendPaymentFailedEmail({ to }: PaymentFailedEmailOptions) 
   if (!response.ok) {
     const body = await response.text()
     throw new Error(`Failed to send payment failed email: ${body}`)
+  }
+}
+
+const RENEWAL_EMAIL_COPY = {
+  day_before: {
+    subject: '您的 ChatGPT Plus 明天到期，续费不断档',
+    title: '您的 ChatGPT Plus 明天就要到期了',
+    intro: '为了不影响您继续使用 ChatGPT Plus 的高级功能（GPT-4o、文件上传、图片生成等），建议您今天完成续费，确保服务无缝衔接。',
+    urgency: '⏰ 距离到期还有 1 天',
+    urgencyColor: '#fbbf24',
+  },
+  day_of: {
+    subject: '您的 ChatGPT Plus 今日到期，立即续费',
+    title: '您的 ChatGPT Plus 今天到期',
+    intro: '您的 ChatGPT Plus 订阅今天到期。到期后将无法使用 GPT-4o、文件上传、图片生成等高级功能。立即续费，避免服务中断。',
+    urgency: '🔴 今日到期',
+    urgencyColor: '#ef4444',
+  },
+}
+
+const RENEWAL_BENEFITS = [
+  '无限使用 GPT-4o 模型',
+  '支持文件上传与图片生成',
+  '优先体验最新功能',
+  '续费流程简单，1 分钟搞定',
+]
+
+function buildRenewalReminderEmailHtml(type: 'day_before' | 'day_of') {
+  const copy = RENEWAL_EMAIL_COPY[type]
+  const benefitsHtml = RENEWAL_BENEFITS
+    .map(b => `<li style="padding:5px 0;color:#cbd5e1;font-size:14px;">✅ ${b}</li>`)
+    .join('')
+
+  return `
+    <!doctype html>
+    <html lang="zh-CN">
+      <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>${copy.subject}</title>
+      </head>
+      <body style="margin:0;padding:32px 16px;background:#050816;font-family:'PingFang SC','Microsoft YaHei',Arial,sans-serif;color:#e5e7eb;">
+        <div style="max-width:640px;margin:0 auto;border:1px solid rgba(16,185,129,0.18);border-radius:24px;overflow:hidden;background:#0b1020;">
+          <div style="padding:32px 32px 24px;background:radial-gradient(circle at top, rgba(16,185,129,0.24), rgba(11,16,32,1) 60%);">
+            <div style="display:inline-block;padding:6px 12px;border-radius:999px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.22);font-size:12px;letter-spacing:0.08em;color:#6ee7b7;">
+              GPT Plus Renewal
+            </div>
+            <h1 style="margin:18px 0 12px;font-size:28px;line-height:1.3;color:#ffffff;">
+              ${copy.title}
+            </h1>
+            <p style="margin:0;font-size:15px;line-height:1.8;color:#cbd5e1;">
+              ${copy.intro}
+            </p>
+          </div>
+
+          <div style="padding:0 32px 32px;">
+            <!-- Urgency Badge -->
+            <div style="margin:0 0 20px;padding:16px 22px;border-radius:16px;background:rgba(8,15,34,0.9);border:1px solid ${copy.urgencyColor}33;text-align:center;">
+              <span style="font-size:18px;font-weight:700;color:${copy.urgencyColor};">
+                ${copy.urgency}
+              </span>
+            </div>
+
+            <!-- CTA Button -->
+            <div style="margin:0 0 24px;text-align:center;">
+              <a href="${SITE_URL}" style="display:inline-block;padding:18px 48px;border-radius:16px;background:linear-gradient(90deg,#059669,#14b8a6);color:#ffffff;text-decoration:none;font-size:18px;font-weight:800;letter-spacing:1px;box-shadow:0 4px 24px rgba(16,185,129,0.3);">
+                立即续费
+              </a>
+              <p style="margin:10px 0 0;font-size:13px;color:#94a3b8;">
+                点击按钮前往 gpt-plus.ai 完成续费
+              </p>
+            </div>
+
+            <!-- Benefits -->
+            <div style="margin:0 0 20px;padding:20px 22px;border-radius:20px;background:rgba(8,15,34,0.9);border:1px solid rgba(148,163,184,0.14);">
+              <div style="font-size:14px;font-weight:700;color:#e2e8f0;margin-bottom:8px;">
+                续费后继续享有
+              </div>
+              <ul style="margin:0;padding-left:0;list-style:none;">
+                ${benefitsHtml}
+              </ul>
+            </div>
+
+            <!-- WeChat Support -->
+            <div style="margin:0 0 20px;padding:18px 22px;border-radius:18px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.15);">
+              <p style="margin:0;font-size:14px;line-height:1.8;color:#94a3b8;">
+                续费遇到问题？联系客服微信：<span style="color:#6ee7b7;font-weight:700;">${SUPPORT_WECHAT}</span>（添加时请备注：gpt）
+              </p>
+            </div>
+          </div>
+        </div>
+      </body>
+    </html>
+  `
+}
+
+function buildRenewalReminderEmailText(type: 'day_before' | 'day_of') {
+  const copy = RENEWAL_EMAIL_COPY[type]
+  return [
+    copy.subject,
+    '',
+    copy.intro,
+    '',
+    copy.urgency,
+    '',
+    `立即续费：${SITE_URL}`,
+    '',
+    '续费后继续享有：',
+    ...RENEWAL_BENEFITS.map(b => `  ✅ ${b}`),
+    '',
+    `续费遇到问题？联系客服微信：${SUPPORT_WECHAT}（添加时请备注：gpt）`,
+  ].join('\n')
+}
+
+export async function sendRenewalReminderEmail({ to, type }: RenewalReminderEmailOptions) {
+  const resendApiKey = process.env.RESEND_API_KEY?.trim()
+  const resendFromEmail = process.env.RESEND_FROM_EMAIL?.trim()
+
+  if (!resendApiKey || !resendFromEmail || !to) {
+    return
+  }
+
+  const copy = RENEWAL_EMAIL_COPY[type]
+
+  const response = await fetch(RESEND_API_URL, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${resendApiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: `GPT Plus <${resendFromEmail}>`,
+      to: [to],
+      subject: copy.subject,
+      html: buildRenewalReminderEmailHtml(type),
+      text: buildRenewalReminderEmailText(type),
+    }),
+  })
+
+  if (!response.ok) {
+    const body = await response.text()
+    throw new Error(`Failed to send renewal reminder email: ${body}`)
   }
 }

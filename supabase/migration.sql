@@ -48,3 +48,7 @@ CREATE INDEX IF NOT EXISTS idx_codes_status ON activation_codes(status);
 CREATE INDEX IF NOT EXISTS idx_codes_session ON activation_codes(stripe_session_id);
 CREATE INDEX IF NOT EXISTS idx_codes_reserved ON activation_codes(status, reserved_at) WHERE status = 'reserved';
 CREATE INDEX IF NOT EXISTS idx_gptplus_orders_session ON gptplus_orders(stripe_session_id);
+
+-- Renewal reminder tracking fields
+ALTER TABLE activation_codes ADD COLUMN IF NOT EXISTS renewal_reminder_1_sent BOOLEAN DEFAULT FALSE;
+ALTER TABLE activation_codes ADD COLUMN IF NOT EXISTS renewal_reminder_2_sent BOOLEAN DEFAULT FALSE;
