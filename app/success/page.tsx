@@ -226,13 +226,24 @@ function SuccessContent() {
             </Button>
           </div>
 
-          {order.email && (
-            <div className="rounded-xl border border-stone-200 bg-white/82 px-4 py-3 text-left shadow-[0_18px_45px_-34px_rgba(15,23,42,0.24)]">
-              <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{t.success.backupEmailLabel}</p>
-              <p className="mt-2 text-sm text-slate-900">{order.email}</p>
-              <p className="mt-1 text-xs text-slate-500">{t.success.backupEmailDesc}</p>
+          <a
+            href="https://my.feishu.cn/wiki/AwGNwqLZeiRPJMkX5L8cbxZCncb"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative flex items-center gap-4 overflow-hidden rounded-xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-teal-50 p-4 text-left transition-all duration-300 hover:border-emerald-300 hover:shadow-lg hover:shadow-emerald-500/10"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-emerald-100/0 to-teal-100/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <div className="relative flex size-10 flex-shrink-0 items-center justify-center rounded-lg bg-emerald-100 ring-1 ring-emerald-200/60 transition-transform duration-300 group-hover:scale-110">
+              <BookOpen className="size-5 text-emerald-600" />
             </div>
-          )}
+            <div className="relative">
+              <p className="text-sm font-semibold text-emerald-800">ChatGPT Plus 自助充值详细教程</p>
+              <p className="mt-0.5 text-xs text-emerald-500">点击查看图文教程，手把手教你完成充值激活</p>
+            </div>
+            <svg className="relative ml-auto size-4 flex-shrink-0 text-emerald-400 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+          </a>
 
           <div className="space-y-4 rounded-xl border border-emerald-200 bg-emerald-50/85 p-5 text-left">
             <p className="text-base font-semibold text-emerald-700">{t.success.nextStepsTitle}</p>
@@ -287,20 +298,13 @@ function SuccessContent() {
             </a>
           </div>
 
-          <a
-            href="https://my.feishu.cn/wiki/AwGNwqLZeiRPJMkX5L8cbxZCncb"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-4 rounded-xl border border-blue-200 bg-blue-50/85 p-4 text-left transition-colors hover:bg-blue-100/80"
-          >
-            <div className="flex size-10 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
-              <BookOpen className="size-5 text-blue-600" />
+          {order.email && (
+            <div className="rounded-xl border border-stone-200 bg-white/82 px-4 py-3 text-left shadow-[0_18px_45px_-34px_rgba(15,23,42,0.24)]">
+              <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{t.success.backupEmailLabel}</p>
+              <p className="mt-2 text-sm text-slate-900">{order.email}</p>
+              <p className="mt-1 text-xs text-slate-500">{t.success.backupEmailDesc}</p>
             </div>
-            <div>
-              <p className="text-sm font-semibold text-blue-700">ChatGPT Plus 自助充值详细教程</p>
-              <p className="mt-0.5 text-xs text-blue-500">点击查看图文教程，手把手教你完成充值激活</p>
-            </div>
-          </a>
+          )}
 
           <div className="rounded-lg border border-amber-200 bg-amber-50/90 px-4 py-3 text-left">
             <p className="text-xs text-amber-700">{t.success.retryHint}</p>

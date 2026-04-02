@@ -1,6 +1,7 @@
 'use client'
 
 import { Shield, Clock, Star, CheckCircle, Users, Headphones, UserCheck, CreditCard } from 'lucide-react'
+import { ReviewMarquee } from '@/components/ReviewMarquee'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { CodeGrid } from '@/components/CodeGrid'
@@ -111,8 +112,11 @@ export default function LandingPage99() {
           </div>
         </section>
 
+        {/* User Testimonials — real chat screenshots */}
+        <ReviewMarquee />
+
         {/* Why Choose Us */}
-        <section className="max-w-5xl mx-auto px-4 pb-32">
+        <section className="max-w-5xl mx-auto px-4 pt-24 pb-32">
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4 text-gray-900">
             {t.whyChooseTitle}
           </h2>
@@ -133,39 +137,6 @@ export default function LandingPage99() {
                 </div>
               )
             })}
-          </div>
-        </section>
-
-        {/* User Testimonials */}
-        <section className="max-w-5xl mx-auto px-4 pb-32">
-          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4 text-gray-900">
-            {t.testimonialsTitle}
-          </h2>
-          <p className="mb-10 text-center text-gray-500">{t.testimonialsSubtitle}</p>
-
-          <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-5">
-            {t.testimonials.map((item) => (
-              <div key={item.name} className="flex h-full flex-col rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-                <div className="flex gap-0.5 mb-3">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className="size-4 text-amber-400 fill-amber-400" />
-                  ))}
-                </div>
-                <p className="mb-4 flex-1 text-sm leading-relaxed text-gray-600">&ldquo;{item.content}&rdquo;</p>
-                <div className="mt-auto flex items-center gap-3 pt-2">
-                  <img
-                    src={item.avatar}
-                    alt={item.name}
-                    loading="lazy"
-                    className="size-11 rounded-full border border-violet-100 object-cover shadow-sm"
-                  />
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">{item.name}</p>
-                    <p className="text-xs text-gray-400">{item.role}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
           </div>
         </section>
 

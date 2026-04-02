@@ -43,6 +43,11 @@ ALTER TABLE gptplus_orders ADD COLUMN IF NOT EXISTS paid_amount DECIMAL(10,2);
 -- Google Click ID for server-side conversion tracking
 ALTER TABLE gptplus_orders ADD COLUMN IF NOT EXISTS gclid TEXT;
 
+-- WeChat Pay support
+ALTER TABLE gptplus_orders ADD COLUMN IF NOT EXISTS payment_method TEXT NOT NULL DEFAULT 'stripe';
+ALTER TABLE gptplus_orders ADD COLUMN IF NOT EXISTS out_trade_no TEXT;
+CREATE INDEX IF NOT EXISTS idx_gptplus_orders_out_trade_no ON gptplus_orders(out_trade_no) WHERE out_trade_no IS NOT NULL;
+
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_codes_status ON activation_codes(status);
 CREATE INDEX IF NOT EXISTS idx_codes_session ON activation_codes(stripe_session_id);

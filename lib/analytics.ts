@@ -19,6 +19,8 @@ type GtagEvent = {
   copy_activation_code: { method: string }
   click_activation_site: { destination: string }
   order_recovery: { source: string }
+  // WeChat Pay events
+  wechat_pay_qr_shown: { source_page: string }
   // Engagement events
   seo_cta_click: { page_slug: string; cta_type: string }
 }

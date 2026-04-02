@@ -5,6 +5,7 @@ import { Loader2, Mail, Sparkles, MessageSquare, Image, Brain, Bot, FolderOpen, 
 import { toast } from 'sonner'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
+import { WechatPayModal } from './WechatPayModal'
 import { trackEvent, setUserDataForAds, trackGoogleAdsSecondaryConversion, trackViewItem } from '@/lib/analytics'
 import { useT, useLocale } from '@/lib/i18n/context'
 import { formatPrice } from '@/lib/i18n/config'
@@ -22,11 +23,22 @@ export function CodeGrid({ priceOverride }: CodeGridProps = {}) {
 
   const [email, setEmail] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [countdown, setCountdown] = useState(0)
+  const [wechatModal, setWechatModal] = useState<{ open: boolean; codeUrl: string; outTradeNo: string; amount: number }>({
+    open: false, codeUrl: '', outTradeNo: '', amount: 0,
+  })
   const emailFocusTracked = useRef(false)
   const viewItemTracked = useRef(false)
 
   const displayPrice = priceOverride ? config.priceOverride : config.price
   const originalPrice = priceOverride ? config.price : config.originalPrice
+
+  // Countdown timer when submitting
+  useEffect(() => {
+    if (!submitting || countdown <= 0) return
+    const timer = setTimeout(() => setCountdown(prev => prev - 1), 1000)
+    return () => clearTimeout(timer)
+  }, [submitting, countdown])
 
   // Capture gclid from URL on mount (for server-side conversion tracking)
   useEffect(() => { captureGclid() }, [])
@@ -65,8 +77,40 @@ export function CodeGrid({ priceOverride }: CodeGridProps = {}) {
     // Fire begin_checkout as Google Ads secondary conversion (needs separate label in Google Ads)
     trackGoogleAdsSecondaryConversion('qgLwCJ_b448cELOXuYhD', displayPrice, config.currency)
     setSubmitting(true)
+    setCountdown(10)
 
     try {
+      // Chinese locale: use native WeChat Pay
+      if (locale === 'zh') {
+        const res = await fetch('/api/payment/wechat-native', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            buyerEmail: normalizedEmail,
+            locale,
+            ...(priceOverride ? { priceOverride } : {}),
+            gclid: getGclid() || undefined,
+          }),
+        })
+
+        const data = await res.json()
+
+        if (!res.ok) {
+          throw new Error(data.error || t.paymentCreateFailed)
+        }
+
+        trackEvent('wechat_pay_qr_shown', { source_page: sourcePage })
+        setWechatModal({
+          open: true,
+          codeUrl: data.code_url,
+          outTradeNo: data.out_trade_no,
+          amount: data.amount,
+        })
+        setSubmitting(false)
+        return
+      }
+
+      // Other locales: use Stripe
       const res = await fetch('/api/payment/create-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -148,7 +192,12 @@ export function CodeGrid({ priceOverride }: CodeGridProps = {}) {
             disabled={submitting}
             className="h-12 w-full rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 text-base font-semibold text-white shadow-lg shadow-violet-500/25 hover:from-violet-500 hover:to-purple-500"
           >
-            {submitting ? <Loader2 className="size-4 animate-spin" /> : (
+            {submitting ? (
+              <span className="flex items-center gap-2">
+                <Loader2 className="size-4 animate-spin" />
+                {countdown > 0 ? `马上加载 ${countdown}s` : '加载中...'}
+              </span>
+            ) : (
               <>
                 {t.buyButton}
                 <span className="ml-2 inline-flex items-center gap-1.5">
@@ -191,24 +240,20 @@ export function CodeGrid({ priceOverride }: CodeGridProps = {}) {
 
           {/* Plus Benefits */}
           <div className="border-t border-gray-100 pt-6">
-            <div className="mb-4 flex items-center justify-between">
+            <div className="flex items-center justify-between">
               <p className="text-sm font-semibold text-gray-800">{t.plusBenefitsTitle}</p>
               <span className="text-sm font-semibold text-violet-600">{t.perMonth}</span>
             </div>
-            <ul className="space-y-3">
-              {t.plusBenefits.map((text, i) => {
-                const Icon = BENEFIT_ICONS[i] || Sparkles
-                return (
-                  <li key={i} className="flex items-center gap-3">
-                    <Icon className="size-4 flex-shrink-0 text-violet-500" />
-                    <span className="text-sm text-gray-600">{text}</span>
-                  </li>
-                )
-              })}
-            </ul>
           </div>
         </div>
       </div>
+      <WechatPayModal
+        open={wechatModal.open}
+        onClose={() => setWechatModal(prev => ({ ...prev, open: false }))}
+        codeUrl={wechatModal.codeUrl}
+        outTradeNo={wechatModal.outTradeNo}
+        amount={wechatModal.amount}
+      />
     </div>
   )
 }
