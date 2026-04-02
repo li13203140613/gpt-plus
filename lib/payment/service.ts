@@ -1,6 +1,6 @@
 import { getDb } from '@/lib/db'
 import { sendActivationCodeEmail, sendPaymentFailedEmail } from '@/lib/email'
-import { notifyNewOrder, notifyPaymentSuccess, notifyPaymentExpired, notifyPaymentAnomaly } from '@/lib/feishu-notify'
+import { notifyNewOrder, notifyPaymentSuccess, notifyPaymentExpired, notifyPaymentAnomaly, notifyLowStock } from '@/lib/feishu-notify'
 import { getStripe } from './stripe'
 import { LOCALE_CONFIGS, type Locale } from '@/lib/i18n/config'
 import { uploadPurchaseConversion } from '@/lib/conversion-upload'
@@ -241,6 +241,19 @@ export async function completePayment(sessionId: string, buyerEmail?: string) {
     } catch (err) {
       console.error('Feishu payment success notify failed:', err)
     }
+  }
+
+  // Check stock level and notify if low (≤3)
+  try {
+    const stockResult = await sql`
+      SELECT COUNT(*)::int AS remaining FROM activation_codes WHERE status = 'available'
+    `
+    const remaining = stockResult[0]?.remaining ?? 0
+    if (remaining <= 3) {
+      await notifyLowStock({ remaining })
+    }
+  } catch (err) {
+    console.error('[completePayment] Stock check notify failed:', err)
   }
 
   // Server-side GA4 conversion tracking (doesn't depend on client-side gtag)

@@ -155,6 +155,49 @@ export async function notifyPaymentAnomaly({
   })
 }
 
+export async function notifyLowStock({ remaining }: { remaining: number }) {
+  const now = new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })
+
+  const urgency =
+    remaining === 0
+      ? { template: 'red' as const, emoji: '🚨', label: '库存已清零' }
+      : remaining === 1
+        ? { template: 'red' as const, emoji: '🔴', label: '库存告急' }
+        : remaining === 2
+          ? { template: 'orange' as const, emoji: '🟠', label: '库存紧张' }
+          : { template: 'yellow' as const, emoji: '🟡', label: '库存偏低' }
+
+  await sendFeishuMessage({
+    config: { wide_screen_mode: true },
+    header: {
+      template: urgency.template,
+      title: { tag: 'plain_text', content: `${urgency.emoji} ${urgency.label}` },
+    },
+    elements: [
+      {
+        tag: 'div',
+        fields: [
+          { is_short: true, text: { tag: 'lark_md', content: `**剩余可用激活码**\n${remaining} 个` } },
+          { is_short: true, text: { tag: 'lark_md', content: `**时间**\n${now}` } },
+        ],
+      },
+      {
+        tag: 'div',
+        text: {
+          tag: 'lark_md',
+          content: remaining === 0
+            ? '⚠️ **所有激活码已售罄，新用户将无法购买！请立即补充库存。**'
+            : `⚠️ **库存仅剩 ${remaining} 个，请尽快补充激活码。**`,
+        },
+      },
+      {
+        tag: 'note',
+        elements: [{ tag: 'plain_text', content: '库存低于 3 个时自动提醒' }],
+      },
+    ],
+  })
+}
+
 export async function notifyPaymentExpired({
   email,
   amount,
