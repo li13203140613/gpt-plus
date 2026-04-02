@@ -3,10 +3,11 @@
 import Link from 'next/link'
 import { Suspense, useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { CheckCircle, Copy, Loader2, XCircle } from 'lucide-react'
+import { BookOpen, CheckCircle, Copy, Loader2, XCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
+import { BookmarkPrompt } from '@/components/BookmarkPrompt'
 import { Button } from '@/components/ui/button'
 import { ORDER_HISTORY_COOKIE, parseOrderHistoryCookie, serializeOrderHistoryCookie } from '@/lib/order-history'
 import { trackEvent, trackGoogleAdsConversion } from '@/lib/analytics'
@@ -19,6 +20,8 @@ interface OrderInfo {
   code: string | null
   email: string | null
   status: 'pending' | 'completed' | 'expired'
+  currency: string | null
+  paidAmount: number | null
 }
 
 function readCookie(name: string) {
@@ -90,6 +93,9 @@ function SuccessContent() {
     setStatus(nextSessionId ? 'loading' : 'empty')
   }, [querySessionId])
 
+  // Determine if this is a WeChat Pay order (out_trade_no starts with "WX")
+  const isWechatOrder = activeSessionId?.startsWith('WX') ?? false
+
   useEffect(() => {
     if (!activeSessionId) {
       return
@@ -97,7 +103,12 @@ function SuccessContent() {
 
     async function checkOrder() {
       try {
-        const res = await fetch(`/api/order/${activeSessionId}`)
+        // WeChat Pay orders use wechat-query endpoint
+        const apiUrl = isWechatOrder
+          ? `/api/payment/wechat-query/${activeSessionId}`
+          : `/api/order/${activeSessionId}`
+
+        const res = await fetch(apiUrl)
         if (!res.ok) {
           setStatus('failed')
           return
@@ -111,12 +122,14 @@ function SuccessContent() {
           if (!purchaseTracked.current && !isConversionTracked(activeSessionId!)) {
             purchaseTracked.current = true
             markConversionTracked(activeSessionId!)
+            const convValue = data.paidAmount ?? 128
+            const convCurrency = (data.currency || 'cny').toUpperCase()
             trackEvent('purchase', {
               transaction_id: activeSessionId!,
-              value: 128,
-              currency: 'CNY',
+              value: convValue,
+              currency: convCurrency,
             })
-            trackGoogleAdsConversion('izOyCJuqvY4cELOXuYhD', 128, data.email || undefined)
+            trackGoogleAdsConversion('izOyCJuqvY4cELOXuYhD', convValue, data.email || undefined, convCurrency)
           }
           return
         }
@@ -274,6 +287,21 @@ function SuccessContent() {
             </a>
           </div>
 
+          <a
+            href="https://my.feishu.cn/wiki/AwGNwqLZeiRPJMkX5L8cbxZCncb"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-4 rounded-xl border border-blue-200 bg-blue-50/85 p-4 text-left transition-colors hover:bg-blue-100/80"
+          >
+            <div className="flex size-10 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
+              <BookOpen className="size-5 text-blue-600" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-blue-700">ChatGPT Plus 自助充值详细教程</p>
+              <p className="mt-0.5 text-xs text-blue-500">点击查看图文教程，手把手教你完成充值激活</p>
+            </div>
+          </a>
+
           <div className="rounded-lg border border-amber-200 bg-amber-50/90 px-4 py-3 text-left">
             <p className="text-xs text-amber-700">{t.success.retryHint}</p>
           </div>
@@ -287,6 +315,8 @@ function SuccessContent() {
           <p className="text-sm text-slate-500">
             {t.success.contactSupportText}<span className="text-slate-900">fanxx2029</span>
           </p>
+
+          <BookmarkPrompt trigger />
         </div>
       )}
 

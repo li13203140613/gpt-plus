@@ -3,16 +3,17 @@
 import { useEffect, useState } from 'react'
 import { Bookmark, Star, X } from 'lucide-react'
 
-export function BookmarkPrompt() {
+export function BookmarkPrompt({ trigger = false }: { trigger?: boolean }) {
   const [show, setShow] = useState(false)
 
   useEffect(() => {
+    if (!trigger) return
     const dismissed = sessionStorage.getItem('bookmark-dismissed')
     if (dismissed) return
 
-    // Disabled: bookmark prompt not shown on page load
-    return
-  }, [])
+    const timer = setTimeout(() => setShow(true), 3000)
+    return () => clearTimeout(timer)
+  }, [trigger])
 
   function handleBookmark() {
     alert('按 Ctrl+D (Mac: Cmd+D) 收藏本网站')

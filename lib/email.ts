@@ -26,6 +26,7 @@ async function getActivationSiteUrl(): Promise<string> {
     return DEFAULT_ACTIVATION_SITE_URL
   }
 }
+const TUTORIAL_URL = 'https://my.feishu.cn/wiki/AwGNwqLZeiRPJMkX5L8cbxZCncb'
 const SITE_URL = 'https://gpt-plus.ai'
 const QR_URL = 'https://www.gpt-plus.ai/wechat-qr.png'
 const RESEND_API_URL = 'https://api.resend.com/emails'
@@ -128,6 +129,18 @@ function buildActivationEmailHtml(code: string, ACTIVATION_SITE_URL: string) {
               </ol>
             </div>
 
+            <div style="margin:0 0 20px;padding:20px 22px;border-radius:20px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);">
+              <div style="font-size:12px;letter-spacing:0.12em;color:#93c5fd;text-transform:uppercase;">
+                详细教程
+              </div>
+              <p style="margin:10px 0 0;font-size:14px;line-height:1.8;color:#e2e8f0;">
+                不确定如何操作？查看我们的图文教程，手把手教你完成充值激活：
+              </p>
+              <a href="${TUTORIAL_URL}" style="display:inline-block;margin-top:12px;padding:12px 18px;border-radius:14px;background:linear-gradient(90deg,#2563eb,#3b82f6);color:#ffffff;text-decoration:none;font-size:14px;font-weight:700;">
+                查看详细教程
+              </a>
+            </div>
+
             <div style="margin:0 0 20px;padding:18px 20px;border-radius:18px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.18);">
               <p style="margin:0;font-size:14px;line-height:1.8;color:#fde68a;">
                 ${EMAIL_COPY.orderHint}
@@ -157,6 +170,8 @@ function buildActivationEmailText(code: string, ACTIVATION_SITE_URL: string) {
     `1. ${EMAIL_COPY.step1}`,
     `2. ${EMAIL_COPY.step2}`,
     `3. ${EMAIL_COPY.step3}`,
+    '',
+    `详细教程：${TUTORIAL_URL}`,
     '',
     `\u8ba2\u5355\u9875\uff1a${ORDER_SITE_URL}`,
     `${EMAIL_COPY.support}${SUPPORT_WECHAT}`,
