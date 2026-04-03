@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Toaster } from '@/components/ui/sonner'
 import { BookmarkPrompt } from '@/components/BookmarkPrompt'
-import { CustomerService } from '@/components/CustomerService'
+// import { CustomerService } from '@/components/CustomerService'
 import { LocaleProvider } from '@/lib/i18n/context'
 import './globals.css'
 
@@ -113,8 +113,8 @@ gtag('config', 'AW-18052938775');`,
         <LocaleProvider>
           {children}
           <Toaster />
-          <BookmarkPrompt />
-          <CustomerService />
+          <BookmarkPrompt trigger />
+          {/* <CustomerService /> */}
         </LocaleProvider>
       </body>
     </html>
