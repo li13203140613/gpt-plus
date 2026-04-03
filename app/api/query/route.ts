@@ -115,11 +115,11 @@ export async function GET(request: NextRequest) {
     `
     values.push(limit, offset)
 
-    const rows = await sql(query, values)
+    const rows = await sql.unsafe(query, values as any[])
 
     // 查询总数
     const countQuery = `SELECT COUNT(*) as total FROM ${tableName} ${whereClause}`
-    const countResult = await sql(countQuery, values.slice(0, -2))
+    const countResult = await sql.unsafe(countQuery, values.slice(0, -2) as any[])
     const total = Number(countResult[0].total)
 
     return NextResponse.json({
