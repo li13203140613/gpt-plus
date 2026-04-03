@@ -20,7 +20,7 @@ export const LOCALE_CONFIGS: Record<Locale, LocaleConfig> = {
     price: 128,
     originalPrice: 145,
     priceOverride: 99,
-    paymentMethods: ['card'],
+    paymentMethods: ['alipay', 'wechat_pay'],
     stripeLocale: 'zh',
   },
   en: {
