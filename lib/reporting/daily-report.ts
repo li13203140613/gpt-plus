@@ -153,38 +153,64 @@ async function getRevenueSection(window: ReportWindow): Promise<ReportSection> {
   const prevDateKey = shiftDateKey(window.label, -1)
   const prevStart = new Date(`${prevDateKey}T00:00:00+08:00`).toISOString()
 
-  const [row] = await sql`
-    SELECT
-      COUNT(*) FILTER (
+  const [[row], repeatRows] = await Promise.all([
+    sql`
+      SELECT
+        COUNT(*) FILTER (
+          WHERE status = 'completed'
+            AND completed_at >= ${window.startIso}
+            AND completed_at < ${window.endIso}
+        )::int AS daily_orders,
+        COALESCE(SUM(amount) FILTER (
+          WHERE status = 'completed'
+            AND completed_at >= ${window.startIso}
+            AND completed_at < ${window.endIso}
+        ), 0)::numeric AS daily_revenue,
+        COUNT(*) FILTER (
+          WHERE status = 'completed'
+            AND completed_at >= ${prevStart}
+            AND completed_at < ${window.startIso}
+        )::int AS prev_orders,
+        COALESCE(SUM(amount) FILTER (
+          WHERE status = 'completed'
+            AND completed_at >= ${prevStart}
+            AND completed_at < ${window.startIso}
+        ), 0)::numeric AS prev_revenue,
+        COUNT(*) FILTER (WHERE status = 'completed')::int AS total_orders,
+        COALESCE(SUM(amount) FILTER (WHERE status = 'completed'), 0)::numeric AS total_revenue
+      FROM gptplus_orders
+    `,
+    // Repeat buyers: count completed orders per email, then aggregate (exclude test accounts)
+    sql`
+      WITH buyer_counts AS (
+        SELECT buyer_email, COUNT(*)::int AS cnt
+        FROM gptplus_orders
+        WHERE status = 'completed' AND buyer_email IS NOT NULL
+          AND buyer_email NOT IN ('595386830@qq.com', '1325650685@qq.com', '13225650685@qq.com')
+        GROUP BY buyer_email
+      ),
+      daily_buyers AS (
+        SELECT DISTINCT buyer_email
+        FROM gptplus_orders
         WHERE status = 'completed'
           AND completed_at >= ${window.startIso}
           AND completed_at < ${window.endIso}
-      )::int AS daily_orders,
-      COALESCE(SUM(amount) FILTER (
-        WHERE status = 'completed'
-          AND completed_at >= ${window.startIso}
-          AND completed_at < ${window.endIso}
-      ), 0)::numeric AS daily_revenue,
-      COUNT(*) FILTER (
-        WHERE status = 'completed'
-          AND completed_at >= ${prevStart}
-          AND completed_at < ${window.startIso}
-      )::int AS prev_orders,
-      COALESCE(SUM(amount) FILTER (
-        WHERE status = 'completed'
-          AND completed_at >= ${prevStart}
-          AND completed_at < ${window.startIso}
-      ), 0)::numeric AS prev_revenue,
-      COUNT(*) FILTER (WHERE status = 'completed')::int AS total_orders,
-      COALESCE(SUM(amount) FILTER (WHERE status = 'completed'), 0)::numeric AS total_revenue
-    FROM gptplus_orders
-  `
+          AND buyer_email IS NOT NULL
+      )
+      SELECT
+        (SELECT COUNT(*) FROM buyer_counts WHERE cnt >= 2)::int AS total_repeat_2,
+        (SELECT COUNT(*) FROM buyer_counts WHERE cnt >= 5)::int AS total_repeat_5,
+        (SELECT COUNT(*) FROM daily_buyers db JOIN buyer_counts bc ON db.buyer_email = bc.buyer_email WHERE bc.cnt >= 2)::int AS daily_repeat_2
+    `,
+  ])
 
   const dailyOrders = toNumber(row.daily_orders)
   const dailyRevenue = toNumber(row.daily_revenue)
   const prevOrders = toNumber(row.prev_orders)
   const prevRevenue = toNumber(row.prev_revenue)
   const avgOrderValue = dailyOrders > 0 ? dailyRevenue / dailyOrders : 0
+
+  const repeatRow = repeatRows[0]
 
   return {
     icon: '💰',
@@ -197,6 +223,9 @@ async function getRevenueSection(window: ReportWindow): Promise<ReportSection> {
       { label: '客单价', value: formatCurrency(avgOrderValue) },
       { label: '累计订单数', value: formatInteger(toNumber(row.total_orders)) },
       { label: '累计收入', value: formatCurrency(toNumber(row.total_revenue)) },
+      { label: '当日复购客户(≥2次)', value: formatInteger(toNumber(repeatRow.daily_repeat_2)) },
+      { label: '累计复购客户(≥2次)', value: formatInteger(toNumber(repeatRow.total_repeat_2)) },
+      { label: '累计忠实客户(≥5次)', value: formatInteger(toNumber(repeatRow.total_repeat_5)) },
     ],
   }
 }
