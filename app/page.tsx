@@ -115,7 +115,7 @@ export default function HomePage() {
         </section>
 
         {/* Trust Stats Bar */}
-        <section className="max-w-4xl mx-auto px-4 pb-32">
+        <section className="max-w-4xl mx-auto px-4 pb-12">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {t.stats.map((item, i) => {
               const Icon = STAT_ICONS[i]
