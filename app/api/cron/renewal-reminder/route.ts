@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
 
     // Find codes expiring tomorrow (sold_at + 29 days <= now < sold_at + 30 days)
     const dayBeforeCodes = await sql`
-      SELECT id, buyer_email
+      SELECT id, buyer_email, sold_at
       FROM activation_codes
       WHERE status = 'sold'
         AND buyer_email IS NOT NULL
@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
 
     // Find codes expiring today (sold_at + 30 days <= now < sold_at + 31 days)
     const dayOfCodes = await sql`
-      SELECT id, buyer_email
+      SELECT id, buyer_email, sold_at
       FROM activation_codes
       WHERE status = 'sold'
         AND buyer_email IS NOT NULL
@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
     // Send day-before reminders
     for (const code of dayBeforeCodes) {
       try {
-        await sendRenewalReminderEmail({ to: code.buyer_email, type: 'day_before' })
+        await sendRenewalReminderEmail({ to: code.buyer_email, type: 'day_before', soldAt: code.sold_at })
         await sql`
           UPDATE activation_codes
           SET renewal_reminder_1_sent = TRUE, updated_at = NOW()
@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
     // Send day-of reminders
     for (const code of dayOfCodes) {
       try {
-        await sendRenewalReminderEmail({ to: code.buyer_email, type: 'day_of' })
+        await sendRenewalReminderEmail({ to: code.buyer_email, type: 'day_of', soldAt: code.sold_at })
         await sql`
           UPDATE activation_codes
           SET renewal_reminder_2_sent = TRUE, updated_at = NOW()

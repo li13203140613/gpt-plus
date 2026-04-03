@@ -14,6 +14,7 @@ interface CreatePaymentSessionInput {
   locale?: Locale
   cancelPath?: string
   gclid?: string
+  source?: string
 }
 
 export async function releaseExpiredReservations() {
@@ -38,7 +39,7 @@ export async function releaseExpiredReservations() {
   `
 }
 
-export async function createPaymentSession({ buyerEmail, priceOverride, locale = 'zh', cancelPath = '/', gclid }: CreatePaymentSessionInput) {
+export async function createPaymentSession({ buyerEmail, priceOverride, locale = 'zh', cancelPath = '/', gclid, source }: CreatePaymentSessionInput) {
   const sql = getDb()
 
   await releaseExpiredReservations()
@@ -126,8 +127,8 @@ export async function createPaymentSession({ buyerEmail, priceOverride, locale =
   `
 
   await sql`
-    INSERT INTO gptplus_orders (code_id, stripe_session_id, amount, status, buyer_email, currency, paid_amount, gclid)
-    VALUES (${code.id}, ${session.id}, ${cnyAmount}, 'pending', ${buyerEmail}, ${localeConfig.currency}, ${finalPrice}, ${gclid || null})
+    INSERT INTO gptplus_orders (code_id, stripe_session_id, amount, status, buyer_email, currency, paid_amount, gclid, source)
+    VALUES (${code.id}, ${session.id}, ${cnyAmount}, 'pending', ${buyerEmail}, ${localeConfig.currency}, ${finalPrice}, ${gclid || null}, ${source || null})
   `
 
   // Notify new order to Feishu (use CNY amount for internal tracking)

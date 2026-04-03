@@ -10,6 +10,7 @@ interface PaymentFailedEmailOptions {
 interface RenewalReminderEmailOptions {
   to: string
   type: 'day_before' | 'day_of'
+  soldAt?: string
 }
 
 import { getDb } from '@/lib/db'
@@ -382,11 +383,27 @@ const RENEWAL_BENEFITS = [
   '续费流程简单，1 分钟搞定',
 ]
 
-function buildRenewalReminderEmailHtml(type: 'day_before' | 'day_of') {
+const RENEWAL_URL = `${SITE_URL}/lp/99?utm_source=renewal_email`
+
+function formatSoldDate(soldAt?: string): string {
+  if (!soldAt) return ''
+  try {
+    const d = new Date(soldAt)
+    return `${d.getFullYear()} 年 ${d.getMonth() + 1} 月 ${d.getDate()} 日`
+  } catch {
+    return ''
+  }
+}
+
+function buildRenewalReminderEmailHtml(type: 'day_before' | 'day_of', soldAt?: string) {
   const copy = RENEWAL_EMAIL_COPY[type]
   const benefitsHtml = RENEWAL_BENEFITS
     .map(b => `<li style="padding:5px 0;color:#cbd5e1;font-size:14px;">✅ ${b}</li>`)
     .join('')
+  const dateStr = formatSoldDate(soldAt)
+  const personalLine = dateStr
+    ? `<p style="margin:12px 0 0;font-size:14px;color:#94a3b8;">您于 <span style="color:#6ee7b7;font-weight:600;">${dateStr}</span> 购买的激活码即将到期。</p>`
+    : ''
 
   return `
     <!doctype html>
@@ -409,6 +426,7 @@ function buildRenewalReminderEmailHtml(type: 'day_before' | 'day_of') {
             <p style="margin:0;font-size:15px;line-height:1.8;color:#cbd5e1;">
               ${copy.intro}
             </p>
+            ${personalLine}
           </div>
 
           <div style="padding:0 32px 32px;">
@@ -419,13 +437,26 @@ function buildRenewalReminderEmailHtml(type: 'day_before' | 'day_of') {
               </span>
             </div>
 
+            <!-- Renewal Price Highlight -->
+            <div style="margin:0 0 20px;padding:20px 22px;border-radius:16px;background:linear-gradient(135deg,rgba(16,185,129,0.12),rgba(5,150,105,0.08));border:1px solid rgba(16,185,129,0.25);text-align:center;">
+              <div style="font-size:13px;color:#6ee7b7;font-weight:600;margin-bottom:6px;">🎁 老用户专属续费价</div>
+              <div style="font-size:42px;font-weight:900;color:#ffffff;line-height:1.2;">
+                ¥99
+              </div>
+              <div style="margin-top:4px;">
+                <span style="font-size:14px;color:#94a3b8;text-decoration:line-through;">原价 ¥128</span>
+                <span style="margin-left:8px;display:inline-block;padding:2px 8px;border-radius:999px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);font-size:12px;color:#f87171;font-weight:700;">省 ¥29</span>
+              </div>
+              <p style="margin:10px 0 0;font-size:12px;color:#94a3b8;">仅限已购买过的老用户享有此价格</p>
+            </div>
+
             <!-- CTA Button -->
             <div style="margin:0 0 24px;text-align:center;">
-              <a href="${SITE_URL}" style="display:inline-block;padding:18px 48px;border-radius:16px;background:linear-gradient(90deg,#059669,#14b8a6);color:#ffffff;text-decoration:none;font-size:18px;font-weight:800;letter-spacing:1px;box-shadow:0 4px 24px rgba(16,185,129,0.3);">
-                立即续费
+              <a href="${RENEWAL_URL}" style="display:inline-block;padding:18px 48px;border-radius:16px;background:linear-gradient(90deg,#059669,#14b8a6);color:#ffffff;text-decoration:none;font-size:18px;font-weight:800;letter-spacing:1px;box-shadow:0 4px 24px rgba(16,185,129,0.3);">
+                立即续费 ¥99
               </a>
               <p style="margin:10px 0 0;font-size:13px;color:#94a3b8;">
-                点击按钮前往 gpt-plus.ai 完成续费
+                点击按钮前往老用户专属续费页面
               </p>
             </div>
 
@@ -452,16 +483,21 @@ function buildRenewalReminderEmailHtml(type: 'day_before' | 'day_of') {
   `
 }
 
-function buildRenewalReminderEmailText(type: 'day_before' | 'day_of') {
+function buildRenewalReminderEmailText(type: 'day_before' | 'day_of', soldAt?: string) {
   const copy = RENEWAL_EMAIL_COPY[type]
+  const dateStr = formatSoldDate(soldAt)
+  const personalLine = dateStr ? `您于 ${dateStr} 购买的激活码即将到期。` : ''
   return [
     copy.subject,
     '',
     copy.intro,
+    ...(personalLine ? ['', personalLine] : []),
     '',
     copy.urgency,
     '',
-    `立即续费：${SITE_URL}`,
+    '🎁 老用户专属续费价：¥99（原价 ¥128，省 ¥29）',
+    '',
+    `立即续费：${RENEWAL_URL}`,
     '',
     '续费后继续享有：',
     ...RENEWAL_BENEFITS.map(b => `  ✅ ${b}`),
@@ -470,7 +506,7 @@ function buildRenewalReminderEmailText(type: 'day_before' | 'day_of') {
   ].join('\n')
 }
 
-export async function sendRenewalReminderEmail({ to, type }: RenewalReminderEmailOptions) {
+export async function sendRenewalReminderEmail({ to, type, soldAt }: RenewalReminderEmailOptions) {
   const resendApiKey = process.env.RESEND_API_KEY?.trim()
   const resendFromEmail = process.env.RESEND_FROM_EMAIL?.trim()
 
@@ -490,8 +526,8 @@ export async function sendRenewalReminderEmail({ to, type }: RenewalReminderEmai
       from: `GPT Plus <${resendFromEmail}>`,
       to: [to],
       subject: copy.subject,
-      html: buildRenewalReminderEmailHtml(type),
-      text: buildRenewalReminderEmailText(type),
+      html: buildRenewalReminderEmailHtml(type, soldAt),
+      text: buildRenewalReminderEmailText(type, soldAt),
     }),
   })
 

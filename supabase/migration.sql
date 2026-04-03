@@ -57,3 +57,6 @@ CREATE INDEX IF NOT EXISTS idx_gptplus_orders_session ON gptplus_orders(stripe_s
 -- Renewal reminder tracking fields
 ALTER TABLE activation_codes ADD COLUMN IF NOT EXISTS renewal_reminder_1_sent BOOLEAN DEFAULT FALSE;
 ALTER TABLE activation_codes ADD COLUMN IF NOT EXISTS renewal_reminder_2_sent BOOLEAN DEFAULT FALSE;
+
+-- Order source tracking (e.g. 'renewal_email', 'organic', 'ad')
+ALTER TABLE gptplus_orders ADD COLUMN IF NOT EXISTS source TEXT;

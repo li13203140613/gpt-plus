@@ -80,37 +80,10 @@ export function CodeGrid({ priceOverride }: CodeGridProps = {}) {
     setCountdown(10)
 
     try {
-      // Chinese locale: use native WeChat Pay
-      if (locale === 'zh') {
-        const res = await fetch('/api/payment/wechat-native', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            buyerEmail: normalizedEmail,
-            locale,
-            ...(priceOverride ? { priceOverride } : {}),
-            gclid: getGclid() || undefined,
-          }),
-        })
+      // [Temporarily disabled] Chinese locale WeChat Pay — all locales now use Stripe
+      // if (locale === 'zh') { ... }
 
-        const data = await res.json()
-
-        if (!res.ok) {
-          throw new Error(data.error || t.paymentCreateFailed)
-        }
-
-        trackEvent('wechat_pay_qr_shown', { source_page: sourcePage })
-        setWechatModal({
-          open: true,
-          codeUrl: data.code_url,
-          outTradeNo: data.out_trade_no,
-          amount: data.amount,
-        })
-        setSubmitting(false)
-        return
-      }
-
-      // Other locales: use Stripe
+      // All locales: use Stripe
       const res = await fetch('/api/payment/create-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -120,6 +93,7 @@ export function CodeGrid({ priceOverride }: CodeGridProps = {}) {
           ...(priceOverride ? { priceOverride } : {}),
           sourcePage: window.location.pathname,
           gclid: getGclid() || undefined,
+          source: new URLSearchParams(window.location.search).get('utm_source') || undefined,
         }),
       })
 
