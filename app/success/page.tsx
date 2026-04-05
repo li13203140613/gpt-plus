@@ -24,6 +24,8 @@ interface OrderInfo {
   paidAmount: number | null
 }
 
+const SUPPORT_WECHAT = 'fanxx2029'
+
 function readCookie(name: string) {
   if (typeof document === 'undefined') return null
 
@@ -50,6 +52,7 @@ function SuccessContent() {
   const [order, setOrder] = useState<OrderInfo | null>(null)
   const [pollCount, setPollCount] = useState(0)
   const [restoredFromCookie, setRestoredFromCookie] = useState(false)
+  const [supportQrPreviewOpen, setSupportQrPreviewOpen] = useState(false)
   const activationUrl = useActivationUrl()
   const purchaseTracked = useRef(false)
 
@@ -204,6 +207,34 @@ function SuccessContent() {
             )}
           </div>
 
+          <div className="rounded-xl border border-violet-100 bg-violet-50/50 p-4">
+            <div className="flex items-center gap-4 text-left sm:gap-5">
+              <button
+                type="button"
+                onClick={() => setSupportQrPreviewOpen(true)}
+                className="block shrink-0 overflow-hidden rounded-xl border border-violet-100 bg-white p-1 shadow-sm transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300"
+                aria-label="预览客服二维码"
+              >
+                <img
+                  src="/wechat-qr.png"
+                  alt={t.cs.qrAlt}
+                  className="size-28 object-contain sm:size-32"
+                />
+              </button>
+              <div className="min-w-0">
+                <p className="text-base font-semibold leading-6 text-slate-900">添加客服微信，续费更优惠</p>
+                <p className="mt-2 text-sm text-slate-700">微信：{SUPPORT_WECHAT}</p>
+                <a
+                  href="/wechat-qr.png"
+                  download="wechat-support-qr.png"
+                  className="mt-1 inline-block text-xs text-violet-600 underline underline-offset-2 hover:text-violet-500"
+                >
+                  👈点击放大图片，下载二维码
+                </a>
+              </div>
+            </div>
+          </div>
+
           <div className="relative rounded-2xl border border-emerald-200 bg-white/82 p-8 shadow-[0_24px_60px_-40px_rgba(15,23,42,0.3)]">
             <div className="flex gap-2 justify-center flex-wrap">
               {order.code.split('').map((char, index) => (
@@ -317,10 +348,46 @@ function SuccessContent() {
           </Link>
 
           <p className="text-sm text-slate-500">
-            {t.success.contactSupportText}<span className="text-slate-900">fanxx2029</span>
+            {t.success.contactSupportText}<span className="text-slate-900">{SUPPORT_WECHAT}</span>
           </p>
 
           <BookmarkPrompt trigger />
+
+          {supportQrPreviewOpen && (
+            <div
+              className="fixed inset-0 z-[160] flex items-center justify-center bg-slate-900/70 px-4"
+              onClick={() => setSupportQrPreviewOpen(false)}
+            >
+              <div
+                className="w-full max-w-sm rounded-2xl bg-white p-4 shadow-2xl"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <button
+                  type="button"
+                  onClick={() => setSupportQrPreviewOpen(false)}
+                  className="ml-auto block text-sm text-gray-500 transition-colors hover:text-gray-700"
+                >
+                  关闭
+                </button>
+                <div className="mx-auto mt-1 w-[72vw] max-w-[320px] overflow-hidden rounded-xl border border-gray-100 bg-white p-2">
+                  <img
+                    src="/wechat-qr.png"
+                    alt={t.cs.qrAlt}
+                    className="aspect-square w-full object-contain"
+                  />
+                </div>
+                <p className="mt-3 text-center text-sm text-gray-700">添加客服微信，续费更优惠</p>
+                <p className="mt-1 text-center text-xs text-gray-500">微信：{SUPPORT_WECHAT}</p>
+                <a
+                  href="/wechat-qr.png"
+                  download="wechat-support-qr.png"
+                  className="mt-1 block text-center text-xs text-violet-600 underline underline-offset-2 hover:text-violet-500"
+                >
+                  👈点击放大图片，下载二维码
+                </a>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

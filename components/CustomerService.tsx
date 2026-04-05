@@ -75,6 +75,13 @@ export function CustomerService() {
                     className="w-full h-full object-cover"
                   />
                 </div>
+                <a
+                  href="/wechat-qr.png"
+                  download="wechat-support-qr.png"
+                  className="inline-block text-xs sm:text-sm text-violet-600 underline underline-offset-2 hover:text-violet-500"
+                >
+                  👈点击放大图片，下载二维码
+                </a>
               </div>
 
               <div className="space-y-1 sm:space-y-1.5 text-xs sm:text-sm">
