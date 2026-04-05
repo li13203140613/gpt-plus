@@ -15,6 +15,7 @@ interface CreatePaymentSessionInput {
   cancelPath?: string
   gclid?: string
   source?: string
+  isMobile?: boolean
 }
 
 export async function releaseExpiredReservations() {
@@ -39,7 +40,7 @@ export async function releaseExpiredReservations() {
   `
 }
 
-export async function createPaymentSession({ buyerEmail, priceOverride, locale = 'zh', cancelPath = '/', gclid, source }: CreatePaymentSessionInput) {
+export async function createPaymentSession({ buyerEmail, priceOverride, locale = 'zh', cancelPath = '/', gclid, source, isMobile = false }: CreatePaymentSessionInput) {
   const sql = getDb()
 
   await releaseExpiredReservations()
@@ -82,14 +83,19 @@ export async function createPaymentSession({ buyerEmail, priceOverride, locale =
     : Math.round(finalPrice * 100)
 
   // Build payment method types and options
-  const paymentMethodTypes = localeConfig.paymentMethods as ('card' | 'alipay' | 'wechat_pay')[]
+  const configuredPaymentMethods = localeConfig.paymentMethods as ('card' | 'alipay' | 'wechat_pay')[]
+  // Mobile: hide WeChat Pay and prevent it from showing in Stripe Checkout.
+  const paymentMethodTypes = (isMobile
+    ? configuredPaymentMethods.filter((method) => method !== 'wechat_pay')
+    : configuredPaymentMethods) as ('card' | 'alipay' | 'wechat_pay')[]
+  const finalPaymentMethodTypes = paymentMethodTypes.length > 0 ? paymentMethodTypes : configuredPaymentMethods
   const paymentMethodOptions: Record<string, unknown> = {}
-  if (paymentMethodTypes.includes('wechat_pay')) {
+  if (finalPaymentMethodTypes.includes('wechat_pay')) {
     paymentMethodOptions.wechat_pay = { client: 'web' }
   }
 
   const session = await getStripe().checkout.sessions.create({
-    payment_method_types: paymentMethodTypes,
+    payment_method_types: finalPaymentMethodTypes,
     ...(Object.keys(paymentMethodOptions).length > 0 ? { payment_method_options: paymentMethodOptions } : {}),
     line_items: [
       {
